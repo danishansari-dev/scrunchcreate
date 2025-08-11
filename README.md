@@ -205,12 +205,10 @@ This project is created for Scrunch & Create brand. Customize and use as needed.
 4. Test thoroughly
 5. Submit a pull request
 
-## 📞 Support
 
-For questions or support, contact:
-- Email: hello@scrunchcreate.com
-- Instagram: @scrunchcreate
+## ✉️ Contact
 
----
+For any questions, feedback, or collaboration opportunities, please feel free to reach out at:  
+📧 **[danishansari.dev@gmail.com](mailto:danishansari.dev@gmail.com)**
 
 **Made with ❤️ for Scrunch & Create**
