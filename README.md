@@ -74,6 +74,7 @@ src/
 - **Sage**: `#BCEAD5` - Alternative green
 - **Cream**: `#FFFDD0` - Warm neutral
 
+
 ### Typography
 - **Font Family**: Inter (Google Fonts)
 - **Weights**: 300, 400, 500, 600, 700, 800
