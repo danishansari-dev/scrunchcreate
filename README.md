@@ -27,7 +27,7 @@ A fully responsive e-commerce frontend for Scrunch & Create, a handmade scrunchi
    git clone <repository-url>
    cd scrunch-create-app
    ```
-
+   
 2. **Install dependencies**
    ```bash
    npm install
@@ -42,7 +42,6 @@ A fully responsive e-commerce frontend for Scrunch & Create, a handmade scrunchi
    Navigate to `http://localhost:5173`
 
 ## 🏗️ Project Structure
-
 ```
 src/
 ├── components/          # Reusable components
