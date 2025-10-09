@@ -14,6 +14,7 @@ A fully responsive e-commerce frontend for Scrunch & Create, a handmade scrunchi
 
 ## 🚀 Tech Stack
 
+
 - **React 18** - Modern React with hooks
 - **Vite** - Fast build tool and development server
 - **Tailwind CSS** - Utility-first CSS framework
