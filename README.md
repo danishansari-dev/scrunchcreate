@@ -25,7 +25,13 @@ A modern, fully responsive e-commerce application for **Scrunch & Create**, a bo
 
 - **🚀 Fast Performance**: Built with Vite for lightning-fast load times
 
-## �️ Tech Stack
+## 📸 Screenshots
+
+Here's a preview of the Scrunch & Create website:
+
+![Scrunch & Create Preview](./ss.png)
+
+## 🛠️ Tech Stack
 
 - **Frontend Framework**: React 19
 - **Build Tool**: Vite 7
