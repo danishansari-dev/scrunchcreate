@@ -2,15 +2,29 @@ pipeline {
     agent any
 
     environment {
-        // Optional: define any environment variables you want here
         PROJECT_NAME = "scrunchcreate"
         GIT_REPO = "https://github.com/danishansari-dev/scrunchcreate.git"
         BRANCH_NAME = "main"
+        DOCKER_REGISTRY = "docker.io"
+        DOCKER_USERNAME = credentials('docker-username')
+        DOCKER_PASSWORD = credentials('docker-password')
+        DOCKER_IMAGE_NAME = "danishansari/scrunchcreate"
+        DOCKER_IMAGE_TAG = "${BUILD_NUMBER}"
+        PRODUCTION_SERVER = "your-production-server.com"
+        PRODUCTION_USER = credentials('production-user')
+        PRODUCTION_PASSWORD = credentials('production-password')
     }
 
     triggers {
-        // Automatically trigger build when webhook is received from GitHub
         githubPush()
+        // Poll SCM every 15 minutes as a fallback
+        pollSCM('H/15 * * * *')
+    }
+
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '10', daysToKeepStr: '30'))
+        timeout(time: 1, unit: 'HOURS')
+        timestamps()
     }
 
     stages {
@@ -18,60 +32,195 @@ pipeline {
         stage('Checkout') {
             steps {
                 echo "📦 Checking out source code from GitHub..."
-                git branch: "${BRANCH_NAME}", url: "${GIT_REPO}"
+                checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: "${BRANCH_NAME}"]],
+                    userRemoteConfigs: [[url: "${GIT_REPO}"]]
+                ])
+            }
+        }
+
+        stage('Environment Setup') {
+            steps {
+                echo "⚙️ Setting up build environment..."
+                sh 'node --version'
+                sh 'npm --version'
+                sh 'docker --version'
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                echo "📚 Installing Node.js dependencies..."
+                sh 'npm install'
+            }
+        }
+
+        stage('Lint') {
+            steps {
+                echo "🧹 Checking code quality with ESLint..."
+                sh 'npm run lint || true'
             }
         }
 
         stage('Build') {
             steps {
-                echo "🔨 Building the project..."
-                // Add your build command below (customize for your tech stack)
-                // Example for Node.js:
-                // sh 'npm install'
-                // Example for Python:
-                // sh 'pip install -r requirements.txt'
+                echo "🔨 Building the React application..."
+                sh 'npm run build'
             }
         }
 
         stage('Test') {
             steps {
                 echo "🧪 Running tests..."
-                // Example: Node.js test command
-                // sh 'npm test'
-                // Example: Python test
-                // sh 'pytest'
+                // Uncomment when tests are available
+                // sh 'npm test -- --coverage --watchAll=false || true'
             }
         }
 
-        stage('Code Quality') {
+        stage('Build Docker Image') {
             steps {
-                echo "🧹 Checking code quality..."
-                // Add linting/static analysis commands here if needed
-                // Example:
-                // sh 'npm run lint'
+                echo "🐳 Building Docker image..."
+                script {
+                    sh '''
+                        docker build -t ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} .
+                        docker tag ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} ${DOCKER_IMAGE_NAME}:latest
+                    '''
+                }
             }
         }
 
-        stage('Deploy') {
+        stage('Docker Security Scan') {
             steps {
-                echo "🚀 Deployment step (optional)"
-                // Add deployment or packaging commands if applicable
+                echo "🔒 Scanning Docker image for vulnerabilities..."
+                script {
+                    sh '''
+                        # Using docker scout for vulnerability scanning (requires Docker Scout plugin)
+                        docker scout cves ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} || true
+                    '''
+                }
+            }
+        }
+
+        stage('Push to Registry') {
+            when {
+                branch 'main'
+            }
+            steps {
+                echo "📤 Pushing Docker image to registry..."
+                script {
+                    sh '''
+                        echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
+                        docker push ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}
+                        docker push ${DOCKER_IMAGE_NAME}:latest
+                        docker logout
+                    '''
+                }
+            }
+        }
+
+        stage('Deploy Development') {
+            when {
+                branch 'main'
+            }
+            steps {
+                echo "🚀 Deploying to development environment..."
+                script {
+                    sh '''
+                        # Stop and remove old containers
+                        docker-compose -f docker-compose.yml down || true
+                        
+                        # Pull latest image and start new containers
+                        docker-compose -f docker-compose.yml up -d
+                        
+                        # Wait for containers to be healthy
+                        sleep 10
+                        
+                        # Check health
+                        docker-compose -f docker-compose.yml ps
+                    '''
+                }
+            }
+        }
+
+        stage('Health Check') {
+            when {
+                branch 'main'
+            }
+            steps {
+                echo "🏥 Performing health checks..."
+                script {
+                    sh '''
+                        max_attempts=10
+                        attempt=0
+                        
+                        while [ $attempt -lt $max_attempts ]; do
+                            if curl -f http://localhost/health 2>/dev/null; then
+                                echo "✅ Application is healthy!"
+                                exit 0
+                            fi
+                            attempt=$((attempt + 1))
+                            echo "⏳ Health check attempt $attempt/$max_attempts..."
+                            sleep 5
+                        done
+                        
+                        echo "❌ Health check failed after $max_attempts attempts"
+                        exit 1
+                    '''
+                }
+            }
+        }
+
+        stage('Deploy Production') {
+            when {
+                branch 'main'
+                tag pattern: "v\\d+\\.\\d+\\.\\d+", comparator: "REGEXP"
+            }
+            steps {
+                echo "🌍 Deploying to production environment..."
+                script {
+                    sh '''
+                        # Deploy to production server (requires SSH setup)
+                        # ssh -i /var/jenkins_home/.ssh/id_rsa ${PRODUCTION_USER}@${PRODUCTION_SERVER} \
+                        #     "cd /opt/scrunchcreate && docker-compose pull && docker-compose up -d"
+                        
+                        echo "📌 Production deployment stage - configure SSH credentials and uncomment deployment commands"
+                    '''
+                }
+            }
+        }
+
+        stage('Cleanup') {
+            steps {
+                echo "🧹 Cleaning up old Docker images..."
+                script {
+                    sh '''
+                        # Remove dangling images
+                        docker image prune -f || true
+                    '''
+                }
             }
         }
     }
 
     post {
         always {
-            echo "📜 Build finished. Cleaning up workspace..."
-            cleanWs()
+            echo "📜 Build finished."
+            // Preserve build artifacts
+            archiveArtifacts artifacts: 'dist/**/*', allowEmptyArchive: true
         }
 
         success {
             echo "✅ SUCCESS: ${PROJECT_NAME} pipeline completed successfully!"
+            echo "🐳 Docker Image: ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}"
         }
 
         failure {
             echo "❌ FAILURE: ${PROJECT_NAME} pipeline failed. Check logs for details."
+        }
+
+        unstable {
+            echo "⚠️ UNSTABLE: ${PROJECT_NAME} build is unstable."
         }
     }
 }
