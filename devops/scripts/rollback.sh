@@ -1,12 +1,15 @@
 #!/bin/bash
 # Rollback script for production environments
-# Usage: ./rollback.sh <previous-version>
+# Usage: ./devops/scripts/rollback.sh <previous-version>
 
 set -e
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+
 VERSION=${1:-latest}
 DOCKER_IMAGE="danishansari/scrunchcreate:${VERSION}"
-COMPOSE_FILE="docker-compose.yml"
+COMPOSE_FILE="${REPO_ROOT}/devops/docker/docker-compose.yml"
 
 echo "🔄 Rolling back ScrunchCreate to version ${VERSION}..."
 echo "📦 Using image: ${DOCKER_IMAGE}"
@@ -28,7 +31,7 @@ print_error() {
 # Backup current version
 echo ""
 echo "💾 Backing up current version..."
-CURRENT_IMAGE=$(docker-compose -f ${COMPOSE_FILE} images -q scrunchcreate-web)
+CURRENT_IMAGE=$(docker-compose -f "${COMPOSE_FILE}" images -q scrunchcreate-web)
 if [ -n "$CURRENT_IMAGE" ]; then
     BACKUP_TAG=$(date +%Y%m%d-%H%M%S)
     docker tag ${CURRENT_IMAGE} danishansari/scrunchcreate:backup-${BACKUP_TAG}
@@ -40,7 +43,7 @@ fi
 # Stop current containers
 echo ""
 echo "🛑 Stopping current containers..."
-docker-compose -f ${COMPOSE_FILE} down || true
+docker-compose -f "${COMPOSE_FILE}" down || true
 print_status "Containers stopped"
 
 # Pull rollback image
@@ -52,7 +55,7 @@ print_status "Rollback image ready"
 # Start with rollback image
 echo ""
 echo "🚀 Starting containers with rollback version..."
-docker-compose -f ${COMPOSE_FILE} up -d
+docker-compose -f "${COMPOSE_FILE}" up -d
 print_status "Containers started"
 
 # Wait for application to be ready
@@ -73,14 +76,14 @@ done
 
 if [ $attempt -eq $max_attempts ]; then
     print_error "Application failed to become healthy after rollback"
-    docker-compose logs scrunchcreate-web
+    docker-compose -f "${COMPOSE_FILE}" logs scrunchcreate-web
     exit 1
 fi
 
 # Verify rollback
 echo ""
 echo "📊 Verifying rollback..."
-docker-compose ps
+docker-compose -f "${COMPOSE_FILE}" ps
 print_status "Rollback verified"
 
 echo ""

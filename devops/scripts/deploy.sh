@@ -1,13 +1,17 @@
 #!/bin/bash
 # Deploy script for production environments
-# Usage: ./deploy.sh <environment> <version>
+# Usage: ./devops/scripts/deploy.sh <environment> <version>
 
 set -e
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
 
 ENVIRONMENT=${1:-development}
 VERSION=${2:-latest}
 DOCKER_IMAGE="danishansari/scrunchcreate:${VERSION}"
-COMPOSE_FILE="docker-compose.yml"
+COMPOSE_FILE="${REPO_ROOT}/devops/docker/docker-compose.yml"
+DOCKERFILE_PATH="${REPO_ROOT}/devops/docker/Dockerfile"
 
 echo "🚀 Deploying ScrunchCreate to ${ENVIRONMENT}..."
 echo "📦 Using image: ${DOCKER_IMAGE}"
@@ -50,7 +54,7 @@ print_status "Docker Compose is installed"
 # Stop and remove old containers
 echo ""
 echo "🛑 Stopping old containers..."
-docker-compose -f ${COMPOSE_FILE} down || true
+docker-compose -f "${COMPOSE_FILE}" down || true
 print_status "Old containers stopped"
 
 # Pull latest image
@@ -59,14 +63,14 @@ echo "📥 Pulling Docker image..."
 docker pull ${DOCKER_IMAGE} || {
     print_warn "Failed to pull image ${DOCKER_IMAGE}"
     print_warn "Attempting to build locally..."
-    docker build -t ${DOCKER_IMAGE} .
+    docker build -f "${DOCKERFILE_PATH}" -t ${DOCKER_IMAGE} "${REPO_ROOT}"
 }
 print_status "Docker image ready"
 
 # Start new containers
 echo ""
 echo "🚀 Starting new containers..."
-docker-compose -f ${COMPOSE_FILE} up -d
+docker-compose -f "${COMPOSE_FILE}" up -d
 print_status "Containers started"
 
 # Wait for application to be ready
@@ -87,7 +91,7 @@ done
 
 if [ $attempt -eq $max_attempts ]; then
     print_error "Application failed to become healthy"
-    docker-compose logs scrunchcreate-web
+    docker-compose -f "${COMPOSE_FILE}" logs scrunchcreate-web
     exit 1
 fi
 
@@ -98,7 +102,7 @@ echo "📊 Running post-deployment checks..."
 # Check container status
 echo ""
 echo "Container Status:"
-docker-compose ps
+docker-compose -f "${COMPOSE_FILE}" ps
 
 # Check application response
 echo ""
@@ -124,8 +128,8 @@ echo "   Health: http://localhost/health"
 echo "   Proxy: http://localhost:8080"
 echo ""
 echo "📋 View logs:"
-echo "   docker-compose logs -f"
+echo "   docker-compose -f ${COMPOSE_FILE} logs -f"
 echo ""
 echo "🛑 Stop containers:"
-echo "   docker-compose down"
+echo "   docker-compose -f ${COMPOSE_FILE} down"
 echo ""

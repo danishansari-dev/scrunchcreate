@@ -4,22 +4,22 @@
 
 ```bash
 # Build and start locally
-docker-compose up -d
+docker-compose -f devops/docker/docker-compose.yml up -d
 
 # View running containers
-docker-compose ps
+docker-compose -f devops/docker/docker-compose.yml ps
 
 # Check application health
 curl http://localhost/health
 
 # View logs
-docker-compose logs -f
+docker-compose -f devops/docker/docker-compose.yml logs -f
 
 # Stop containers
-docker-compose down
+docker-compose -f devops/docker/docker-compose.yml down
 
 # Build image manually
-docker build -t scrunchcreate:latest .
+docker build -f devops/docker/Dockerfile -t scrunchcreate:latest .
 
 # Run image directly
 docker run -p 80:80 scrunchcreate:latest
@@ -117,7 +117,7 @@ volumes:
 
 Mount logs for debugging:
 ```bash
-docker-compose exec scrunchcreate-web cat /var/log/nginx/access.log
+docker-compose -f devops/docker/docker-compose.yml exec scrunchcreate-web cat /var/log/nginx/access.log
 ```
 
 ## Performance Tuning
@@ -147,29 +147,29 @@ location ~* \.(js|css|png|jpg)$ {
 View logs with:
 ```bash
 # All services
-docker-compose logs
+docker-compose -f devops/docker/docker-compose.yml logs
 
 # Specific service
-docker-compose logs scrunchcreate-web
+docker-compose -f devops/docker/docker-compose.yml logs scrunchcreate-web
 
 # Follow mode
-docker-compose logs -f
+docker-compose -f devops/docker/docker-compose.yml logs -f
 
 # Last 100 lines
-docker-compose logs --tail=100
+docker-compose -f devops/docker/docker-compose.yml logs --tail=100
 
 # Timestamps
-docker-compose logs -t
+docker-compose -f devops/docker/docker-compose.yml logs -t
 
 # Specific time range
-docker-compose logs --since 2025-11-13T10:00:00
+docker-compose -f devops/docker/docker-compose.yml logs --since 2025-11-13T10:00:00
 ```
 
 ## Debugging
 
 ```bash
 # SSH into container
-docker-compose exec scrunchcreate-web sh
+docker-compose -f devops/docker/docker-compose.yml exec scrunchcreate-web sh
 
 # Inside container, useful commands:
 curl http://localhost/health
@@ -183,7 +183,7 @@ printenv | grep NODE_ENV
 
 ## Resource Limits
 
-Add to docker-compose.yml for production:
+Add to `devops/docker/docker-compose.yml` for production:
 ```yaml
 services:
   scrunchcreate-web:
