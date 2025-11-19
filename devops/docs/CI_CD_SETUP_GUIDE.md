@@ -28,6 +28,7 @@ Jenkins (CI/CD Orchestrator)
 ## 📦 Files Included
 
 ### 1. **Dockerfile**
+**Location:** `devops/docker/Dockerfile`
 Multi-stage build that:
 - Builds React app with Node 20 Alpine
 - Serves with Nginx Alpine (lightweight production image)
@@ -35,6 +36,7 @@ Multi-stage build that:
 - ~150MB final image size
 
 ### 2. **docker-compose.yml**
+**Location:** `devops/docker/docker-compose.yml`
 Orchestrates:
 - `scrunchcreate-web`: Main React application
 - `nginx-proxy`: Reverse proxy for multiple services
@@ -42,6 +44,7 @@ Orchestrates:
 - Health checks and auto-restart policies
 
 ### 3. **nginx.conf**
+**Location:** `devops/docker/nginx.conf`
 Primary Nginx config with:
 - Single-page app routing (SPA)
 - Gzip compression
@@ -50,6 +53,7 @@ Primary Nginx config with:
 - Health endpoint
 
 ### 4. **nginx-proxy.conf**
+**Location:** `devops/docker/nginx-proxy.conf`
 Reverse proxy configuration:
 - Upstream routing
 - Logging
@@ -57,6 +61,7 @@ Reverse proxy configuration:
 - Security headers
 
 ### 5. **Jenkinsfile**
+**Location:** `devops/Jenkinsfile`
 Complete CI/CD pipeline with stages:
 - Checkout
 - Environment Setup
@@ -103,7 +108,7 @@ Complete CI/CD pipeline with stages:
    - New Item → Pipeline
    - Select "Pipeline script from SCM"
    - Repository URL: `https://github.com/danishansari-dev/scrunchcreate.git`
-   - Script Path: `Jenkinsfile`
+   - Script Path: `devops/Jenkinsfile`
 
 ### Step 2: GitHub Webhook Setup
 
@@ -119,19 +124,19 @@ Test the Docker setup locally:
 
 ```bash
 # Build and start containers
-docker-compose up -d
+docker-compose -f devops/docker/docker-compose.yml up -d
 
 # Check status
-docker-compose ps
+docker-compose -f devops/docker/docker-compose.yml ps
 
 # View logs
-docker-compose logs -f scrunchcreate-web
+docker-compose -f devops/docker/docker-compose.yml logs -f scrunchcreate-web
 
 # Stop containers
-docker-compose down
+docker-compose -f devops/docker/docker-compose.yml down
 
 # Build image without compose
-docker build -t scrunchcreate:latest .
+docker build -f devops/docker/Dockerfile -t scrunchcreate:latest .
 
 # Run image
 docker run -p 80:80 scrunchcreate:latest
@@ -236,13 +241,13 @@ PRODUCTION_USER = credentials('production-user')  // SSH user
 docker ps
 
 # Review build logs
-docker build -t scrunchcreate:latest . --no-cache
+docker build -f devops/docker/Dockerfile -t scrunchcreate:latest . --no-cache
 ```
 
 ### Application Won't Start
 ```bash
 # Check logs
-docker-compose logs scrunchcreate-web
+docker-compose -f devops/docker/docker-compose.yml logs scrunchcreate-web
 
 # Verify health endpoint
 curl http://localhost/health
@@ -267,7 +272,7 @@ sudo systemctl restart jenkins
 
 1. **Enable Tests**: Add Jest/Vitest configuration to `package.json`
 2. **Add Monitoring**: Integrate Prometheus/Grafana
-3. **Database**: Add PostgreSQL/MongoDB to docker-compose
+3. **Database**: Add PostgreSQL/MongoDB to `devops/docker/docker-compose.yml`
 4. **SSL/TLS**: Configure Let's Encrypt certificates
 5. **Notifications**: Add Slack/Email notifications to Jenkins
 
@@ -284,14 +289,14 @@ sudo systemctl restart jenkins
 1. Always use semantic versioning for tags: `v1.0.0`
 2. Keep Docker images under 500MB for faster deploys
 3. Use `.dockerignore` to exclude unnecessary files
-4. Test locally with docker-compose before Jenkins
+4. Test locally with `docker-compose -f devops/docker/docker-compose.yml` before Jenkins
 5. Monitor production deployments in real-time
 
 ## 📞 Support
 
 For issues or questions:
 1. Check Jenkins logs: Jenkins Dashboard → Build history
-2. Check container logs: `docker-compose logs`
+2. Check container logs: `docker-compose -f devops/docker/docker-compose.yml logs`
 3. Review GitHub issues and discussions
 4. Consult the documentation files included
 

@@ -358,14 +358,31 @@ This project includes a complete **automated CI/CD pipeline** using Jenkins and 
 
 ### Docker Setup
 
+#### DevOps Layout
+```
+devops/
+├── Jenkinsfile
+├── docker/
+│   ├── Dockerfile
+│   ├── docker-compose.yml
+│   ├── nginx.conf
+│   └── nginx-proxy.conf
+├── scripts/
+│   ├── deploy.sh
+│   └── rollback.sh
+└── docs/
+    ├── CI_CD_SETUP_GUIDE.md
+    └── DOCKER_JENKINS_REFERENCE.md
+```
+
 #### Build Docker Image
 ```bash
-docker build -t scrunchcreate:latest .
+docker build -f devops/docker/Dockerfile -t scrunchcreate:latest .
 ```
 
 #### Run with Docker Compose
 ```bash
-docker-compose up -d
+docker-compose -f devops/docker/docker-compose.yml up -d
 ```
 
 #### Docker Compose Services
@@ -373,6 +390,8 @@ docker-compose up -d
 - **nginx-proxy**: Reverse proxy for additional routing (optional)
 
 ### Jenkins Configuration
+
+The pipeline definition lives at `devops/Jenkinsfile`, so configure Jenkins jobs with that script path.
 
 #### Required Jenkins Plugins
 - GitHub Integration Plugin
@@ -404,6 +423,19 @@ PRODUCTION_USER = credentials('production-user')
 
 ### Deployment Environments
 
+Use the helper scripts inside `devops/scripts` to manage deployments:
+
+```bash
+# Deploy latest image to development (defaults)
+./devops/scripts/deploy.sh
+
+# Deploy explicit version to production
+./devops/scripts/deploy.sh production v1.2.3
+
+# Roll back to a previous version
+./devops/scripts/rollback.sh v1.2.2
+```
+
 #### Development
 - Automatic deployment on main branch
 - Build triggered by GitHub webhook
@@ -420,7 +452,7 @@ PRODUCTION_USER = credentials('production-user')
 
 ```bash
 # Build image locally
-docker build -t scrunchcreate:dev .
+docker build -f devops/docker/Dockerfile -t scrunchcreate:dev .
 
 # Run container
 docker run -p 80:80 scrunchcreate:dev
@@ -433,16 +465,16 @@ docker run -p 80:80 scrunchcreate:dev
 
 ```bash
 # View running containers
-docker-compose ps
+docker-compose -f devops/docker/docker-compose.yml ps
 
 # View logs
-docker-compose logs -f scrunchcreate-web
+docker-compose -f devops/docker/docker-compose.yml logs -f scrunchcreate-web
 
 # Check container health
-docker-compose logs scrunchcreate-web | grep health
+docker-compose -f devops/docker/docker-compose.yml logs scrunchcreate-web | grep health
 
 # Stop containers
-docker-compose down
+docker-compose -f devops/docker/docker-compose.yml down
 ```
 
 ### Production Deployment Checklist
@@ -471,7 +503,7 @@ npm install
 - Ensure image naming follows registry standards
 
 **Health check failing**
-- Check container logs: `docker-compose logs scrunchcreate-web`
+- Check container logs: `docker-compose -f devops/docker/docker-compose.yml logs scrunchcreate-web`
 - Verify Nginx configuration
 - Ensure application is running on port 80
 
@@ -481,10 +513,10 @@ npm install
 docker inspect scrunchcreate:latest
 
 # Rebuild image
-docker-compose build --no-cache
+docker-compose -f devops/docker/docker-compose.yml build --no-cache
 
 # Start with verbose output
-docker-compose up (without -d flag)
+docker-compose -f devops/docker/docker-compose.yml up (without -d flag)
 ```
 
 ## ✉️ Contact

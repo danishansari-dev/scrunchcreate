@@ -83,7 +83,7 @@ pipeline {
                 echo "🐳 Building Docker image..."
                 script {
                     sh '''
-                        docker build -t ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} .
+                        docker build -f devops/docker/Dockerfile -t ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} .
                         docker tag ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} ${DOCKER_IMAGE_NAME}:latest
                     '''
                 }
@@ -128,16 +128,16 @@ pipeline {
                 script {
                     sh '''
                         # Stop and remove old containers
-                        docker-compose -f docker-compose.yml down || true
+                        docker-compose -f devops/docker/docker-compose.yml down || true
                         
                         # Pull latest image and start new containers
-                        docker-compose -f docker-compose.yml up -d
+                        docker-compose -f devops/docker/docker-compose.yml up -d
                         
                         # Wait for containers to be healthy
                         sleep 10
                         
                         # Check health
-                        docker-compose -f docker-compose.yml ps
+                        docker-compose -f devops/docker/docker-compose.yml ps
                     '''
                 }
             }
@@ -182,7 +182,7 @@ pipeline {
                     sh '''
                         # Deploy to production server (requires SSH setup)
                         # ssh -i /var/jenkins_home/.ssh/id_rsa ${PRODUCTION_USER}@${PRODUCTION_SERVER} \
-                        #     "cd /opt/scrunchcreate && docker-compose pull && docker-compose up -d"
+                        #     "cd /opt/scrunchcreate && docker-compose -f devops/docker/docker-compose.yml pull && docker-compose -f devops/docker/docker-compose.yml up -d"
                         
                         echo "📌 Production deployment stage - configure SSH credentials and uncomment deployment commands"
                     '''
