@@ -3,8 +3,8 @@ pipeline {
 
     environment {
         PROJECT_NAME = "scrunchcreate"
-        IMAGE_NAME = "danishansari/scrunchcreate"
-        DOCKER_TAG = "${env.BUILD_NUMBER}"
+        IMAGE_NAME   = "danishansari/scrunchcreate"
+        DOCKER_TAG   = "${env.BUILD_NUMBER}"
     }
 
     stages {
@@ -28,25 +28,24 @@ pipeline {
 
         stage('Docker Build') {
             steps {
-                bat
                 bat "docker build -f devops/docker/Dockerfile -t %IMAGE_NAME%:%DOCKER_TAG% ."
             }
         }
 
         stage('Docker Push') {
-    steps {
-        withCredentials([usernamePassword(credentialsId: 'docker-username', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-            bat """
-                echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin
-                docker tag %IMAGE_NAME%:%DOCKER_TAG% %IMAGE_NAME%:latest
-                docker push %IMAGE_NAME%:%DOCKER_TAG%
-                docker push %IMAGE_NAME%:latest
-                docker logout
-            """
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'docker-username', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    bat """
+                        echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin
+                        docker tag %IMAGE_NAME%:%DOCKER_TAG% %IMAGE_NAME%:latest
+                        docker push %IMAGE_NAME%:%DOCKER_TAG%
+                        docker push %IMAGE_NAME%:latest
+                        docker logout
+                    """
+                }
+            }
         }
     }
-}
-
 
     post {
         always {
