@@ -16,26 +16,26 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                sh 'npm install'
+                bat 'npm install'
             }
         }
 
         stage('Build App') {
             steps {
-                sh 'npm run build'
+                bat 'npm run build'
             }
         }
 
         stage('Docker Build') {
             steps {
-                sh 'docker build -f devops/docker/Dockerfile -t ${IMAGE_NAME}:${DOCKER_TAG} .'
+                bat 'docker build -f devops/docker/Dockerfile -t ${IMAGE_NAME}:${DOCKER_TAG} .'
             }
         }
 
         stage('Docker Push') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'docker-username', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                    sh '''
+                    bat '''
                         echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
                         docker tag ${IMAGE_NAME}:${DOCKER_TAG} ${IMAGE_NAME}:latest
                         docker push ${IMAGE_NAME}:${DOCKER_TAG}
