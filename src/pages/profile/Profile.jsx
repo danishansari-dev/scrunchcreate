@@ -1,11 +1,12 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import NavBar from '../../componets/navbar/NavBar'
 import styles from './Profile.module.css'
+import { useAuth } from '../../context/AuthContext'
 
 export default function Profile() {
   const navigate = useNavigate()
-  const [currentUser, setCurrentUser] = useState(null)
+  const { currentUser, updateUser, logout } = useAuth()
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [error, setError] = useState('')
@@ -15,20 +16,11 @@ export default function Profile() {
   const [newPassword, setNewPassword] = useState('')
 
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem('currentUser')
-      if (!stored) {
-        navigate('/signin')
-        return
-      }
-      const parsed = JSON.parse(stored)
-      setCurrentUser(parsed)
-      setName(parsed.name || '')
-      setEmail(parsed.email || '')
-    } catch {
-      navigate('/signin')
+    if (currentUser) {
+      setName(currentUser.name || '')
+      setEmail(currentUser.email || '')
     }
-  }, [navigate])
+  }, [currentUser])
 
   const handleSave = (e) => {
     e.preventDefault()
@@ -63,18 +55,11 @@ export default function Profile() {
     }
 
     localStorage.setItem('users', JSON.stringify(users))
-    const nextCurrent = { ...currentUser, name: name.trim() }
-    localStorage.setItem('currentUser', JSON.stringify(nextCurrent))
-    setCurrentUser(nextCurrent)
+    updateUser({ name: name.trim() })
     setPassword('')
     setNewPassword('')
     setChangingPassword(false)
     setSuccess('Profile updated successfully.')
-  }
-
-  const handleLogout = () => {
-    localStorage.removeItem('currentUser')
-    navigate('/')
   }
 
   const greeting = useMemo(() => {
@@ -132,7 +117,7 @@ export default function Profile() {
               <h2 className={styles.sectionTitle}>Security</h2>
               <p className={styles.sectionText}>You are signed in as <strong>{email}</strong>.</p>
               <div className={styles.actions}>
-                <button className={styles.danger} type="button" onClick={handleLogout}>Log out</button>
+                <button className={styles.danger} type="button" onClick={() => { logout(); navigate('/'); }}>Log out</button>
               </div>
             </div>
           </div>
@@ -141,8 +126,8 @@ export default function Profile() {
             <div className={styles.card}>
               <h3 className={styles.sectionTitle}>Quick Links</h3>
               <ul className={styles.links}>
-                <li><a href="/products" className={styles.link}>Browse Products</a></li>
-                <li><a href="/" className={styles.link}>Home</a></li>
+                <li><Link to="/products" className={styles.link}>Browse Products</Link></li>
+                <li><Link to="/" className={styles.link}>Home</Link></li>
               </ul>
             </div>
             <div className={styles.card}>

@@ -1,13 +1,21 @@
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
+import { useNavigate, Link } from 'react-router-dom'
 import NavBar from '../../componets/navbar/NavBar'
 import styles from './SignIn.module.css'
+import { useAuth } from '../../context/AuthContext'
 
 export default function SignIn() {
   const navigate = useNavigate()
+  const { login, isAuthenticated } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/')
+    }
+  }, [isAuthenticated, navigate])
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -25,7 +33,7 @@ export default function SignIn() {
       setError('Invalid credentials.')
       return
     }
-    localStorage.setItem('currentUser', JSON.stringify({ id: match.id, name: match.name, email: match.email }))
+    login(match)
     navigate('/')
   }
 
@@ -65,7 +73,7 @@ export default function SignIn() {
 
           <p className={styles.inlineText}>
             New here?{' '}
-            <a className={styles.link} href="/signup">Create an account</a>
+            <Link className={styles.link} to="/signup">Create an account</Link>
           </p>
         </form>
       </main>

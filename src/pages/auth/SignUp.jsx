@@ -1,14 +1,22 @@
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
+import { useNavigate, Link } from 'react-router-dom'
 import NavBar from '../../componets/navbar/NavBar'
 import styles from './SignUp.module.css'
+import { useAuth } from '../../context/AuthContext'
 
 export default function SignUp() {
   const navigate = useNavigate()
+  const { login, isAuthenticated } = useAuth()
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/')
+    }
+  }, [isAuthenticated, navigate])
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -41,7 +49,7 @@ export default function SignUp() {
     const newUser = { id: Date.now(), name: trimmedName, email: trimmedEmail, password: trimmedPassword }
     const nextUsers = [...users, newUser]
     localStorage.setItem('users', JSON.stringify(nextUsers))
-    localStorage.setItem('currentUser', JSON.stringify({ id: newUser.id, name: newUser.name, email: newUser.email }))
+    login(newUser)
     navigate('/')
   }
 
@@ -92,7 +100,7 @@ export default function SignUp() {
 
           <p className={styles.inlineText}>
             Already have an account?{' '}
-            <a className={styles.link} href="/signin">Sign in</a>
+            <Link className={styles.link} to="/signin">Sign in</Link>
           </p>
         </form>
       </main>
