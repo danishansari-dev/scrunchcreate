@@ -1,110 +1,65 @@
-# CI/CD Pipeline Setup Guide for ScrunchCreate
+# CI/CD Pipeline Setup Guide - Academic Project
 
-This guide explains the automated CI/CD pipeline setup using Jenkins and Docker for the ScrunchCreate e-commerce application.
+**Note:** This is a simplified CI/CD setup for academic/demo purposes only. Not for production use.
 
-## 📋 Overview
+## Overview
 
-The pipeline includes:
-- **Continuous Integration**: Automated code checkout, linting, building
-- **Docker Containerization**: Multi-stage builds for optimized production images
-- **Automated Testing**: Code quality checks and health verification
-- **Container Registry**: Push to Docker Hub
-- **Automated Deployment**: Development environment deployment with health checks
-- **Production Readiness**: Tag-based production deployments
+Simple CI/CD pipeline for ScrunchCreate React application:
+- **Continuous Integration**: Automated build and test
+- **Docker Containerization**: Simple Docker setup
+- **Localhost Deployment**: Runs on localhost for demo
 
-## 🏗️ Architecture
+## Architecture
 
 ```
 GitHub Repository
     ↓
-Jenkins (CI/CD Orchestrator)
+Jenkins (CI/CD)
     ├── Build & Test
-    ├── Docker Build & Push
-    └── Deploy to Environment
-        ├── Development (docker-compose)
-        └── Production (SSH Deploy)
+    ├── Docker Build
+    └── Deploy to Localhost
 ```
 
-## 📦 Files Included
+## Files Included
 
 ### 1. **Dockerfile**
 **Location:** `devops/docker/Dockerfile`
-Multi-stage build that:
-- Builds React app with Node 20 Alpine
-- Serves with Nginx Alpine (lightweight production image)
-- Includes health checks
-- ~150MB final image size
+- Simple single-stage build
+- Uses Node 20 Alpine
+- Serves with Vite preview server (port 4173)
 
 ### 2. **docker-compose.yml**
 **Location:** `devops/docker/docker-compose.yml`
-Orchestrates:
-- `scrunchcreate-web`: Main React application
-- `nginx-proxy`: Reverse proxy for multiple services
-- Networking and volume management
-- Health checks and auto-restart policies
+- Simple single-service setup
+- Runs React app on localhost:4173
 
-### 3. **nginx.conf**
-**Location:** `devops/docker/nginx.conf`
-Primary Nginx config with:
-- Single-page app routing (SPA)
-- Gzip compression
-- Caching strategies
-- Security headers
-- Health endpoint
-
-### 4. **nginx-proxy.conf**
-**Location:** `devops/docker/nginx-proxy.conf`
-Reverse proxy configuration:
-- Upstream routing
-- Logging
-- Websocket support
-- Security headers
-
-### 5. **Jenkinsfile**
+### 3. **Jenkinsfile**
 **Location:** `devops/Jenkinsfile`
-Complete CI/CD pipeline with stages:
+Pipeline stages:
 - Checkout
 - Environment Setup
 - Install Dependencies
 - Lint (ESLint)
 - Build (Vite)
-- Test
-- Docker Build
-- Security Scanning
-- Registry Push
-- Development Deployment
-- Health Checks
-- Production Deployment
-- Cleanup
+- Test (placeholder)
+- Build Docker Image
+- Deploy to Localhost
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
-- Jenkins server with Docker plugin installed
+- Jenkins server
 - Docker and Docker Compose
 - GitHub repository access
-- (Optional) Docker Hub account for image registry
 
 ### Step 1: Jenkins Setup
 
 1. **Install Required Plugins:**
-   - Docker Pipeline
-   - GitHub
-   - SSH Agent
-   - Docker Scout (for vulnerability scanning)
+   - GitHub Integration Plugin
+   - Docker Plugin
+   - Docker Compose Plugin
 
-2. **Configure Credentials in Jenkins:**
-   ```
-   Dashboard → Manage Jenkins → Manage Credentials
-   ```
-   
-   Add the following:
-   - **docker-username**: Your Docker Hub username
-   - **docker-password**: Your Docker Hub password (use token for security)
-   - **production-user**: SSH user for production server
-   - **production-password**: SSH private key or password
-
-3. **Create Jenkins Job:**
+2. **Create Jenkins Job:**
    - New Item → Pipeline
    - Select "Pipeline script from SCM"
    - Repository URL: `https://github.com/danishansari-dev/scrunchcreate.git`
@@ -120,145 +75,64 @@ Complete CI/CD pipeline with stages:
 
 ### Step 3: Local Testing
 
-Test the Docker setup locally:
+Test Docker setup locally:
 
 ```bash
-# Build and start containers
-docker-compose -f devops/docker/docker-compose.yml up -d
+# Build and start container
+docker-compose -f devops/docker/docker-compose.yml up -d --build
 
 # Check status
 docker-compose -f devops/docker/docker-compose.yml ps
 
 # View logs
-docker-compose -f devops/docker/docker-compose.yml logs -f scrunchcreate-web
+docker-compose -f devops/docker/docker-compose.yml logs -f
+
+# Access application
+# Open browser: http://localhost:4173
 
 # Stop containers
 docker-compose -f devops/docker/docker-compose.yml down
-
-# Build image without compose
-docker build -f devops/docker/Dockerfile -t scrunchcreate:latest .
-
-# Run image
-docker run -p 80:80 scrunchcreate:latest
 ```
 
-## 📊 Pipeline Stages Explained
+## Pipeline Stages
 
-### 1. **Checkout**
-Pulls latest code from GitHub main branch
+1. **Checkout** - Clone code from GitHub
+2. **Environment Setup** - Verify Node.js, npm, Docker versions
+3. **Install Dependencies** - Run `npm install`
+4. **Lint** - ESLint code quality check (non-blocking)
+5. **Build** - Compile React app with Vite
+6. **Test** - Placeholder for tests
+7. **Build Docker Image** - Create Docker image
+8. **Deploy to Localhost** - Start container on localhost:4173
 
-### 2. **Environment Setup**
-Verifies Node.js, npm, and Docker versions
+## Accessing the Application
 
-### 3. **Install Dependencies**
-Runs `npm install` to get all packages
+After deployment:
+- **Main App**: http://localhost:4173
 
-### 4. **Lint**
-ESLint checks code quality (non-blocking, errors logged)
-
-### 5. **Build**
-Compiles React app using Vite: `npm run build`
-
-### 6. **Test**
-Placeholder for test suite (uncomment when tests added)
-
-### 7. **Build Docker Image**
-Creates optimized Docker image with tags:
-- `danishansari/scrunchcreate:${BUILD_NUMBER}`
-- `danishansari/scrunchcreate:latest`
-
-### 8. **Docker Security Scan**
-Scans image for vulnerabilities using Docker Scout
-
-### 9. **Push to Registry**
-Pushes image to Docker Hub (main branch only)
-
-### 10. **Deploy Development**
-- Stops old containers
-- Pulls latest image
-- Starts new containers with docker-compose
-
-### 11. **Health Check**
-Verifies application is responding (10 attempts, 5s intervals)
-
-### 12. **Deploy Production**
-Triggered by version tags (v1.0.0, etc.)
-Deploys to production server via SSH
-
-## 🔧 Environment Variables
-
-### Jenkins Credentials (Configure these first!)
-- `docker-username`: Docker Hub username
-- `docker-password`: Docker Hub password/token
-- `production-user`: Production server SSH user
-- `production-password`: SSH private key
-
-### Pipeline Variables (Edit in Jenkinsfile)
-```groovy
-DOCKER_REGISTRY = "docker.io"              // Docker registry
-DOCKER_IMAGE_NAME = "danishansari/scrunchcreate"  // Image name
-PRODUCTION_SERVER = "your-production-server.com"  // Production host
-PRODUCTION_USER = credentials('production-user')  // SSH user
-```
-
-## 📱 Accessing the Application
-
-### Development (after docker-compose)
-- **Main App**: http://localhost
-- **Health Check**: http://localhost/health
-- **Proxy**: http://localhost:8080
-
-### Docker Container Names
-- `scrunchcreate-web`: Main application
-- `scrunchcreate-proxy`: Nginx reverse proxy
-
-## 🛡️ Security Features
-
-1. **Multi-stage Docker build**: Reduces image size and attack surface
-2. **Nginx security headers**: XSS, Clickjacking, MIME-type protections
-3. **Health checks**: Automatic container restart if unhealthy
-4. **Vulnerability scanning**: Docker Scout security analysis
-5. **Gzip compression**: Reduces network exposure
-6. **CSP headers**: Content Security Policy enforcement
-
-## 📈 Scaling Considerations
-
-### For Higher Traffic
-1. Increase nginx worker processes in `nginx.conf`
-2. Add load balancing in `nginx-proxy.conf`
-3. Use Kubernetes instead of docker-compose
-
-### For CI/CD Speed
-1. Enable Docker layer caching
-2. Use Jenkins executors pool
-3. Parallel build stages
-
-## 🚨 Troubleshooting
+## Troubleshooting
 
 ### Docker Build Fails
 ```bash
 # Check Docker daemon
 docker ps
 
-# Review build logs
-docker build -f devops/docker/Dockerfile -t scrunchcreate:latest . --no-cache
+# Rebuild without cache
+docker-compose -f devops/docker/docker-compose.yml build --no-cache
 ```
 
 ### Application Won't Start
 ```bash
 # Check logs
-docker-compose -f devops/docker/docker-compose.yml logs scrunchcreate-web
+docker-compose -f devops/docker/docker-compose.yml logs
 
-# Verify health endpoint
-curl http://localhost/health
-
-# Inspect container
-docker inspect scrunchcreate-web
+# Check if port 4173 is available
+netstat -an | grep 4173
 ```
 
 ### Jenkins Can't Find Docker
 ```bash
-# Ensure Jenkins user has Docker permissions
+# Ensure Jenkins user has Docker permissions (Linux)
 sudo usermod -aG docker jenkins
 sudo systemctl restart jenkins
 ```
@@ -268,39 +142,23 @@ sudo systemctl restart jenkins
 2. Check Jenkins GitHub plugin configuration
 3. Test payload delivery in GitHub webhook settings
 
-## 📚 Next Steps
+## Quick Commands
 
-1. **Enable Tests**: Add Jest/Vitest configuration to `package.json`
-2. **Add Monitoring**: Integrate Prometheus/Grafana
-3. **Database**: Add PostgreSQL/MongoDB to `devops/docker/docker-compose.yml`
-4. **SSL/TLS**: Configure Let's Encrypt certificates
-5. **Notifications**: Add Slack/Email notifications to Jenkins
+```bash
+# Build image manually
+docker build -f devops/docker/Dockerfile -t scrunchcreate:latest .
 
-## 🔗 Useful Resources
+# Run container manually
+docker run -p 4173:4173 scrunchcreate:latest
 
-- [Vite Documentation](https://vitejs.dev/)
-- [Docker Documentation](https://docs.docker.com/)
-- [Nginx Documentation](https://nginx.org/en/docs/)
-- [Jenkins Documentation](https://www.jenkins.io/doc/)
-- [React Documentation](https://react.dev/)
+# View running containers
+docker-compose -f devops/docker/docker-compose.yml ps
 
-## 💡 Tips
-
-1. Always use semantic versioning for tags: `v1.0.0`
-2. Keep Docker images under 500MB for faster deploys
-3. Use `.dockerignore` to exclude unnecessary files
-4. Test locally with `docker-compose -f devops/docker/docker-compose.yml` before Jenkins
-5. Monitor production deployments in real-time
-
-## 📞 Support
-
-For issues or questions:
-1. Check Jenkins logs: Jenkins Dashboard → Build history
-2. Check container logs: `docker-compose -f devops/docker/docker-compose.yml logs`
-3. Review GitHub issues and discussions
-4. Consult the documentation files included
+# Stop containers
+docker-compose -f devops/docker/docker-compose.yml down
+```
 
 ---
 
-**Last Updated**: November 13, 2025
-**Version**: 1.0.0
+**Last Updated**: November 2025  
+**Purpose**: Academic Project Demo

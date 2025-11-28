@@ -336,9 +336,11 @@ This project is created for Scrunch & Create brand. Customize and use as needed.
 5. Submit a pull request
 
 
-## 🔄 CI/CD Pipeline
+## 🔄 CI/CD Pipeline (Academic Project)
 
-This project includes a complete **automated CI/CD pipeline** using Jenkins and Docker for continuous integration and deployment.
+**Note:** This is a simplified CI/CD setup for academic/demo purposes only.
+
+This project includes a basic **automated CI/CD pipeline** using Jenkins and Docker.
 
 ### Pipeline Stages
 
@@ -347,33 +349,22 @@ This project includes a complete **automated CI/CD pipeline** using Jenkins and 
 3. **Install Dependencies** - Install npm packages
 4. **Lint** - Code quality checks with ESLint
 5. **Build** - Compile React application with Vite
-6. **Test** - Run unit and integration tests
+6. **Test** - Placeholder for tests
 7. **Build Docker Image** - Create Docker container image
-8. **Docker Security Scan** - Vulnerability scanning with Docker Scout
-9. **Push to Registry** - Push image to Docker registry
-10. **Deploy Development** - Deploy to development environment
-11. **Health Check** - Verify application health
-12. **Deploy Production** - Deploy to production (on tag release)
-13. **Cleanup** - Remove dangling Docker images
+8. **Deploy to Localhost** - Deploy to localhost:4173
 
-### Docker Setup
-
-#### DevOps Layout
+### DevOps Layout
 ```
 devops/
 ├── Jenkinsfile
 ├── docker/
 │   ├── Dockerfile
-│   ├── docker-compose.yml
-│   ├── nginx.conf
-│   └── nginx-proxy.conf
-├── scripts/
-│   ├── deploy.sh
-│   └── rollback.sh
+│   └── docker-compose.yml
 └── docs/
-    ├── CI_CD_SETUP_GUIDE.md
-    └── DOCKER_JENKINS_REFERENCE.md
+    └── CI_CD_SETUP_GUIDE.md
 ```
+
+### Quick Start
 
 #### Build Docker Image
 ```bash
@@ -382,141 +373,52 @@ docker build -f devops/docker/Dockerfile -t scrunchcreate:latest .
 
 #### Run with Docker Compose
 ```bash
-docker-compose -f devops/docker/docker-compose.yml up -d
+docker-compose -f devops/docker/docker-compose.yml up -d --build
 ```
 
-#### Docker Compose Services
-- **scrunchcreate-web**: React application served by Nginx
-- **nginx-proxy**: Reverse proxy for additional routing (optional)
+#### Access Application
+- **URL**: http://localhost:4173
 
 ### Jenkins Configuration
 
-The pipeline definition lives at `devops/Jenkinsfile`, so configure Jenkins jobs with that script path.
+1. **Create Jenkins Job:**
+   - New Item → Pipeline
+   - Select "Pipeline script from SCM"
+   - Repository URL: `https://github.com/danishansari-dev/scrunchcreate.git`
+   - Script Path: `devops/Jenkinsfile`
 
-#### Required Jenkins Plugins
-- GitHub Integration Plugin
-- Docker Plugin
-- Docker Compose Plugin
-- NodeJS Plugin
-- Email Extension Plugin
+2. **Required Plugins:**
+   - GitHub Integration Plugin
+   - Docker Plugin
+   - Docker Compose Plugin
 
-#### Environment Variables to Set
-```groovy
-DOCKER_USERNAME = credentials('docker-username')
-DOCKER_PASSWORD = credentials('docker-password')
-PRODUCTION_SERVER = "your-production-server.com"
-PRODUCTION_USER = credentials('production-user')
-```
-
-#### GitHub Webhook Setup
-1. Go to Repository Settings → Webhooks
-2. Add webhook URL: `http://jenkins-server/github-webhook/`
-3. Events: Push events
-4. Active: ✅
-
-### Docker Image Details
-
-- **Base Image**: Node 20 Alpine (builder), Nginx Alpine (production)
-- **Build Process**: Multi-stage build for optimized image size
-- **Port**: 80
-- **Health Check**: HTTP endpoint at `/health`
-
-### Deployment Environments
-
-Use the helper scripts inside `devops/scripts` to manage deployments:
-
-```bash
-# Deploy latest image to development (defaults)
-./devops/scripts/deploy.sh
-
-# Deploy explicit version to production
-./devops/scripts/deploy.sh production v1.2.3
-
-# Roll back to a previous version
-./devops/scripts/rollback.sh v1.2.2
-```
-
-#### Development
-- Automatic deployment on main branch
-- Build triggered by GitHub webhook
-- Health checks enabled
-- Logs available via Docker
-
-#### Production
-- Requires git tag (v*.*.*)
-- Manual approval recommended
-- SSH deployment to production server
-- Zero-downtime deployment with docker-compose
+3. **GitHub Webhook Setup:**
+   - Repository Settings → Webhooks
+   - URL: `http://jenkins-server/github-webhook/`
+   - Events: Push events
 
 ### Local Development with Docker
 
 ```bash
-# Build image locally
-docker build -f devops/docker/Dockerfile -t scrunchcreate:dev .
-
-# Run container
-docker run -p 80:80 scrunchcreate:dev
-
-# Access application
-# Open browser: http://localhost
-```
-
-### Monitoring & Logs
-
-```bash
-# View running containers
-docker-compose -f devops/docker/docker-compose.yml ps
+# Build and start
+docker-compose -f devops/docker/docker-compose.yml up -d --build
 
 # View logs
-docker-compose -f devops/docker/docker-compose.yml logs -f scrunchcreate-web
+docker-compose -f devops/docker/docker-compose.yml logs -f
 
-# Check container health
-docker-compose -f devops/docker/docker-compose.yml logs scrunchcreate-web | grep health
-
-# Stop containers
+# Stop
 docker-compose -f devops/docker/docker-compose.yml down
 ```
 
-### Production Deployment Checklist
-
-- [ ] Configure Jenkins credentials for Docker registry
-- [ ] Set up SSH keys for production server
-- [ ] Update PRODUCTION_SERVER environment variable
-- [ ] Configure GitHub webhook
-- [ ] Set up email notifications for builds
-- [ ] Test build pipeline with a feature branch
-- [ ] Create git tags for version releases
-- [ ] Monitor application after deployment
-
 ### Troubleshooting
-
-**Build fails with npm install error**
-```bash
-# Clear npm cache and rebuild
-npm cache clean --force
-npm install
-```
-
-**Docker image push fails**
-- Verify Docker credentials in Jenkins
-- Check Docker registry availability
-- Ensure image naming follows registry standards
-
-**Health check failing**
-- Check container logs: `docker-compose -f devops/docker/docker-compose.yml logs scrunchcreate-web`
-- Verify Nginx configuration
-- Ensure application is running on port 80
 
 **Container won't start**
 ```bash
-# Check image
-docker inspect scrunchcreate:latest
+# Check logs
+docker-compose -f devops/docker/docker-compose.yml logs
 
-# Rebuild image
+# Rebuild
 docker-compose -f devops/docker/docker-compose.yml build --no-cache
-
-# Start with verbose output
-docker-compose -f devops/docker/docker-compose.yml up (without -d flag)
 ```
 
 ## ✉️ Contact

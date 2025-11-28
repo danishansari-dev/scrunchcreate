@@ -1,38 +1,22 @@
-# Stage 1: Build stage
-FROM node:20-alpine AS builder
+# Simple single-stage build for academic project
+FROM node:20-alpine
 
 WORKDIR /app
 
-# Copy package.json and package-lock.json
+# Copy package files
 COPY package*.json ./
 
 # Install dependencies
 RUN npm install
 
-# Copy the entire project
+# Copy source code
 COPY . .
 
 # Build the React application
 RUN npm run build
 
-# Stage 2: Production stage - use lightweight nginx server
-FROM nginx:alpine
+# Expose port 4173 (Vite preview default)
+EXPOSE 4173
 
-# Install curl for health checks
-RUN apk add --no-cache curl
-
-# Copy built application from builder stage to nginx
-COPY --from=builder /app/dist /usr/share/nginx/html
-
-# Copy nginx configuration
-COPY devops/docker/nginx.conf /etc/nginx/conf.d/default.conf
-
-# Expose port 80
-EXPOSE 80
-
-# Health check
-HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-  CMD curl -f http://localhost/health || exit 1
-
-# Start nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Start Vite preview server (simple for demo)
+CMD ["npm", "run", "preview", "--", "--host", "0.0.0.0"]

@@ -1,55 +1,12 @@
 version: '3.8'
 
 services:
-  # Frontend React Application
+  # Simple React app for academic demo
   scrunchcreate-web:
     build:
       context: ../..
       dockerfile: devops/docker/Dockerfile
     container_name: scrunchcreate-web
     ports:
-      - "80:80"
-    environment:
-      - NODE_ENV=production
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost/health"]
-      interval: 30s
-      timeout: 5s
-      retries: 3
-      start_period: 10s
+      - "4173:4173"
     restart: unless-stopped
-    networks:
-      - scrunchcreate-network
-    volumes:
-      - nginx-logs:/var/log/nginx
-    labels:
-      - "com.scrunchcreate.description=ScrunchCreate Web Application"
-      - "com.scrunchcreate.environment=production"
-
-  # Nginx Reverse Proxy (Optional - for production with multiple services)
-  nginx-proxy:
-    image: nginx:alpine
-    container_name: scrunchcreate-proxy
-    ports:
-      - "8080:8080"
-      - "443:443"
-    volumes:
-      - ./nginx-proxy.conf:/etc/nginx/conf.d/default.conf:ro
-    depends_on:
-      - scrunchcreate-web
-    restart: unless-stopped
-    networks:
-      - scrunchcreate-network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080"]
-      interval: 30s
-      timeout: 5s
-      retries: 3
-
-networks:
-  scrunchcreate-network:
-    driver: bridge
-
-volumes:
-  nginx-logs:
-    driver: local
