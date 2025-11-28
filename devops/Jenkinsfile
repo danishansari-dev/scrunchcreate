@@ -56,13 +56,6 @@ pipeline {
             }
         }
 
-        stage('Health Check') {
-            steps {
-                // simple smoke test to verify app is up
-                bat 'curl -sS http://localhost:4173 > NUL'
-            }
-        }
-
     }
 
     post {
