@@ -33,20 +33,36 @@ pipeline {
         }
 
         stage('Docker Push') {
-    steps {
-        withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-            bat """
-                echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin
-                docker tag %IMAGE_NAME%:%DOCKER_TAG% %IMAGE_NAME%:latest
-                docker push %IMAGE_NAME%:%DOCKER_TAG%
-                docker push %IMAGE_NAME%:latest
-                docker logout
-            """
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    bat """
+                        echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin
+                        docker tag %IMAGE_NAME%:%DOCKER_TAG% %IMAGE_NAME%:latest
+                        docker push %IMAGE_NAME%:%DOCKER_TAG%
+                        docker push %IMAGE_NAME%:latest
+                        docker logout
+                    """
+                }
+            }
+        }
+
+        stage('Deploy to Localhost') {
+            steps {
+                bat """
+                    docker compose -f devops/docker/docker-compose.yml down
+                    docker compose -f devops/docker/docker-compose.yml pull
+                    docker compose -f devops/docker/docker-compose.yml up -d
+                """
+            }
+        }
+
+        stage('Health Check') {
+            steps {
+                // simple smoke test to verify app is up
+                bat 'curl -sS http://localhost:4173 > NUL'
+            }
         }
     }
-}
-    }
-
 
     post {
         always {
@@ -57,6 +73,9 @@ pipeline {
                     echo "Archive skipped: ${err.message}"
                 }
             }
+        }
+        success {
+            echo "Deployed build #${env.BUILD_NUMBER} of ${env.PROJECT_NAME} from commit ${env.GIT_COMMIT}"
         }
     }
 }
