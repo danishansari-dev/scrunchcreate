@@ -1,11 +1,8 @@
 version: '3.8'
 
 services:
-  # Simple React app for academic demo
   scrunchcreate-web:
-    build:
-      context: ../..
-      dockerfile: devops/docker/Dockerfile
+    image: danish491/scrunchcreate:latest
     container_name: scrunchcreate-web
     ports:
       - "4173:4173"
