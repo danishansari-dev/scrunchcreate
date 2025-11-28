@@ -28,7 +28,9 @@ pipeline {
 
         stage('Docker Build') {
             steps {
-                bat 'docker build -f devops/docker/Dockerfile -t ${IMAGE_NAME}:${DOCKER_TAG} .'
+                bat """
+                docker build -f devops/docker/Dockerfile -t ${IMAGE_NAME}:${DOCKER_TAG} .
+                """
             }
         }
 
