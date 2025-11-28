@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         PROJECT_NAME = "scrunchcreate"
-        IMAGE_NAME   = "danishansari/scrunchcreate"
+        IMAGE_NAME   = "danish491/scrunchcreate"
         DOCKER_TAG   = "${env.BUILD_NUMBER}"
     }
 
