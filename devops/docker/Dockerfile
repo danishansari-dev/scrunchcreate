@@ -16,7 +16,7 @@ COPY . .
 RUN npm run build
 
 # Expose port 4173 (Vite preview default)
-EXPOSE 4173
+EXPOSE 6666
 
 # Start Vite preview server (simple for demo)
 CMD ["npm", "run", "preview", "--", "--host", "0.0.0.0"]
