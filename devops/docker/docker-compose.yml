@@ -5,5 +5,5 @@ services:
     image: danish491/scrunchcreate:latest
     container_name: scrunchcreate-web
     ports:
-      - "4173:4173"
+      - "62000:6000"
     restart: unless-stopped
