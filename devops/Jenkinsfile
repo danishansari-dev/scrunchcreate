@@ -62,6 +62,17 @@ pipeline {
                 bat 'curl -sS http://localhost:4173 > NUL'
             }
         }
+
+        stage('Open Browser') {
+    when {
+        branch 'main'   // optional: only for main branch
+    }
+    steps {
+        // Start default browser pointing to the app
+        bat 'start "" "http://localhost:4173"'
+    }
+}
+
     }
 
     post {
