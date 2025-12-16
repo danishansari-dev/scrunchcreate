@@ -1,0 +1,124 @@
+@import '../theme/theme.css';
+
+.header {
+  background-color: var(--color-surface);
+  padding: 16px 24px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  border-bottom: 1px solid var(--color-surface);
+}
+
+.headerContainer {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--color-text-main);
+  text-decoration: none;
+}
+
+.brandText {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 24px;
+  color: var(--color-text-main);
+}
+
+.nav {
+  display: none;
+  align-items: center;
+  gap: 32px;
+  flex: 1;
+  justify-content: center;
+}
+
+@media (min-width: 1024px) {
+  .nav { display: flex; }
+}
+
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  list-style: none;
+}
+
+.navLinks a {
+  color: var(--color-text-muted);
+  text-decoration: none;
+  font-size: 14px;
+  padding: 8px 0;
+  border-bottom: 2px solid transparent;
+  transition: var(--transition-fast);
+}
+
+.navLinks a:hover {
+  color: var(--color-text-main);
+  border-bottom-color: var(--color-primary);
+}
+
+.utilityLinks {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.iconButton {
+  background: none;
+  border: none;
+  padding: 8px;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+}
+
+.iconButton:hover {
+  background: rgba(231,133,146,0.08);
+  color: var(--color-text-main);
+}
+
+.cartBadge {
+  position: relative;
+}
+
+.cartCount {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+  font-size: 11px;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.menuButton {
+  display: block;
+  padding: 8px;
+  background: none;
+  border: none;
+  color: var(--color-text-muted);
+}
+
+.menuButton:hover {
+  background: rgba(231,133,146,0.08);
+  border-radius: var(--radius-sm);
+}
+
+@media (min-width: 1024px) {
+  .menuButton { display: none; }
+}

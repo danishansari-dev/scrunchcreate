@@ -1,12 +1,12 @@
 // Image imports for Scrunch & Create products
-import JimmiChooHairBow from '../../assets/products/Hairbows/Jimmi Choo Hair Bow/Jimmi Choo Hair Bow.jpg';
-import SatinHairBow from '../../assets/products/Hairbows/Satin Hair Bow/Satin Hair Bow.jpg';
-import SatinScarfHairbow from '../../assets/products/Hairbows/Satin Scarf hairbow/Satin Scarf hairbow.jpg';
-import SheerSatinHairBow from '../../assets/products/Hairbows/Sheer Satin Hair Bow/Sheer Satin Hair Bow.jpg';
-import VelvetHairBow from '../../assets/products/Hairbows/Velvet Hair Bow/Velvet Hair Bow.jpg';
+import JimmiChooHairBow from '../assets/products/Hairbows/Jimmi Choo Hair Bow/Jimmi Choo Hair Bow.jpg';
+import SatinHairBow from '../assets/products/Hairbows/Satin Hair Bow/Satin Hair Bow.jpg';
+import SatinScarfHairbow from '../assets/products/Hairbows/Satin Scarf hairbow/Satin Scarf hairbow.jpg';
+import SheerSatinHairBow from '../assets/products/Hairbows/Sheer Satin Hair Bow/Sheer Satin Hair Bow.jpg';
+import VelvetHairBow from '../assets/products/Hairbows/Velvet Hair Bow/Velvet Hair Bow.jpg';
 
-import ClassicScrunchie from '../../assets/products/Scrunchies/Scrunchies/IMG-20250610-WA0058.jpg';
-import TulipScrunchie from '../../assets/products/Scrunchies/Tulip Scrunchie/Tulip Scrunchie.jpg';
+import ClassicScrunchie from '../assets/products/Scrunchies/Scrunchies/IMG-20250610-WA0058.jpg';
+import TulipScrunchie from '../assets/products/Scrunchies/Tulip Scrunchie/Tulip Scrunchie.jpg';
 
 export const PRODUCTS = [
   {
@@ -73,5 +73,3 @@ export const PRODUCTS = [
     description: 'Textured tulip-style scrunchie that adds volume and a subtle statement to ponytails.'
   },
 ];
-
-

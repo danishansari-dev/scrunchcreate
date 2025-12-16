@@ -1,9 +1,9 @@
 import React from 'react'
 import styles from './ProductList.module.css'
 import { useNavigate } from 'react-router-dom'
-import { useCart } from '../cart/CartContext'
+import { useCart } from '../components/CartContext'
 import { AnimatePresence, motion } from 'framer-motion'
-import { useToast } from '../toast/ToastContext'
+import { useToast } from '../components/ToastContext'
 
 export default function ProductList({ title, products = [], showViewAllLink = false, viewAllHref = '/products' }) {
   const navigate = useNavigate()
@@ -64,5 +64,3 @@ export default function ProductList({ title, products = [], showViewAllLink = fa
     </section>
   )
 }
-
-

@@ -27,7 +27,6 @@ export function CartProvider({ children }) {
   }, [items])
 
   const addToCart = (product, qty = 1) => {
-    // Add product to cart. No authentication required for client-side demo cart.
     setItems((prev) => {
       const idx = prev.findIndex((p) => p.id === product.id)
       if (idx !== -1) {
@@ -82,5 +81,3 @@ export function useCart() {
   if (!ctx) throw new Error('useCart must be used within CartProvider')
   return ctx
 }
-
-

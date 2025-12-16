@@ -1,0 +1,134 @@
+@import '../theme/theme.css';
+
+.footer {
+  background: var(--color-surface);
+  color: var(--color-text-main);
+  padding: 64px 0 0;
+  border-top: 1px solid var(--color-border-soft);
+}
+
+.main {
+  padding: 0 24px;
+  margin-bottom: 40px;
+}
+
+.grid {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 48px;
+  }
+}
+
+.logoSection {
+  display: grid;
+  gap: 20px;
+}
+
+.brand {
+  color: var(--color-text-main);
+  font-family: var(--font-heading);
+  font-size: 24px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.description {
+  color: var(--color-text-muted);
+  margin: 0;
+  font-size: 14px;
+}
+
+.socials {
+  display: flex;
+  gap: 16px;
+}
+
+.socialLink {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--color-surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border-soft);
+}
+
+.socialLink:hover {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--color-on-primary);
+}
+
+.section {
+  display: grid;
+  gap: 16px;
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: 16px;
+  font-family: var(--font-heading);
+}
+
+.linkList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 12px;
+}
+
+.linkList a {
+  color: var(--color-text-muted);
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.linkList a:hover {
+  color: var(--color-primary);
+}
+
+.bottom {
+  border-top: 1px solid var(--color-border-soft);
+  background: var(--color-surface-soft);
+}
+
+.bottomInner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.copy {
+  color: var(--color-text-muted);
+  font-size: 14px;
+}
+
+.bottomLinks {
+  display: flex;
+  gap: 24px;
+}
+
+.bottomLink {
+  color: var(--color-text-muted);
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.bottomLink:hover {
+  color: var(--color-primary);
+}

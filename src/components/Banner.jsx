@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import styles from './Banner.module.css'
 
-import slide1 from '../../assets/slider1.png'
-import slide2 from '../../assets/slider2.png'
-import slide3 from '../../assets/slider3.png'
+import slide1 from '../assets/slider1.png'
+import slide2 from '../assets/slider2.png'
+import slide3 from '../assets/slider3.png'
 
 const AUTOPLAY_MS = 4000
 const SWIPE_THRESHOLD_PX = 60
@@ -108,5 +108,3 @@ export default function Banner() {
     </section>
   )
 }
-
-

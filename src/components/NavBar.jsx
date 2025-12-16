@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from './NavBar.module.css';
-import { useCart } from '../cart/CartContext';
-import { useAuth } from '../../context/AuthContext';
+import { useCart } from '../components/CartContext';
+import { useAuth } from '../context/AuthContext';
 
 const NavBar = () => {
   const { totalItems } = useCart();
