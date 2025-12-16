@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import NavBar from '../../componets/navbar/NavBar'
+import NavBar from '../../components/NavBar'
 import styles from './Profile.module.css'
 import { useAuth } from '../../context/AuthContext'
 

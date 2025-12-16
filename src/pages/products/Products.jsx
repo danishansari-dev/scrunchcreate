@@ -1,13 +1,13 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
-import NavBar from '../../componets/navbar/NavBar'
+import NavBar from '../../components/NavBar'
 import styles from './Products.module.css'
-import { useCart } from '../../componets/cart/CartContext'
+import { useCart } from '../../components/CartContext'
 import { useLocation, useNavigate } from 'react-router-dom'
-import FilterSidebar from '../../componets/filtersidebar/FilterSidebar'
-import { PRODUCTS } from '../../componets/productlist/productsData'
-import Footer from '../../componets/footer/Footer'
+import FilterSidebar from '../../components/FilterSidebar'
+import { PRODUCTS } from '../../components/productsData'
+import Footer from '../../components/Footer'
 import { AnimatePresence, motion } from 'framer-motion'
-import { useToast } from '../../componets/toast/ToastContext'
+import { useToast } from '../../components/ToastContext'
     
 const DUMMY_PRODUCTS = PRODUCTS
 
