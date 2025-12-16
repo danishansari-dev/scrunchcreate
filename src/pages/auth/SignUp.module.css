@@ -1,41 +1,32 @@
-:root {
-  --bg: #0b0b0b;
-  --surface: #121212;
-  --border: #222222;
-  --text: #eaeaea;
-  --muted: #a3a3a3;
-  --accent: #ff002e;
-}
+@import '../../theme/theme.css';
 
 .page {
-  background: var(--bg);
-  min-height: 100vh;
-  color: var(--text);
+  padding: 32px 16px;
   display: grid;
   place-items: start center;
-  padding: 32px 16px;
 }
 
 .card {
   width: 100%;
   max-width: 420px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 14px;
+  background: var(--color-surface-soft);
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-lg);
   padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 12px;
+  box-shadow: var(--shadow-soft);
 }
 
-.title { margin: 0; font-size: 22px; }
-.subtitle { margin: 0 0 6px; color: var(--muted); }
+.title { margin: 0; font-size: 22px; color: var(--color-text-main); }
+.subtitle { margin: 0 0 6px; color: var(--color-text-muted); }
 
 .error {
   background: rgba(255, 0, 46, 0.08);
   border: 1px solid rgba(255, 0, 46, 0.24);
-  color: #fff;
-  border-radius: 10px;
+  color: var(--color-error);
+  border-radius: var(--radius-md);
   padding: 8px 10px;
 }
 
@@ -43,26 +34,24 @@
 .input {
   height: 40px;
   padding: 0 12px;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  background: #0e0e0e;
-  color: var(--text);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border-soft);
+  background: var(--color-surface);
+  color: var(--color-text-main);
   outline: none;
 }
-.input:focus { border-color: #2b2b2b; }
+.input:focus { border-color: var(--color-primary); }
 
 .button {
   height: 42px;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   border: none;
-  background: var(--accent);
-  color: #fff;
+  background: var(--color-primary);
+  color: var(--color-on-primary);
   cursor: pointer;
+  font-weight: 600;
 }
-.button:hover { filter: brightness(1.05); }
 
-.inlineText { color: var(--muted); margin: 0; }
-.link { color: #fff; text-decoration: none; }
+.inlineText { color: var(--color-text-muted); margin: 0; }
+.link { color: var(--color-primary); text-decoration: none; }
 .link:hover { text-decoration: underline; }
-
-

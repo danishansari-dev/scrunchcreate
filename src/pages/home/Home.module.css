@@ -1,0 +1,12 @@
+@import '../../theme/theme.css';
+
+.home-shell {
+  padding: 24px 16px 48px;
+}
+
+.home-shell-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  gap: 32px;
+}

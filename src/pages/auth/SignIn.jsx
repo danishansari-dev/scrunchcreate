@@ -1,84 +1,61 @@
-import React, { useState, useEffect } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
-import NavBar from '../../components/NavBar'
+import React, { useState } from 'react'
 import styles from './SignIn.module.css'
 import { useAuth } from '../../context/AuthContext'
+import { useNavigate, Link } from 'react-router-dom'
 
 export default function SignIn() {
+  const { signIn } = useAuth()
   const navigate = useNavigate()
-  const { login, isAuthenticated } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate('/')
-    }
-  }, [isAuthenticated, navigate])
-
-  const handleSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault()
     setError('')
-
-    const trimmedEmail = email.trim().toLowerCase()
-    const trimmedPassword = password.trim()
-    if (!trimmedEmail || !trimmedPassword) {
-      setError('Enter email and password.')
+    const ok = await signIn(email, password)
+    if (!ok) {
+      setError('Invalid email or password')
       return
     }
-    const users = JSON.parse(localStorage.getItem('users') || '[]')
-    const match = users.find((u) => u.email === trimmedEmail && u.password === trimmedPassword)
-    if (!match) {
-      setError('Invalid credentials.')
-      return
-    }
-    login(match)
-    navigate('/')
+    navigate('/profile')
   }
 
   return (
-    <>
-      <NavBar />
-      <main className={styles.page}>
-        <form className={styles.card} onSubmit={handleSubmit}>
-          <h1 className={styles.title}>Welcome Back</h1>
-          <p className={styles.subtitle}>Sign in to continue.</p>
+    <main className={styles.page}>
+      <form className={styles.card} onSubmit={onSubmit}>
+        <h1 className={styles.title}>Sign in</h1>
+        <p className={styles.subtitle}>Access your account and saved styles.</p>
 
-          {error ? <div className={styles.error} role="alert">{error}</div> : null}
+        {error ? <div className={styles.error}>{error}</div> : null}
 
-          <label className={styles.label}>
-            <span>Email</span>
-            <input
-              className={styles.input}
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@example.com"
-            />
-          </label>
+        <label className={styles.label}>
+          Email
+          <input
+            className={styles.input}
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </label>
 
-          <label className={styles.label}>
-            <span>Password</span>
-            <input
-              className={styles.input}
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Your password"
-            />
-          </label>
+        <label className={styles.label}>
+          Password
+          <input
+            className={styles.input}
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </label>
 
-          <button className={styles.button} type="submit">Sign In</button>
-
-          <p className={styles.inlineText}>
-            New here?{' '}
-            <Link className={styles.link} to="/signup">Create an account</Link>
-          </p>
-        </form>
-      </main>
-    </>
+        <button type="submit" className={styles.button}>Continue</button>
+        <p className={styles.inlineText}>
+          New here? <Link to="/signup" className={styles.link}>Create an account</Link>
+        </p>
+      </form>
+    </main>
   )
 }
-
-

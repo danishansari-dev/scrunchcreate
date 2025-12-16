@@ -8,7 +8,6 @@
 
 main {
   flex: 1;
-  background-color: var(--color-surface);
   margin: 0;
   padding: 0;
 }
@@ -20,21 +19,21 @@ main {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--bg-primary);
+  background: var(--color-surface);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--border);
+  background: var(--color-border-soft);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--accent);
+  background: var(--color-primary);
 }
 
 /* Global link styling */
 a {
-  color: var(--accent);
+  color: var(--color-primary);
   text-decoration: none;
 }
 
@@ -44,27 +43,31 @@ a:hover {
 
 /* Global button styling */
 button {
-  background: var(--accent);
-  color: #ffffff;
+  background: var(--color-primary);
+  color: var(--color-on-primary);
   border: 1px solid transparent;
   cursor: pointer;
   transition: background-color 0.2s, border-color 0.2s, opacity 0.2s;
 }
 
 button:hover {
-  background: var(--accent-hover);
-  border-color: #111;
+  background: var(--color-primary-strong);
+  border-color: var(--color-border-strong);
   opacity: 1;
 }
 
 /* Input styling */
-input, select, textarea {
-  background: var(--bg-surface);
-  color: var(--text-primary);
-  border: 1px solid var(--border);
+input,
+select,
+textarea {
+  background: var(--color-surface);
+  color: var(--color-text-main);
+  border: 1px solid var(--color-border-soft);
 }
 
-input:focus, select:focus, textarea:focus {
-  border-color: var(--accent);
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--color-primary);
   outline: none;
 }
