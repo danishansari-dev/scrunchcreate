@@ -45,14 +45,16 @@ a:hover {
 /* Global button styling */
 button {
   background: var(--accent);
-  color: var(--text-primary);
-  border: none;
+  color: #ffffff;
+  border: 1px solid transparent;
   cursor: pointer;
-  transition: opacity 0.2s;
+  transition: background-color 0.2s, border-color 0.2s, opacity 0.2s;
 }
 
 button:hover {
-  opacity: 0.9;
+  background: var(--accent-hover);
+  border-color: #111;
+  opacity: 1;
 }
 
 /* Input styling */
