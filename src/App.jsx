@@ -6,6 +6,8 @@ import SignIn from './pages/auth/SignIn'
 import SignUp from './pages/auth/SignUp'
 import Profile from './pages/profile/Profile'
 import Cart from './pages/cart/Cart'
+import PrivacyPolicy from './pages/legal/PrivacyPolicy'
+import TermsAndConditions from './pages/legal/TermsAndConditions'
 import ProtectedRoute from './components/ProtectedRoute'
 import Layout from './components/Layout'
 
@@ -26,6 +28,8 @@ export default function App() {
         } 
       />
       <Route path='/cart' element={<Cart />} />
+      <Route path='/privacy-policy' element={<PrivacyPolicy />} />
+      <Route path='/terms-and-conditions' element={<TermsAndConditions />} />
       </Route>
     </Routes>
   )

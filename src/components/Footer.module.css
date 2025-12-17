@@ -229,11 +229,15 @@
   flex-wrap: wrap;
 }
 
-.bottomLinkDisabled {
+.bottomLink {
   color: var(--color-text-muted);
+  text-decoration: none;
   font-size: 14px;
-  opacity: 0.6;
-  cursor: not-allowed;
+  transition: var(--transition-fast);
+}
+
+.bottomLink:hover {
+  color: var(--color-primary);
 }
 
 @media (max-width: 767px) {

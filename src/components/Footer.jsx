@@ -126,8 +126,8 @@ export default function Footer() {
             <span className={styles.trustReminder}>Handmade in India • Cash on Delivery Available</span>
           </div>
           <nav className={styles.bottomLinks} aria-label="Legal">
-            <span className={styles.bottomLinkDisabled}>Privacy Policy (Coming Soon)</span>
-            <span className={styles.bottomLinkDisabled}>Terms & Conditions (Coming Soon)</span>
+            <Link to="/privacy-policy" className={styles.bottomLink}>Privacy Policy</Link>
+            <Link to="/terms-and-conditions" className={styles.bottomLink}>Terms & Conditions</Link>
           </nav>
         </div>
       </section>
