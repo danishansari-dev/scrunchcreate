@@ -6,23 +6,23 @@ import { PRODUCTS } from '../../components/productsData'
 export default function Home() {
   return (
     <>
-      <Banner />
+     <Banner /> 
       <div className="home-shell">
         <div className="home-shell-inner">
-          <ProductList
-            title="Hair Bows Collection"
-            products={PRODUCTS.filter(p => p.category === 'Hairbows')}
-            showViewAllLink
-            viewAllHref="/products?category=Hairbows"
-          />
-          <ProductList
-            title="Scrunchies Collection"
-            products={PRODUCTS.filter(p => p.category === 'Scrunchies')}
-            showViewAllLink
-            viewAllHref="/products?category=Scrunchies"
-          />
-        </div>
-      </div>
+         <ProductList
+           title="Hair Bows Collection"
+           products={PRODUCTS.filter(p => p.category === 'Hairbows')}
+           showViewAllLink
+           viewAllHref="/products?category=Hairbows"
+         />
+         <ProductList
+           title="Scrunchies Collection"
+           products={PRODUCTS.filter(p => p.category === 'Scrunchies')}
+           showViewAllLink
+           viewAllHref="/products?category=Scrunchies"
+         />
+       </div>
+     </div>
     </>
   )
 }

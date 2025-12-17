@@ -23,50 +23,50 @@ export default function SignUp() {
   }
 
   return (
-    <main className={styles.page}>
+      <main className={styles.page}>
       <form className={styles.card} onSubmit={onSubmit}>
         <h1 className={styles.title}>Create account</h1>
         <p className={styles.subtitle}>Join Scrunch &amp; Create for curated accessories.</p>
 
         {error ? <div className={styles.error}>{error}</div> : null}
 
-        <label className={styles.label}>
+          <label className={styles.label}>
           Name
-          <input
-            className={styles.input}
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            <input
+              className={styles.input}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
             required
-          />
-        </label>
+            />
+          </label>
 
-        <label className={styles.label}>
+          <label className={styles.label}>
           Email
-          <input
-            className={styles.input}
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            <input
+              className={styles.input}
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             required
-          />
-        </label>
+            />
+          </label>
 
-        <label className={styles.label}>
+          <label className={styles.label}>
           Password
-          <input
-            className={styles.input}
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            <input
+              className={styles.input}
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             required
-          />
-        </label>
+            />
+          </label>
 
         <button type="submit" className={styles.button}>Create account</button>
-        <p className={styles.inlineText}>
+          <p className={styles.inlineText}>
           Already have an account? <Link to="/signin" className={styles.link}>Sign in</Link>
-        </p>
-      </form>
-    </main>
+          </p>
+        </form>
+      </main>
   )
 }

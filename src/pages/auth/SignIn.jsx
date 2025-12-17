@@ -22,40 +22,40 @@ export default function SignIn() {
   }
 
   return (
-    <main className={styles.page}>
+      <main className={styles.page}>
       <form className={styles.card} onSubmit={onSubmit}>
         <h1 className={styles.title}>Sign in</h1>
         <p className={styles.subtitle}>Access your account and saved styles.</p>
 
         {error ? <div className={styles.error}>{error}</div> : null}
 
-        <label className={styles.label}>
+          <label className={styles.label}>
           Email
-          <input
-            className={styles.input}
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            <input
+              className={styles.input}
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             required
-          />
-        </label>
+            />
+          </label>
 
-        <label className={styles.label}>
+          <label className={styles.label}>
           Password
-          <input
-            className={styles.input}
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            <input
+              className={styles.input}
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             required
-          />
-        </label>
+            />
+          </label>
 
         <button type="submit" className={styles.button}>Continue</button>
-        <p className={styles.inlineText}>
+          <p className={styles.inlineText}>
           New here? <Link to="/signup" className={styles.link}>Create an account</Link>
-        </p>
-      </form>
-    </main>
+          </p>
+        </form>
+      </main>
   )
 }

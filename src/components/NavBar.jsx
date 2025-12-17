@@ -33,12 +33,13 @@ const NavBar = () => {
         
         <nav className={styles.nav}>
           <ul className={styles.navLinks}>
-            <li><Link to="/products">Shop All</Link></li>
-            <li><Link to="/products/hair-bows">HAIR BOWS</Link></li>
+            <li><Link to="/products">Shop</Link></li>
+            <li><Link to="/products/hair-bows">Hair Bows</Link></li>
             <li><Link to="/products/scrunchies">Scrunchies</Link></li>
-            <li><Link to="/products/kids">KIDS</Link></li>
-            <li><Link to="/best sellers">BEST SELLERS</Link></li>
-            <li><Link to="/gifting">GIFTING</Link></li>
+            <li><Link to="/products/combo">Combo</Link></li>
+            <li><Link to="/products/earings">Earings</Link></li>
+            <li><Link to="/products/hamper">Hamper</Link></li>
+            <li><Link to="/products/paraandi">Paraandi</Link></li>
           </ul>
         </nav>
         
