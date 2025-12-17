@@ -6,6 +6,7 @@ import FilterSidebar from '../../components/FilterSidebar'
 import { PRODUCTS } from '../../components/productsData'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useToast } from '../../components/ToastContext'
+import { createSlug } from '../../utils/productUtils'
     
 const DUMMY_PRODUCTS = PRODUCTS
 
@@ -93,14 +94,20 @@ export default function Products() {
                   exit={{ opacity: 0, y: 8, scale: 0.98 }}
                 transition={{ delay: idx * 0.05, type: 'spring', stiffness: 400, damping: 30 }}
                 >
-                  <div 
+                  <button
                     className={styles.thumb} 
                     style={{ backgroundImage: `url(${product.image})` }}
-                    aria-hidden="true" 
+                    aria-label={`View ${product.title}`}
+                    onClick={() => navigate(`/product/${createSlug(product.title)}`)}
                   />
                   <div className={styles.cardBody}>
                     <div className={styles.titleRow}>
-                      <h3 className={styles.cardTitle}>{product.title}</h3>
+                      <button
+                        className={styles.titleButton}
+                        onClick={() => navigate(`/product/${createSlug(product.title)}`)}
+                      >
+                        <h3 className={styles.cardTitle}>{product.title}</h3>
+                      </button>
                       {product.tag ? <span className={styles.badge}>{product.tag}</span> : null}
                     </div>
                     <p className={styles.description}>{product.description}</p>
@@ -113,7 +120,8 @@ export default function Products() {
                     <button
                       type="button"
                       className={styles.addToCart}
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.stopPropagation()
                         const ok = addToCart(product, 1)
                         if (!ok) navigate('/signin')
                         else show('Added to cart', 'success')

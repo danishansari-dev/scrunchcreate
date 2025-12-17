@@ -6,6 +6,7 @@ import SignIn from './pages/auth/SignIn'
 import SignUp from './pages/auth/SignUp'
 import Profile from './pages/profile/Profile'
 import Cart from './pages/cart/Cart'
+import ProductDetail from './pages/product/ProductDetail'
 import PrivacyPolicy from './pages/legal/PrivacyPolicy'
 import TermsAndConditions from './pages/legal/TermsAndConditions'
 import ProtectedRoute from './components/ProtectedRoute'
@@ -17,6 +18,7 @@ export default function App() {
       <Route element={<Layout />}>
       <Route path='/' element={<Home />} />
       <Route path='/products' element={<Products />} />
+      <Route path='/product/:slug' element={<ProductDetail />} />
       <Route path='/signin' element={<SignIn />} />
       <Route path='/signup' element={<SignUp />} />
       <Route 

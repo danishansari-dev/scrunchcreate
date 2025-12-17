@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { useCart } from '../components/CartContext'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useToast } from '../components/ToastContext'
+import { createSlug } from '../utils/productUtils'
 
 export default function ProductList({ title, products = [], showViewAllLink = false, viewAllHref = '/products' }) {
   const navigate = useNavigate()
@@ -32,12 +33,8 @@ export default function ProductList({ title, products = [], showViewAllLink = fa
               <button
                 className={styles.thumb}
                 style={{ backgroundImage: `url(${p.image})` }}
-                aria-label={`Open ${p.title}`}
-                onClick={() => {
-                  const params = new URLSearchParams()
-                  if (p.category) params.set('category', p.category)
-                  navigate(`/products?${params.toString()}`)
-                }}
+                aria-label={`View ${p.title}`}
+                onClick={() => navigate(`/product/${createSlug(p.title)}`)}
               />
               <div className={styles.title}>{p.title}</div>
               <div className={styles.meta}>
