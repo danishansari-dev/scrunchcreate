@@ -1,0 +1,100 @@
+@import '../../theme/theme.css';
+
+.page {
+    padding: 48px 16px 64px;
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.container {
+    max-width: 520px;
+    text-align: center;
+}
+
+.icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 24px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #4caf50 0%, #81c784 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(76, 175, 80, 0.3);
+}
+
+.iconSvg {
+    width: 40px;
+    height: 40px;
+    stroke: white;
+    stroke-width: 3;
+    fill: none;
+}
+
+.title {
+    margin: 0 0 12px;
+    font-size: 28px;
+    color: var(--color-text-main);
+}
+
+.subtitle {
+    margin: 0 0 24px;
+    font-size: 16px;
+    color: var(--color-text-muted);
+    line-height: 1.5;
+}
+
+.orderId {
+    display: inline-block;
+    padding: 8px 16px;
+    background: var(--color-surface-soft);
+    border: 1px solid var(--color-border-soft);
+    border-radius: var(--radius-md);
+    font-family: monospace;
+    font-size: 14px;
+    color: var(--color-text-main);
+    margin-bottom: 32px;
+}
+
+.actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.primaryBtn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: var(--radius-md);
+    background: var(--color-primary);
+    color: var(--color-on-primary);
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+}
+
+.primaryBtn:hover {
+    opacity: 0.9;
+}
+
+.secondaryBtn {
+    padding: 12px 24px;
+    border: 1px solid var(--color-border-soft);
+    border-radius: var(--radius-md);
+    background: transparent;
+    color: var(--color-text-main);
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.2s ease;
+}
+
+.secondaryBtn:hover {
+    background: var(--color-surface-soft);
+}

@@ -1,0 +1,42 @@
+@import '../theme/theme.css';
+
+.section {
+  display: grid;
+  gap: 32px;
+  padding: 48px 24px;
+  margin: 0;
+  background: var(--color-surface);
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--color-text-main);
+  font-family: var(--font-heading);
+}
+
+.viewAll {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: var(--radius-md);
+}
+
+.grid {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 24px;
+  margin: 0;
+}

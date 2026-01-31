@@ -1,0 +1,487 @@
+[
+  {
+    "id": "rose-flowerjewellery-yellow",
+    "slug": "rose-flowerjewellery-yellow",
+    "name": "Rose Flowerjewellery Yellow",
+    "category": "FlowerJewellery",
+    "type": "Rose",
+    "color": "Yellow",
+    "price": 0,
+    "images": [
+      "/assets/products/FlowerJewellery/Rose/Yellow/sc-flowerJewellery-rose-yellow-1.jpg",
+      "/assets/products/FlowerJewellery/Rose/Yellow/sc-flowerJewellery-rose-yellow-2.jpg",
+      "/assets/products/FlowerJewellery/Rose/Yellow/sc-flowerJewellery-rose-yellow-3.jpg",
+      "/assets/products/FlowerJewellery/Rose/Yellow/sc-flowerJewellery-rose-yellow-4.jpg",
+      "/assets/products/FlowerJewellery/Rose/Yellow/sc-flowerJewellery-rose-yellow-5.jpg"
+    ]
+  },
+  {
+    "id": "gifthamper",
+    "slug": "gifthamper",
+    "name": "Gifthamper",
+    "category": "GiftHamper",
+    "type": null,
+    "color": null,
+    "price": 1299,
+    "images": [
+      "/assets/products/GiftHamper/sc-gifthamper-1.jpg",
+      "/assets/products/GiftHamper/sc-gifthamper-2.jpg",
+      "/assets/products/GiftHamper/sc-gifthamper-3.jpg",
+      "/assets/products/GiftHamper/sc-gifthamper-4.jpg"
+    ]
+  },
+  {
+    "id": "jimmychoo-hairbow-yellow",
+    "slug": "jimmychoo-hairbow-yellow",
+    "name": "Jimmychoo Hairbow Yellow",
+    "category": "HairBow",
+    "type": "JimmyChoo",
+    "color": "Yellow",
+    "price": 899,
+    "images": [
+      "/assets/products/HairBow/JimmyChoo/Yellow/sc-hairbow-jimmychoo-yellow-1.jpg",
+      "/assets/products/HairBow/JimmyChoo/Yellow/sc-hairbow-jimmychoo-yellow-10.jpg",
+      "/assets/products/HairBow/JimmyChoo/Yellow/sc-hairbow-jimmychoo-yellow-11.jpg",
+      "/assets/products/HairBow/JimmyChoo/Yellow/sc-hairbow-jimmychoo-yellow-12.jpg",
+      "/assets/products/HairBow/JimmyChoo/Yellow/sc-hairbow-jimmychoo-yellow-13.jpg",
+      "/assets/products/HairBow/JimmyChoo/Yellow/sc-hairbow-jimmychoo-yellow-14.jpg",
+      "/assets/products/HairBow/JimmyChoo/Yellow/sc-hairbow-jimmychoo-yellow-15.jpg",
+      "/assets/products/HairBow/JimmyChoo/Yellow/sc-hairbow-jimmychoo-yellow-16.jpg",
+      "/assets/products/HairBow/JimmyChoo/Yellow/sc-hairbow-jimmychoo-yellow-17.jpg",
+      "/assets/products/HairBow/JimmyChoo/Yellow/sc-hairbow-jimmychoo-yellow-18.jpg",
+      "/assets/products/HairBow/JimmyChoo/Yellow/sc-hairbow-jimmychoo-yellow-19.jpg",
+      "/assets/products/HairBow/JimmyChoo/Yellow/sc-hairbow-jimmychoo-yellow-2.jpg",
+      "/assets/products/HairBow/JimmyChoo/Yellow/sc-hairbow-jimmychoo-yellow-20.jpg",
+      "/assets/products/HairBow/JimmyChoo/Yellow/sc-hairbow-jimmychoo-yellow-21.jpg",
+      "/assets/products/HairBow/JimmyChoo/Yellow/sc-hairbow-jimmychoo-yellow-22.jpg",
+      "/assets/products/HairBow/JimmyChoo/Yellow/sc-hairbow-jimmychoo-yellow-23.jpg",
+      "/assets/products/HairBow/JimmyChoo/Yellow/sc-hairbow-jimmychoo-yellow-24.jpg",
+      "/assets/products/HairBow/JimmyChoo/Yellow/sc-hairbow-jimmychoo-yellow-25.jpg",
+      "/assets/products/HairBow/JimmyChoo/Yellow/sc-hairbow-jimmychoo-yellow-26.jpg",
+      "/assets/products/HairBow/JimmyChoo/Yellow/sc-hairbow-jimmychoo-yellow-27.jpg",
+      "/assets/products/HairBow/JimmyChoo/Yellow/sc-hairbow-jimmychoo-yellow-28.jpg",
+      "/assets/products/HairBow/JimmyChoo/Yellow/sc-hairbow-jimmychoo-yellow-29.jpg",
+      "/assets/products/HairBow/JimmyChoo/Yellow/sc-hairbow-jimmychoo-yellow-3.jpg",
+      "/assets/products/HairBow/JimmyChoo/Yellow/sc-hairbow-jimmychoo-yellow-30.jpg",
+      "/assets/products/HairBow/JimmyChoo/Yellow/sc-hairbow-jimmychoo-yellow-31.jpg",
+      "/assets/products/HairBow/JimmyChoo/Yellow/sc-hairbow-jimmychoo-yellow-4.jpg",
+      "/assets/products/HairBow/JimmyChoo/Yellow/sc-hairbow-jimmychoo-yellow-5.jpg",
+      "/assets/products/HairBow/JimmyChoo/Yellow/sc-hairbow-jimmychoo-yellow-6.jpg",
+      "/assets/products/HairBow/JimmyChoo/Yellow/sc-hairbow-jimmychoo-yellow-7.jpg",
+      "/assets/products/HairBow/JimmyChoo/Yellow/sc-hairbow-jimmychoo-yellow-8.jpg",
+      "/assets/products/HairBow/JimmyChoo/Yellow/sc-hairbow-jimmychoo-yellow-9.jpg"
+    ]
+  },
+  {
+    "id": "satin-hairbow-white",
+    "slug": "satin-hairbow-white",
+    "name": "Satin Hairbow White",
+    "category": "HairBow",
+    "type": "Satin",
+    "color": "White",
+    "price": 899,
+    "images": [
+      "/assets/products/HairBow/Satin/White/IMG-20250611-WA0006.jpg"
+    ]
+  },
+  {
+    "id": "scarf-hairbow-petrol",
+    "slug": "scarf-hairbow-petrol",
+    "name": "Scarf Hairbow Petrol",
+    "category": "HairBow",
+    "type": "Scarf",
+    "color": "Petrol",
+    "price": 899,
+    "images": [
+      "/assets/products/HairBow/Scarf/Petrol/Satin_Scarf_hairbow.png",
+      "/assets/products/HairBow/Scarf/Petrol/sc-hairbow-scarf-petrol-1.jpg"
+    ]
+  },
+  {
+    "id": "scarf-hairbow-yellow",
+    "slug": "scarf-hairbow-yellow",
+    "name": "Scarf Hairbow Yellow",
+    "category": "HairBow",
+    "type": "Scarf",
+    "color": "Yellow",
+    "price": 899,
+    "images": [
+      "/assets/products/HairBow/Scarf/Yellow/IMG_20250610_WA0045.png",
+      "/assets/products/HairBow/Scarf/Yellow/sc-hairbow-scarf-yellow-1.jpg",
+      "/assets/products/HairBow/Scarf/Yellow/sc-hairbow-scarf-yellow-2.jpg"
+    ]
+  },
+  {
+    "id": "velvet-hairbow-black",
+    "slug": "velvet-hairbow-black",
+    "name": "Velvet Hairbow Black",
+    "category": "HairBow",
+    "type": "Velvet",
+    "color": "Black",
+    "price": 899,
+    "images": [
+      "/assets/products/HairBow/Velvet/Black/sc-hairbow-velvet-black-1.jpg"
+    ]
+  },
+  {
+    "id": "velvet-hairbow-red",
+    "slug": "velvet-hairbow-red",
+    "name": "Velvet Hairbow Red",
+    "category": "HairBow",
+    "type": "Velvet",
+    "color": "Red",
+    "price": 899,
+    "images": [
+      "/assets/products/HairBow/Velvet/Red/Velvet_Hair_Bow.png",
+      "/assets/products/HairBow/Velvet/Red/sc-hairbow-velvet-red-1.jpg",
+      "/assets/products/HairBow/Velvet/Red/sc-hairbow-velvet-red-2.jpg",
+      "/assets/products/HairBow/Velvet/Red/sc-hairbow-velvet-red-3.jpg",
+      "/assets/products/HairBow/Velvet/Red/sc-hairbow-velvet-red-4.jpg",
+      "/assets/products/HairBow/Velvet/Red/sc-hairbow-velvet-red-5.jpg"
+    ]
+  },
+  {
+    "id": "classic-scrunchie-brown",
+    "slug": "classic-scrunchie-brown",
+    "name": "Classic Scrunchie Brown",
+    "category": "Scrunchie",
+    "type": "Classic",
+    "color": "Brown",
+    "price": 499,
+    "images": [
+      "/assets/products/Scrunchie/Classic/Brown/sc-scrunchie-classic-brown-1.jpg"
+    ]
+  },
+  {
+    "id": "classic-scrunchie-golden",
+    "slug": "classic-scrunchie-golden",
+    "name": "Classic Scrunchie Golden",
+    "category": "Scrunchie",
+    "type": "Classic",
+    "color": "Golden",
+    "price": 499,
+    "images": [
+      "/assets/products/Scrunchie/Classic/Golden/sc-scrunchie-classic-golden-1.jpg",
+      "/assets/products/Scrunchie/Classic/Golden/sc-scrunchie-classic-golden-2.jpg"
+    ]
+  },
+  {
+    "id": "classic-scrunchie-grey",
+    "slug": "classic-scrunchie-grey",
+    "name": "Classic Scrunchie Grey",
+    "category": "Scrunchie",
+    "type": "Classic",
+    "color": "Grey",
+    "price": 499,
+    "images": [
+      "/assets/products/Scrunchie/Classic/Grey/sc-scrunchie-classic-grey-1.jpg"
+    ]
+  },
+  {
+    "id": "classic-scrunchie-lavender",
+    "slug": "classic-scrunchie-lavender",
+    "name": "Classic Scrunchie Lavender",
+    "category": "Scrunchie",
+    "type": "Classic",
+    "color": "Lavender",
+    "price": 499,
+    "images": [
+      "/assets/products/Scrunchie/Classic/Lavender/sc-scrunchie-classic-lavender-1.jpg"
+    ]
+  },
+  {
+    "id": "classic-scrunchie-metallic-olive",
+    "slug": "classic-scrunchie-metallic-olive",
+    "name": "Classic Scrunchie Metallic Olive",
+    "category": "Scrunchie",
+    "type": "Classic",
+    "color": "Metallic_Olive",
+    "price": 499,
+    "images": [
+      "/assets/products/Scrunchie/Classic/Metallic_Olive/sc-scrunchie-classic-metallic_olive-1.jpg"
+    ]
+  },
+  {
+    "id": "classic-scrunchie-petrol",
+    "slug": "classic-scrunchie-petrol",
+    "name": "Classic Scrunchie Petrol",
+    "category": "Scrunchie",
+    "type": "Classic",
+    "color": "Petrol",
+    "price": 499,
+    "images": [
+      "/assets/products/Scrunchie/Classic/Petrol/sc-scrunchie-classic-petrol-1.jpg",
+      "/assets/products/Scrunchie/Classic/Petrol/sc-scrunchie-classic-petrol-2.jpg"
+    ]
+  },
+  {
+    "id": "classic-scrunchie-white",
+    "slug": "classic-scrunchie-white",
+    "name": "Classic Scrunchie White",
+    "category": "Scrunchie",
+    "type": "Classic",
+    "color": "White",
+    "price": 499,
+    "images": [
+      "/assets/products/Scrunchie/Classic/White/sc-scrunchie-classic-white-1.jpg"
+    ]
+  },
+  {
+    "id": "classic-scrunchie-wine",
+    "slug": "classic-scrunchie-wine",
+    "name": "Classic Scrunchie Wine",
+    "category": "Scrunchie",
+    "type": "Classic",
+    "color": "Wine",
+    "price": 499,
+    "images": [
+      "/assets/products/Scrunchie/Classic/Wine/sc-scrunchie-classic-wine-1.jpg"
+    ]
+  },
+  {
+    "id": "classic-scrunchie-yellow",
+    "slug": "classic-scrunchie-yellow",
+    "name": "Classic Scrunchie Yellow",
+    "category": "Scrunchie",
+    "type": "Classic",
+    "color": "Yellow",
+    "price": 499,
+    "images": [
+      "/assets/products/Scrunchie/Classic/Yellow/sc-scrunchie-classic-yellow-1.jpg",
+      "/assets/products/Scrunchie/Classic/Yellow/sc-scrunchie-classic-yellow-2.jpg"
+    ]
+  },
+  {
+    "id": "combo-scrunchie",
+    "slug": "combo-scrunchie",
+    "name": "Combo Scrunchie",
+    "category": "Scrunchie",
+    "type": "Combo",
+    "color": null,
+    "price": 499,
+    "images": [
+      "/assets/products/Scrunchie/Combo/IMG_0974.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_0975.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_0976.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_0977.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_0978.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_0979.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_0980.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_0981.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_0982.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_0983.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_0984.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_0985.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_0986.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_0987.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_0988.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_0989.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_0990.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_0991.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_0994.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_0995.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_0996.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_0997.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_0998.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_0999.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1001.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1002.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1003.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1004.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1005.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1006.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1007.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1008.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1009.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1010.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1011.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1012.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1013.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1014.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1015.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1016.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1017.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1018.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1019.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1020.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1021.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1022.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1023.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1024.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1025.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1026.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1027.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1028.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1029.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1030.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1031.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1032.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1033.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1034.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1035.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1036.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1037.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1038.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1039.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1040.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1041.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1042.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1043.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1044.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1045.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1046.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1047.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1048.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1049.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1050.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1051.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1052.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1053.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1625.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1626.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1627.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1628.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1629.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1630.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1631.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1632.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1633.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1634.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1635.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1636.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1637.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1638.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1639.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1640.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1641.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1642.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1643.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1644.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1645.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1646.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1647.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1648.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1649.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1650.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1651.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1652.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1653.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1654.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1655.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1656.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1657.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1658.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1659.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1660.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1661.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1662.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1663.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1664.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1665.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1666.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1667.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1668.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_1670.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_9518.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_9519.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_9520.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_9521.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_9522.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_9523.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_9524.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_9525.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_9526.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_9527.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_9528.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_9529.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_9530.jpg",
+      "/assets/products/Scrunchie/Combo/IMG_9533.jpg"
+    ]
+  },
+  {
+    "id": "tulip-scrunchie-skyblue",
+    "slug": "tulip-scrunchie-skyblue",
+    "name": "Tulip Scrunchie Skyblue",
+    "category": "Scrunchie",
+    "type": "Tulip",
+    "color": "SkyBlue",
+    "price": 499,
+    "images": [
+      "/assets/products/Scrunchie/Tulip/SkyBlue/sc-scrunchie-tulip-skyblue-1.jpg"
+    ]
+  },
+  {
+    "id": "tulip-sheer-scrunchie-grey",
+    "slug": "tulip-sheer-scrunchie-grey",
+    "name": "Tulip Sheer Scrunchie Grey",
+    "category": "Scrunchie",
+    "type": "Tulip-Sheer",
+    "color": "Grey",
+    "price": 499,
+    "images": [
+      "/assets/products/Scrunchie/Tulip-Sheer/Grey/sc-scrunchie-tulip-sheer-grey-1.jpg"
+    ]
+  },
+  {
+    "id": "tulip-sheer-scrunchie-lavender",
+    "slug": "tulip-sheer-scrunchie-lavender",
+    "name": "Tulip Sheer Scrunchie Lavender",
+    "category": "Scrunchie",
+    "type": "Tulip-Sheer",
+    "color": "Lavender",
+    "price": 499,
+    "images": [
+      "/assets/products/Scrunchie/Tulip-Sheer/Lavender/sc-scrunchie-tulip-sheer-lavender-1.jpg"
+    ]
+  },
+  {
+    "id": "tulip-sheer-scrunchie-magenta",
+    "slug": "tulip-sheer-scrunchie-magenta",
+    "name": "Tulip Sheer Scrunchie Magenta",
+    "category": "Scrunchie",
+    "type": "Tulip-Sheer",
+    "color": "Magenta",
+    "price": 499,
+    "images": [
+      "/assets/products/Scrunchie/Tulip-Sheer/Magenta/sc-scrunchie-tulip-sheer-magenta-1.jpg"
+    ]
+  },
+  {
+    "id": "tulip-sheer-scrunchie-petrol",
+    "slug": "tulip-sheer-scrunchie-petrol",
+    "name": "Tulip Sheer Scrunchie Petrol",
+    "category": "Scrunchie",
+    "type": "Tulip-Sheer",
+    "color": "Petrol",
+    "price": 499,
+    "images": [
+      "/assets/products/Scrunchie/Tulip-Sheer/Petrol/sc-scrunchie-tulip-sheer-petrol-1.jpg"
+    ]
+  },
+  {
+    "id": "tulip-sheer-scrunchie-red",
+    "slug": "tulip-sheer-scrunchie-red",
+    "name": "Tulip Sheer Scrunchie Red",
+    "category": "Scrunchie",
+    "type": "Tulip-Sheer",
+    "color": "Red",
+    "price": 499,
+    "images": [
+      "/assets/products/Scrunchie/Tulip-Sheer/Red/sc-scrunchie-tulip-sheer-red-1.jpg"
+    ]
+  },
+  {
+    "id": "tulip-sheer-scrunchie-yellow",
+    "slug": "tulip-sheer-scrunchie-yellow",
+    "name": "Tulip Sheer Scrunchie Yellow",
+    "category": "Scrunchie",
+    "type": "Tulip-Sheer",
+    "color": "Yellow",
+    "price": 499,
+    "images": [
+      "/assets/products/Scrunchie/Tulip-Sheer/Yellow/sc-scrunchie-tulip-sheer-yellow-1.jpg",
+      "/assets/products/Scrunchie/Tulip-Sheer/Yellow/sc-scrunchie-tulip-sheer-yellow-2.jpg",
+      "/assets/products/Scrunchie/Tulip-Sheer/Yellow/sc-scrunchie-tulip-sheer-yellow-3.jpg"
+    ]
+  }
+]

@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  app:
+    container_name: scrunchcreate-app
+    image: danish491/scrunchcreate:latest
+    ports:
+      - "6666:4173"
+    restart: always
+    environment:
+      - VITE_API_URL=http://localhost:5000/api

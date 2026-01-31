@@ -1,0 +1,91 @@
+@import '../../theme/theme.css';
+
+.page {
+    padding: 32px 16px 48px;
+    min-height: 80vh;
+}
+
+.header {
+    max-width: 1280px;
+    margin: 0 auto 32px;
+}
+
+.title {
+    font-size: 32px;
+    margin: 0 0 8px;
+    color: var(--color-text-main);
+    font-family: var(--font-heading);
+}
+
+.subtitle {
+    color: var(--color-text-muted);
+    margin: 0;
+    font-size: 16px;
+}
+
+.content {
+    max-width: 1280px;
+    margin: 0 auto;
+}
+
+.grid {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 24px;
+}
+
+@media (max-width: 600px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.emptyState {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 64px 24px;
+    background: var(--color-surface-soft);
+    border-radius: var(--radius-lg);
+    text-align: center;
+    margin-top: 32px;
+}
+
+.emptyIcon {
+    width: 64px;
+    height: 64px;
+    color: var(--color-text-muted);
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+.emptyTitle {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--color-text-main);
+    margin: 0 0 8px;
+}
+
+.emptyText {
+    color: var(--color-text-muted);
+    margin: 0 0 24px;
+    max-width: 400px;
+}
+
+.ctaButton {
+    background: var(--color-primary);
+    color: var(--color-on-primary);
+    padding: 12px 24px;
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    font-weight: 600;
+    transition: background-color 0.2s ease;
+}
+
+.ctaButton:hover {
+    background: var(--color-primary-strong);
+}

@@ -1,0 +1,10 @@
+# Docker configuration ignore file
+# Files that should NOT be included in Docker image
+
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Dependencies
+node_modules/

@@ -1,0 +1,257 @@
+@import '../theme/theme.css';
+
+.footer {
+  background: var(--color-surface);
+  color: var(--color-text-main);
+  padding: 64px 0 0;
+  border-top: 1px solid var(--color-border-soft);
+}
+
+.main {
+  padding: 0 24px;
+  margin-bottom: 40px;
+}
+
+.grid {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 32px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: 2fr 1fr 1fr 1.2fr;
+    gap: 48px;
+  }
+}
+
+/* Brand Section */
+.brandSection {
+  display: grid;
+  gap: 16px;
+}
+
+.brand {
+  color: var(--color-text-main);
+  font-family: var(--font-heading);
+  font-size: 24px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: var(--transition-fast);
+}
+
+.brand:hover {
+  color: var(--color-primary);
+}
+
+.description {
+  color: var(--color-text-muted);
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.email {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-size: 14px;
+  transition: var(--transition-fast);
+}
+
+.email:hover {
+  color: var(--color-primary-strong);
+  text-decoration: underline;
+}
+
+/* Trust & Assurance Section */
+.section {
+  display: grid;
+  gap: 16px;
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: 16px;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  color: var(--color-text-main);
+}
+
+.trustList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 12px;
+}
+
+.trustItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--color-text-muted);
+  font-size: 14px;
+}
+
+.trustIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--color-surface-accent);
+  color: var(--color-primary);
+  font-size: 12px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+/* Social & Community Section */
+.socials {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.socialLink {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--color-surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border-soft);
+  transition: var(--transition-fast);
+  text-decoration: none;
+  opacity: 0.7;
+}
+
+.socialLink:hover {
+  opacity: 1;
+  background: var(--color-surface-accent);
+  border-color: var(--color-border-soft);
+  color: var(--color-text-muted);
+  transform: translateY(-1px);
+}
+
+/* WhatsApp CTA Section */
+.ctaSection {
+  display: flex;
+  align-items: flex-start;
+}
+
+.ctaBlock {
+  background: var(--color-surface-accent);
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  display: grid;
+  gap: 16px;
+  width: 100%;
+}
+
+.ctaText {
+  margin: 0;
+  color: var(--color-text-main);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.ctaButton {
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  text-decoration: none;
+  padding: 12px 20px;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  transition: var(--transition-fast);
+  display: inline-block;
+  border: 1px solid transparent;
+}
+
+.ctaButton:hover {
+  background: var(--color-primary-strong);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-soft);
+}
+
+/* Bottom Section */
+.bottom {
+  border-top: 1px solid var(--color-border-soft);
+  background: var(--color-surface-soft);
+}
+
+.bottomInner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.bottomLeft {
+  display: grid;
+  gap: 8px;
+}
+
+.copy {
+  color: var(--color-text-muted);
+  font-size: 14px;
+}
+
+.trustReminder {
+  color: var(--color-text-muted);
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.bottomLinks {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.bottomLink {
+  color: var(--color-text-muted);
+  text-decoration: none;
+  font-size: 14px;
+  transition: var(--transition-fast);
+}
+
+.bottomLink:hover {
+  color: var(--color-primary);
+}
+
+@media (max-width: 767px) {
+  .bottomInner {
+    flex-direction: column;
+    text-align: center;
+    gap: 16px;
+  }
+  
+  .bottomLeft {
+    text-align: center;
+  }
+  
+  .bottomLinks {
+    justify-content: center;
+  }
+}
