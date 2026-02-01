@@ -1,5 +1,4 @@
 # 🎀 Scrunch & Create - E-commerce Platform
-
 A modern, fully responsive e-commerce application for **Scrunch & Create**, a boutique brand specializing in handmade scrunchies and decorative hair bows. Built with React, Vite, and styled with modern CSS modules.
 
 ## ✨ Features
