@@ -26,7 +26,7 @@ jobs:
       - name: 🏗️ Build project
         run: npm run build
 
-        
+
       - name: 📂 Sync files (Deploy to Hostinger)
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
@@ -35,6 +35,8 @@ jobs:
           password: ${{ secrets.HOSTINGER_FTP_PASSWORD }}
           local-dir: ./dist/
           server-dir: ./public_html/ 
+          exclude: |
+            **/assets/products/**
           # ⚠️ IMPORTANT: hostinger uses 'public_html' or similar as root. 
           # If your site is a subdomain or subfolder, adjust 'server-dir' accordingly. 
           # e.g. ./domains/example.com/public_html/
