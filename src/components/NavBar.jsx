@@ -46,24 +46,40 @@ const NavBar = () => {
     navigate('/');
   };
 
-  // Get all products and derive categories with their types
+  // Get all products and derive categories with their types and colors
   const categoryData = useMemo(() => {
     const products = getProducts();
     const data = {};
 
     navCategories.forEach(cat => {
       const catProducts = products.filter(p => p.category === cat);
-      const types = new Set();
-      const colors = new Set();
+
+      // Group by Type
+      const typeGroups = {};
 
       catProducts.forEach(p => {
-        if (p.type) types.add(p.type);
-        if (p.color) colors.add(p.color);
+        const type = p.type || 'Standard'; // Fallback for products without type
+        if (!typeGroups[type]) {
+          typeGroups[type] = {
+            name: type,
+            colors: new Set(),
+            count: 0
+          };
+        }
+        typeGroups[type].count++;
+        if (p.normalizedColor || p.color) {
+          typeGroups[type].colors.add(p.normalizedColor || p.color);
+        }
       });
 
+      // Convert Sets to Arrays and sort
+      const types = Object.values(typeGroups).map(group => ({
+        ...group,
+        colors: Array.from(group.colors).sort()
+      })).sort((a, b) => b.count - a.count); // Sort types by product count desc
+
       data[cat] = {
-        types: Array.from(types).sort(),
-        colors: Array.from(colors).sort(),
+        types,
         count: catProducts.length
       };
     });
@@ -157,65 +173,45 @@ const NavBar = () => {
                     )}
                   </Link>
 
-                  {/* Dropdown Menu */}
+                  {/* Mega Menu Dropdown */}
                   {hasSubcategories && activeDropdown === category && (
                     <div className={styles.dropdown}>
-                      <div className={styles.dropdownContent}>
-                        <div className={styles.dropdownSection}>
-                          <h4 className={styles.dropdownHeading}>Shop by Type</h4>
-                          <ul className={styles.dropdownList}>
-                            <li>
-                              <Link
-                                to={`/products/${slug}`}
-                                className={styles.dropdownLink}
-                                onClick={() => setActiveDropdown(null)}
-                              >
-                                All {displayName}
-                              </Link>
-                            </li>
-                            {data.types.map(type => (
-                              <li key={type}>
-                                <Link
-                                  to={`/products/${slug}?type=${encodeURIComponent(type)}`}
-                                  className={styles.dropdownLink}
-                                  onClick={() => setActiveDropdown(null)}
-                                >
-                                  {type}
-                                </Link>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-
-                        {data.colors.length > 0 && (
-                          <div className={styles.dropdownSection}>
-                            <h4 className={styles.dropdownHeading}>Shop by Color</h4>
-                            <ul className={styles.dropdownList}>
-                              {data.colors.slice(0, 6).map(color => (
+                      <div className={styles.megaMenuContent}>
+                        {data.types.map(typeGroup => (
+                          <div key={typeGroup.name} className={styles.megaMenuColumn}>
+                            <Link
+                              to={`/products/${slug}?type=${encodeURIComponent(typeGroup.name)}`}
+                              className={styles.megaMenuHeading}
+                              onClick={() => setActiveDropdown(null)}
+                            >
+                              {typeGroup.name}
+                            </Link>
+                            <ul className={styles.megaMenuList}>
+                              {typeGroup.colors.slice(0, 5).map(color => (
                                 <li key={color}>
                                   <Link
-                                    to={`/products/${slug}?color=${encodeURIComponent(color)}`}
-                                    className={styles.dropdownLink}
+                                    to={`/products/${slug}?type=${encodeURIComponent(typeGroup.name)}&color=${encodeURIComponent(color)}`}
+                                    className={styles.megaMenuLink}
                                     onClick={() => setActiveDropdown(null)}
                                   >
-                                    {color.replace(/_/g, ' ')}
+                                    {color.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
                                   </Link>
                                 </li>
                               ))}
-                              {data.colors.length > 6 && (
+                              {typeGroup.colors.length > 5 && (
                                 <li>
                                   <Link
-                                    to={`/products/${slug}`}
-                                    className={styles.dropdownLinkMore}
+                                    to={`/products/${slug}?type=${encodeURIComponent(typeGroup.name)}`}
+                                    className={styles.megaMenuViewAll}
                                     onClick={() => setActiveDropdown(null)}
                                   >
-                                    View all colors →
+                                    View all {typeGroup.colors.length} colors →
                                   </Link>
                                 </li>
                               )}
                             </ul>
                           </div>
-                        )}
+                        ))}
                       </div>
                     </div>
                   )}

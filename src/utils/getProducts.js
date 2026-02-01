@@ -3,12 +3,19 @@
  * Uses absolute paths starting with /assets/products (no imports)
  */
 import productsData from '../data/products.json';
+import { getProductPrice } from './pricing';
+import { normalizeColor } from './colorNormalization';
 
 let cachedProducts = null;
 
 export function getProducts() {
   if (!cachedProducts) {
-    cachedProducts = productsData;
+    // Enrich products with dynamic pricing and normalized colors
+    cachedProducts = productsData.map(product => ({
+      ...product,
+      price: getProductPrice(product),
+      normalizedColor: normalizeColor(product.color)
+    }));
   }
   return cachedProducts;
 }

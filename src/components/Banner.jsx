@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import styles from './Banner.module.css'
 
-import slide1 from '../assets/Marketing/slider1.png'
-import slide2 from '../assets/Marketing/slider2.png'
-import slide3 from '../assets/Marketing/slider3.png'
+const slide1 = '/assets/marketing/slider1.png'
+const slide2 = '/assets/marketing/slider2.png'
+const slide3 = '/assets/marketing/slider3.png'
 
 const AUTOPLAY_MS = 4000
 const SWIPE_THRESHOLD_PX = 60
@@ -84,12 +84,12 @@ export default function Banner() {
 
       <button className={styles.prev} onClick={goPrev} aria-label="Previous slide">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M15 6l-6 6 6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M15 6l-6 6 6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </button>
       <button className={styles.next} onClick={goNext} aria-label="Next slide">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M9 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M9 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </button>
 

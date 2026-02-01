@@ -103,7 +103,8 @@
   z-index: 1001;
   opacity: 0;
   visibility: hidden;
-  animation: dropdownIn 0.2s ease forwards;
+  pointer-events: none;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
 }
 
 @keyframes dropdownIn {
@@ -118,74 +119,79 @@
   }
 }
 
-.navItem:hover .dropdown {
+.navItem:hover .dropdown,
+.dropdown:hover {
   opacity: 1;
   visibility: visible;
+  pointer-events: auto;
 }
 
-.dropdownContent {
+.megaMenuContent {
   background: var(--color-surface);
   border: 1px solid var(--color-border-soft);
   border-radius: var(--radius-lg);
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
-  padding: 20px;
-  min-width: 280px;
-  display: flex;
+  padding: 24px;
+  width: max-content;
+  max-width: 90vw;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 32px;
 }
 
-.dropdownSection {
-  min-width: 120px;
+.megaMenuColumn {
+  min-width: 160px;
 }
 
-.dropdownHeading {
-  font-size: 11px;
+.megaMenuHeading {
+  display: block;
+  font-size: 13px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: var(--color-text-muted);
+  color: var(--color-text-main);
   margin: 0 0 12px;
   padding-bottom: 8px;
   border-bottom: 1px solid var(--color-border-soft);
+  text-decoration: none;
 }
 
-.dropdownList {
+.megaMenuHeading:hover {
+  color: var(--color-primary);
+}
+
+.megaMenuList {
   list-style: none;
   padding: 0;
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
 }
 
-.dropdownLink {
+.megaMenuLink {
   display: block;
-  padding: 8px 12px;
-  color: var(--color-text-main);
+  color: var(--color-text-muted);
   text-decoration: none;
   font-size: 14px;
-  border-radius: var(--radius-sm);
-  transition: background-color 0.15s ease;
+  transition: color 0.15s ease;
 }
 
-.dropdownLink:hover {
-  background: var(--color-surface-soft);
+.megaMenuLink:hover {
   color: var(--color-primary);
 }
 
-.dropdownLinkMore {
+.megaMenuViewAll {
   display: block;
-  padding: 8px 12px;
+  margin-top: 4px;
+  font-size: 12px;
+  font-weight: 500;
   color: var(--color-primary);
   text-decoration: none;
-  font-size: 13px;
-  font-weight: 500;
-  border-radius: var(--radius-sm);
-  transition: background-color 0.15s ease;
 }
 
-.dropdownLinkMore:hover {
-  background: var(--color-surface-accent);
+.megaMenuViewAll:hover {
+  text-decoration: underline;
 }
 
 /* Utility Links */

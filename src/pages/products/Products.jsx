@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react'
 import styles from './Products.module.css'
 import { useParams, useSearchParams } from 'react-router-dom'
 import { getProducts } from '../../utils/getProducts'
+import { getColorDisplayName } from '../../utils/colorNormalization'
 import { AnimatePresence } from 'framer-motion'
 import ProductCard from '../../components/ProductCard'
 
@@ -85,11 +86,11 @@ export default function Products() {
     })
   }, [categoryProducts, urlSearch])
 
-  // Extract unique colors and types from filtered products
+  // Extract unique normalized colors from filtered products
   const availableColors = useMemo(() => {
     const colors = new Set()
     searchFilteredProducts.forEach(p => {
-      if (p.color) colors.add(p.color)
+      if (p.normalizedColor) colors.add(p.normalizedColor)
     })
     return Array.from(colors).sort()
   }, [searchFilteredProducts])
@@ -107,7 +108,7 @@ export default function Products() {
     let products = searchFilteredProducts
 
     if (selectedColors.length > 0) {
-      products = products.filter(p => p.color && selectedColors.includes(p.color))
+      products = products.filter(p => p.normalizedColor && selectedColors.includes(p.normalizedColor))
     }
 
     if (selectedTypes.length > 0) {
@@ -231,7 +232,7 @@ export default function Products() {
                           onChange={() => toggleColor(color)}
                           className={styles.filterCheckbox}
                         />
-                        <span>{color.replace(/_/g, ' ')}</span>
+                        <span>{getColorDisplayName(color)}</span>
                       </label>
                     </li>
                   ))}

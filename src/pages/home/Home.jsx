@@ -11,18 +11,18 @@ export default function Home() {
     setProducts(data)
   }, [])
 
-  // Filter products by category (case-insensitive matching)
+  // Filter products by category (case-insensitive matching) - limit to 8 for preview
   const hairbowsProducts = useMemo(() =>
     products.filter(p =>
       p.category && (p.category.toLowerCase() === 'hairbows' || p.category.toLowerCase() === 'hairbow')
-    ), [products]
+    ).slice(0, 8), [products]
   )
 
 
   const scrunchiesProducts = useMemo(() =>
     products.filter(p =>
       p.category && (p.category.toLowerCase() === 'scrunchies' || p.category.toLowerCase() === 'scrunchie')
-    ), [products]
+    ).slice(0, 8), [products]
   )
 
   return (
