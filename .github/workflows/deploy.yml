@@ -34,8 +34,7 @@ jobs:
           password: ${{ secrets.HOSTINGER_FTP_PASSWORD }}
           local-dir: ./dist/
           server-dir: ./
+          state-name: .ftp-deploy-sync-state-v2.json
           exclude: |
             **/assets/products/**
-          # This will only upload changed files (faster deploys)
-          # Old JS/CSS files with different hashes will remain on server but won't affect the site
-          # since index.html always references the correct new files
+          # state-name creates a new sync state, forcing fresh comparison
