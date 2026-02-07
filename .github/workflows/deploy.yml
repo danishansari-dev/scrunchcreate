@@ -37,4 +37,6 @@ jobs:
           state-name: .ftp-deploy-sync-state-v2.json
           exclude: |
             **/assets/products/**
+            **/assets/guides/**
+            **/assets/marketing/**            
           # state-name creates a new sync state, forcing fresh comparison
