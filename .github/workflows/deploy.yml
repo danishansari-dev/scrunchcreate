@@ -34,10 +34,10 @@ jobs:
           password: ${{ secrets.HOSTINGER_FTP_PASSWORD }}
           local-dir: ./dist/
           server-dir: ./
-          dangerous-clean-slate: true
+          state-name: .ftp-deploy-sync-state-v4.json
           exclude: |
             **/assets/products/**
             **/assets/guides/**
             **/assets/marketing/**
-          # dangerous-clean-slate deletes old files but RESPECTS excludes
-          # So products, guides, marketing folders stay safe
+          # state-name=v4 forces a fresh check to ensure index.html updates
+          # This fixes the issue where old files were being served
