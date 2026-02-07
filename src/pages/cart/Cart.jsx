@@ -2,12 +2,26 @@ import React from 'react'
 import { useCart } from '../../components/CartContext'
 import styles from './Cart.module.css'
 import { Link } from 'react-router-dom'
+import { generateWhatsAppMessage } from '../../utils/whatsappUtils'
 
 export default function Cart() {
   const { items, increment, decrement, removeFromCart, subtotal, clearCart } = useCart()
 
   const delivery = subtotal >= 499 ? 0 : 49
   const total = subtotal + delivery
+
+  const handleCheckout = () => {
+    if (items.length === 0) return
+
+    const confirmCheckout = window.confirm(
+      'You will be redirected to WhatsApp to complete your order with Scrunch & Create. Continue?'
+    )
+
+    if (confirmCheckout) {
+      const whatsappUrl = generateWhatsAppMessage(items, subtotal)
+      window.open(whatsappUrl, '_blank')
+    }
+  }
 
   return (
     <main className={styles.page}>
@@ -21,10 +35,22 @@ export default function Cart() {
             {items.map((item) => (
               <li key={item.id} className={styles.row}>
                 <div className={styles.info}>
-                  <div className={styles.thumb} aria-hidden="true" />
+                  {/* Thumbnail logic: if image exists, show it, else generic */}
+                  {item.images && item.images[0] ? (
+                    <div
+                      className={styles.thumb}
+                      style={{ backgroundImage: `url(${item.images[0]})` }}
+                      aria-hidden="true"
+                    />
+                  ) : (
+                    <div className={styles.thumb} aria-hidden="true" />
+                  )}
                   <div>
                     <div className={styles.productTitle}>{item.name}</div>
                     <div className={styles.price}>₹{item.price.toLocaleString('en-IN')}</div>
+                    {/* Optional: Show Variant/Color if available */}
+                    {(item.type || item.variant) && <div className={styles.meta}>Type: {item.type || item.variant}</div>}
+                    {item.color && <div className={styles.meta}>Color: {item.color}</div>}
                   </div>
                 </div>
                 <div className={styles.controls}>
@@ -43,7 +69,14 @@ export default function Cart() {
             <div className={styles.summaryRow}><span>Subtotal</span><span>₹{subtotal.toLocaleString('en-IN')}</span></div>
             <div className={styles.summaryRow}><span>Delivery</span><span>{delivery === 0 ? 'Free' : `₹${delivery}`}</span></div>
             <div className={styles.summaryTotal}><span>Total</span><span>₹{total.toLocaleString('en-IN')}</span></div>
-            <Link to="/checkout" className={styles.checkout}>Checkout</Link>
+
+            <button
+              className={styles.checkout}
+              onClick={handleCheckout}
+              disabled={items.length === 0}
+            >
+              Proceed to WhatsApp Checkout
+            </button>
             <button className={styles.clear} onClick={clearCart}>Clear Cart</button>
           </aside>
         </section>
