@@ -3,6 +3,7 @@ import Banner from '../../components/Banner'
 import FeaturesSection from '../../components/FeaturesSection'
 import CollectionsSection from '../../components/CollectionsSection'
 import BestSellersSection from '../../components/BestSellersSection'
+import WhyChooseSection from '../../components/WhyChooseSection'
 import ProductList from '../../components/ProductList'
 import { getProducts } from '../../utils/getProducts'
 
@@ -34,6 +35,7 @@ export default function Home() {
       <FeaturesSection />
       <CollectionsSection />
       <BestSellersSection />
+      <WhyChooseSection />
       <div className="home-shell">
         <div className="home-shell-inner">
           <ProductList
