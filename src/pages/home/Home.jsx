@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react'
 import Banner from '../../components/Banner'
+import FeaturesSection from '../../components/FeaturesSection'
 import ProductList from '../../components/ProductList'
 import { getProducts } from '../../utils/getProducts'
 
@@ -28,6 +29,7 @@ export default function Home() {
   return (
     <>
       <Banner />
+      <FeaturesSection />
       <div className="home-shell">
         <div className="home-shell-inner">
           <ProductList
