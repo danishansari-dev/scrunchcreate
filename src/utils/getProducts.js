@@ -36,11 +36,13 @@ export function getProductsByCategory(category) {
  */
 export function resolveImagePath(imagePath) {
   if (!imagePath) return null;
+  // Clean the path
+  const cleanPath = imagePath.trim();
   // Ensure path starts with /
-  if (imagePath.startsWith('/')) {
-    return imagePath;
+  if (cleanPath.startsWith('/')) {
+    return cleanPath;
   }
   // If it doesn't start with /, add it
-  return `/${imagePath}`;
+  return `/${cleanPath}`;
 }
 
