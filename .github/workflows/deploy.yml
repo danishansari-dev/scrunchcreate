@@ -34,9 +34,10 @@ jobs:
           password: ${{ secrets.HOSTINGER_FTP_PASSWORD }}
           local-dir: ./dist/
           server-dir: ./
-          state-name: .ftp-deploy-sync-state-v2.json
+          dangerous-clean-slate: true
           exclude: |
             **/assets/products/**
             **/assets/guides/**
-            **/assets/marketing/**            
-          # state-name creates a new sync state, forcing fresh comparison
+            **/assets/marketing/**
+          # dangerous-clean-slate deletes old files but RESPECTS excludes
+          # So products, guides, marketing folders stay safe
