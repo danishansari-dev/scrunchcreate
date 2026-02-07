@@ -8,28 +8,28 @@ const collections = [
         name: 'Scrunchies',
         description: 'Luxurious fabric scrunchies that care for your hair',
         image: '/assets/products/scrunchie/classic/golden/sc-scrunchie-classic-golden-1.webp',
-        href: '/products?category=Scrunchies',
+        href: '/products/scrunchies',
     },
     {
         id: 'hairbows',
         name: 'Hair Bows',
         description: 'Elegant bows for a sophisticated touch',
         image: '/assets/products/hairbow/satin/cream/sc-hairbow-satin-cream-1.webp',
-        href: '/products?category=Hairbows',
+        href: '/products/hair-bows',
     },
     {
         id: 'flowerjewellery',
         name: 'Flower Jewellery',
         description: 'Beautiful floral accessories for special occasions',
         image: '/assets/products/flowerjewellery/rose/yellow/sc-flowerjewellery-rose-yellow-1.webp',
-        href: '/products?category=Flowerjewellery',
+        href: '/products/flower-jewellery',
     },
     {
         id: 'gifthamper',
         name: 'Gift Hampers',
         description: 'Curated gift sets for your loved ones',
         image: '/assets/products/gifthamper/sc-gifthamper-1.webp',
-        href: '/products?category=Gifthamper',
+        href: '/products/hamper',
     },
 ]
 
