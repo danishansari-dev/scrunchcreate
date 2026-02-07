@@ -216,6 +216,18 @@
 
 .cartBadge {
   position: relative;
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  border-radius: var(--radius-sm);
+  transition: var(--transition-fast);
+}
+
+.cartBadge:hover {
+  background: rgba(231, 133, 146, 0.08);
+  color: var(--color-text-main);
 }
 
 .cartCount {
