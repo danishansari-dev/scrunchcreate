@@ -33,9 +33,11 @@ jobs:
           username: ${{ secrets.HOSTINGER_FTP_USERNAME }}
           password: ${{ secrets.HOSTINGER_FTP_PASSWORD }}
           local-dir: ./dist/
-          server-dir: ./public_html/ 
+          server-dir: ./public_html/
+          dangerous-clean-slate: true
           exclude: |
             **/assets/products/**
           # ⚠️ IMPORTANT: hostinger uses 'public_html' or similar as root. 
           # If your site is a subdomain or subfolder, adjust 'server-dir' accordingly. 
           # e.g. ./domains/example.com/public_html/
+
