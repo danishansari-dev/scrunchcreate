@@ -33,6 +33,7 @@ const collections = [
     },
 ]
 
+
 export default function CollectionsSection() {
     return (
         <section className={styles.collectionsSection}>
