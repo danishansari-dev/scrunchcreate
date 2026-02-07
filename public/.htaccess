@@ -7,3 +7,11 @@
   RewriteRule . /index.html [L]
 </IfModule>
 
+# Prevent caching of index.html so new deployments take effect immediately
+<IfModule mod_headers.c>
+  <FilesMatch "^index\.html$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+    Header set Pragma "no-cache"
+    Header set Expires "0"
+  </FilesMatch>
+</IfModule>
