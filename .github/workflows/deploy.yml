@@ -34,10 +34,6 @@ jobs:
           password: ${{ secrets.HOSTINGER_FTP_PASSWORD }}
           local-dir: ./dist/
           server-dir: ./
-          state-name: .ftp-deploy-sync-state-v4.json
-          exclude: |
-            **/assets/products/**
-            **/assets/guides/**
-            **/assets/marketing/**
-          # state-name=v4 forces a fresh check to ensure index.html updates
-          # This fixes the issue where old files were being served
+          state-name: .ftp-deploy-sync-state-v6.json
+          # Removed exclude for assets so they are uploaded!
+          # state-name=v6 forces a fresh check to ensure everything is synced
