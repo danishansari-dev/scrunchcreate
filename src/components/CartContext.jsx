@@ -21,10 +21,16 @@ function writeCartToStorage(items) {
 
 export function CartProvider({ children }) {
   const [items, setItems] = useState(() => readCartFromStorage())
+  const [isCartOpen, setIsCartOpen] = useState(false)
 
   useEffect(() => {
     writeCartToStorage(items)
   }, [items])
+
+  // Drawer controls
+  const openCart = () => setIsCartOpen(true)
+  const closeCart = () => setIsCartOpen(false)
+  const toggleCart = () => setIsCartOpen((prev) => !prev)
 
   const addToCart = (product, qty = 1) => {
     setItems((prev) => {
@@ -37,6 +43,8 @@ export function CartProvider({ children }) {
       // Store full product details for WhatsApp checkout
       return [...prev, { ...product, qty }]
     })
+    // Open cart drawer when item is added
+    setIsCartOpen(true)
     return true
   }
 
@@ -72,6 +80,10 @@ export function CartProvider({ children }) {
     clearCart,
     totalItems,
     subtotal,
+    isCartOpen,
+    openCart,
+    closeCart,
+    toggleCart,
   }
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>
