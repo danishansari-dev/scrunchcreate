@@ -34,7 +34,8 @@ export function CartProvider({ children }) {
         next[idx] = { ...next[idx], qty: next[idx].qty + qty }
         return next
       }
-      return [...prev, { id: product.id, name: product.name, price: product.price, qty }]
+      // Store full product details for WhatsApp checkout
+      return [...prev, { ...product, qty }]
     })
     return true
   }
