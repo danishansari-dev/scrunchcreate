@@ -128,7 +128,6 @@ export default function ProductCard({ product, index = 0 }) {
                             <span className={styles.originalPrice}>₹{product.originalPrice.toLocaleString('en-IN')}</span>
                         )}
                     </div>
-                    {product.rating && <span className={styles.rating}>★ {product.rating}</span>}
                 </div>
 
                 <button
