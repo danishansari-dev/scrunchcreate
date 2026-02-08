@@ -10,22 +10,19 @@ export default function FilterSidebar({ availableCategories = [] }) {
   const initialCategory = params.get('category') || ''
   const initialMinPrice = params.get('minPrice') || ''
   const initialMaxPrice = params.get('maxPrice') || ''
-  const initialRating = params.get('rating') || ''
   const initialSort = params.get('sort') || ''
 
   const [category, setCategory] = useState(initialCategory)
   const [minPrice, setMinPrice] = useState(initialMinPrice)
   const [maxPrice, setMaxPrice] = useState(initialMaxPrice)
-  const [rating, setRating] = useState(initialRating)
   const [sort, setSort] = useState(initialSort)
 
   useEffect(() => {
     setCategory(initialCategory)
     setMinPrice(initialMinPrice)
     setMaxPrice(initialMaxPrice)
-    setRating(initialRating)
     setSort(initialSort)
-  }, [initialCategory, initialMinPrice, initialMaxPrice, initialRating, initialSort])
+  }, [initialCategory, initialMinPrice, initialMaxPrice, initialSort])
 
   const apply = () => {
     const next = new URLSearchParams(location.search)
@@ -36,14 +33,13 @@ export default function FilterSidebar({ availableCategories = [] }) {
     setOrDelete('category', category)
     setOrDelete('minPrice', minPrice)
     setOrDelete('maxPrice', maxPrice)
-    setOrDelete('rating', rating)
     setOrDelete('sort', sort)
     navigate(`/products?${next.toString()}`)
   }
 
   const clearAll = () => {
     const next = new URLSearchParams(location.search)
-    ;['category', 'minPrice', 'maxPrice', 'rating', 'sort'].forEach((k) => next.delete(k))
+      ;['category', 'minPrice', 'maxPrice', 'sort'].forEach((k) => next.delete(k))
     navigate(`/products?${next.toString()}`)
   }
 
@@ -68,7 +64,7 @@ export default function FilterSidebar({ availableCategories = [] }) {
         <div className={styles.label}>Price</div>
         <div className={styles.row}>
           <input
-            className={ `${styles.input} ${styles.minPrice}`}
+            className={`${styles.input} ${styles.minPrice}`}
             type="number"
             min="0"
             placeholder="Min"
@@ -88,22 +84,11 @@ export default function FilterSidebar({ availableCategories = [] }) {
       </div>
 
       <div className={styles.group}>
-        <div className={styles.label}>Rating</div>
-        <select className={styles.select} value={rating} onChange={(e) => setRating(e.target.value)}>
-          <option value="">All</option>
-          <option value="4.5">4.5+ stars</option>
-          <option value="4.0">4.0+ stars</option>
-          <option value="3.5">3.5+ stars</option>
-        </select>
-      </div>
-
-      <div className={styles.group}>
         <div className={styles.label}>Sort By</div>
         <select className={styles.select} value={sort} onChange={(e) => setSort(e.target.value)}>
           <option value="">Featured</option>
           <option value="price_asc">Price: Low to High</option>
           <option value="price_desc">Price: High to Low</option>
-          <option value="rating_desc">Rating: High to Low</option>
         </select>
       </div>
 
