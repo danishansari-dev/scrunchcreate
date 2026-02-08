@@ -22,6 +22,7 @@ export const CANONICAL_COLORS = [
     'blush',
     'rose',
     'peach',
+    'peach-cream',
     'coral',
     'orange',
     'yellow',
@@ -31,6 +32,7 @@ export const CANONICAL_COLORS = [
     'green',
     'olive',
     'metallic-olive',
+    'olive-green',
     'mint',
     'light-mint',
     'sage',
@@ -73,6 +75,7 @@ const COLOR_ALIASES = {
     'baby pink': 'baby-pink',
     'sky blue': 'sky-blue',
     'petrol blue': 'petrol-blue',
+    'petrol': 'petrol-blue',
     'royal blue': 'royal-blue',
     'light yellow': 'light-yellow',
     'light mint': 'light-mint',
@@ -183,4 +186,73 @@ export function extractCanonicalColors(products) {
     });
 
     return Array.from(colorSet).sort();
+}
+
+// Map of canonical colors to CSS Hex/Gradient values
+export const COLOR_HEX_MAP = {
+    'black': '#000000',
+    'white': '#FFFFFF',
+    'cream': '#FFFDD0',
+    'beige': '#F5F5DC',
+    'grey': '#808080',
+    'brown': '#8B4513',
+    'red': '#FF0000',
+    'wine': '#722F37',
+    'maroon': '#800000',
+    'burgundy': '#800020',
+    'pink': '#FFC0CB',
+    'hot-pink': '#FF69B4',
+    'baby-pink': '#F4C2C2',
+    'blush': '#DE5D83',
+    'rose': '#F33A6A',
+    'peach': '#FFDAB9',
+    'peach-cream': '#FFEFDB',
+    'coral': '#FF7F50',
+    'orange': '#FFA500',
+    'yellow': '#FFFF00',
+    'light-yellow': '#FFFFE0',
+    'mustard': '#FFDB58',
+    'gold': '#FFD700',
+    'green': '#008000',
+    'olive': '#808000',
+    'metallic-olive': '#556B2F',
+    'olive-green': '#556B2F',
+    'mint': '#98FF98',
+    'light-mint': '#E0FFE0',
+    'sage': '#9DC183',
+    'teal': '#008080',
+    'turquoise': '#40E0D0',
+    'blue': '#0000FF',
+    'navy': '#000080',
+    'sky-blue': '#87CEEB',
+    'petrol-blue': '#1F4E5F',
+    'royal-blue': '#4169E1',
+    'purple': '#800080',
+    'lavender': '#E6E6FA',
+    'lilac': '#C8A2C8',
+    'magenta': '#FF00FF',
+    'pistachio': '#93C572',
+    'chocolate': '#D2691E',
+    'silver': '#C0C0C0',
+    'multi': 'linear-gradient(135deg, red, orange, yellow, green, blue, indigo, violet)',
+    'combo': 'linear-gradient(135deg, #FFC0CB 50%, #87CEEB 50%)' // Example combo
+};
+
+/**
+ * Get the CSS background value for a color
+ * @param {string} rawColor 
+ * @returns {string} CSS color or gradient
+ */
+export function getColorHex(rawColor) {
+    const normalized = normalizeColor(rawColor);
+    if (!normalized) return '#dddddd'; // Default grey
+
+    // Return mapped hex if available
+    if (COLOR_HEX_MAP[normalized]) {
+        return COLOR_HEX_MAP[normalized];
+    }
+
+    // Fallback: try to use the normalized name itself
+    // This allows standard colors like 'cyan' to work if they aren't in our map yet
+    return normalized;
 }
