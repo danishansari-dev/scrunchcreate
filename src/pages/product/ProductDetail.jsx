@@ -193,7 +193,7 @@ export default function ProductDetail() {
         <nav className={styles.breadcrumbs} aria-label="Breadcrumb">
           <Link to="/" className={styles.breadcrumbLink}>Home</Link>
           <span className={styles.breadcrumbSeparator}>/</span>
-          <Link to="/products" className={styles.breadcrumbLink}>Shop All</Link>
+          <Link to="/products" className={styles.breadcrumbLink}>Shop</Link>
           <span className={styles.breadcrumbSeparator}>/</span>
           <Link to={`/products/${product.category}`} className={styles.breadcrumbLink}>{product.category}</Link>
           <span className={styles.breadcrumbSeparator}>/</span>
@@ -258,13 +258,23 @@ export default function ProductDetail() {
           {/* Product Info Section */}
           <div className={styles.info}>
             <div className={styles.header}>
-              <div className={styles.stockBadge}>
-                <CheckIcon />
-                <span>In Stock</span>
+              <div className={styles.badgeRow}>
+                <div className={styles.stockBadge}>
+                  <CheckIcon />
+                  <span>In Stock</span>
+                </div>
+                {product.discountPercent > 0 && (
+                  <span className={styles.discountBadge}>
+                    {product.discountPercent}% OFF
+                  </span>
+                )}
               </div>
               <h1 className={styles.title}>{product.name}</h1>
               <div className={styles.priceRow}>
-                <span className={styles.price}>₹{product.price.toLocaleString('en-IN')}</span>
+                <span className={styles.offerPrice}>₹{(product.offerPrice || product.price).toLocaleString('en-IN')}</span>
+                {product.discountPercent > 0 && product.originalPrice && (
+                  <span className={styles.originalPrice}>₹{product.originalPrice.toLocaleString('en-IN')}</span>
+                )}
                 {product.rating && <span className={styles.rating}>★ {product.rating}</span>}
               </div>
             </div>
