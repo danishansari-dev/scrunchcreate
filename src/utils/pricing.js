@@ -2,19 +2,23 @@
 /**
  * Official Pricing Configuration
  * Central source of truth for product pricing.
+ * 
+ * Each product has:
+ * - offerPrice: The selling price
+ * - originalPrice: MRP (calculated with markup)
+ * - discountPercent: Auto-calculated discount percentage
  */
 
-const PRICING_TABLE = {
-    // Category level defaults or specific maps
+// Offer price table (selling prices)
+const OFFER_PRICE_TABLE = {
     scrunchie: {
-        default: 35, // Fallback
+        default: 35,
         types: {
             classic: 35,
             tulip: 69,
             'tulip-sheer': 79,
-            'satin-mini': 30, // Single
-            // Combos/Packs handled by logic
-            combo: 99 // Default combo (Classic Pack of 3)
+            'satin-mini': 30,
+            combo: 99
         }
     },
     hairbow: {
@@ -27,13 +31,12 @@ const PRICING_TABLE = {
             scarf: 99,
             'satin-princes': 79,
             'satin-tulip': 89,
-            combo: 399 // Fallback for hairbow combo? Or maybe 79*3? 
-            // Table didn't specify HairBow Combo explicitly except FlowerJewellery Combo.
-            // But let's look at logic.
+            'satin-mini': 49,
+            combo: 399
         }
     },
     gifthamper: {
-        default: 699, // Royal Valentine / Default
+        default: 699,
         types: {
             'satin-hamper': 199,
             'glimmer-grace': 189
@@ -42,7 +45,7 @@ const PRICING_TABLE = {
     flowerjewellery: {
         default: 399,
         types: {
-            rose: 399, // Assumption based on "Combo" price or set
+            rose: 399,
             combo: 399
         }
     },
@@ -54,47 +57,65 @@ const PRICING_TABLE = {
     }
 };
 
+// MRP markup percentages by category (how much higher MRP is than offer price)
+const MRP_MARKUP = {
+    scrunchie: 0.20,      // 20% markup
+    hairbow: 0.20,        // 20% markup
+    gifthamper: 0.15,     // 15% markup
+    flowerjewellery: 0.15,// 15% markup
+    earring: 0.25,        // 25% markup
+    paraandi: 0.15        // 15% markup
+};
+
 /**
- * Calculate price for a product based on its metadata.
- * @param {Object} product - Product object from JSON
- * @returns {number} Price in INR
+ * Round price to nearest "nice" number (ending in 9 or 99)
  */
-export function getProductPrice(product) {
+function roundToNicePrice(price) {
+    if (price < 100) {
+        // Round to nearest X9
+        return Math.ceil(price / 10) * 10 - 1;
+    } else if (price < 500) {
+        // Round to nearest X9
+        return Math.ceil(price / 10) * 10 - 1;
+    } else {
+        // Round to nearest X99
+        return Math.ceil(price / 100) * 100 - 1;
+    }
+}
+
+/**
+ * Calculate offer price for a product based on its metadata.
+ * @param {Object} product - Product object from JSON
+ * @returns {number} Offer price in INR
+ */
+function calculateOfferPrice(product) {
     if (!product) return 0;
 
     const category = (product.category || '').toLowerCase().replace(/\s+/g, '');
     const type = (product.type || '').toLowerCase();
     const name = (product.name || '').toLowerCase();
 
-    // 1. Direct Category Match
-    const catConfig = PRICING_TABLE[category];
+    const catConfig = OFFER_PRICE_TABLE[category];
 
     if (!catConfig) {
         console.warn(`[Pricing] Unknown category: ${category} for product ${product.id}`);
-        return 0; // Or generic fallback?
+        return 99; // Default fallback instead of 0
     }
-
-    // 2. Specialized Logic by Category
 
     // --- SCRUNCHIE ---
     if (category === 'scrunchie') {
-        // Handle Combos / Packs
         if (type === 'combo' || name.includes('combo') || name.includes('pack')) {
-            if (name.includes('tulip') && name.includes('sheer')) return 599; // Tulip-Sheer Combo
-            if (name.includes('tulip')) return 349; // Tulip Combo
-            if (type === 'satin-mini' || name.includes('mini')) return 399; // Satin Mini Pack (Pack of 14) implies combo if price is high?
-            // Wait, "Satin Mini" single is 30. "Satin Mini" Pack is 399.
-            // How to distinguish? logic below.
-            return 99; // Default Classic Pack of 3
+            if (name.includes('tulip') && name.includes('sheer')) return 599;
+            if (name.includes('tulip')) return 349;
+            if (type === 'satin-mini' || name.includes('mini')) return 399;
+            return 99;
         }
 
-        // Handle Satin Mini specifics
         if (type === 'satin-mini' || type === 'satin_mini') {
             if (name.includes('pack') || name.includes('set') || name.includes('14')) return 399;
-            return 30; // Single
+            return 30;
         }
 
-        // Regular Types
         if (catConfig.types && catConfig.types[type]) {
             return catConfig.types[type];
         }
@@ -104,13 +125,10 @@ export function getProductPrice(product) {
 
     // --- HAIRBOW ---
     if (category === 'hairbow') {
-        // Check specific types from table
-        if (PRICING_TABLE.hairbow.types[type]) {
-            return PRICING_TABLE.hairbow.types[type];
+        if (OFFER_PRICE_TABLE.hairbow.types[type]) {
+            return OFFER_PRICE_TABLE.hairbow.types[type];
         }
-        // Specific check for Scarf if type misses but name has it
         if (name.includes('scarf')) return 99;
-
         return catConfig.default;
     }
 
@@ -118,7 +136,7 @@ export function getProductPrice(product) {
     if (category === 'gifthamper') {
         if (type === 'satin-hamper') return 199;
         if (name.includes('glimmer') || name.includes('grace')) return 189;
-        return 699; // Default / Royal Valentine
+        return 699;
     }
 
     // --- OTHERS ---
@@ -129,8 +147,40 @@ export function getProductPrice(product) {
         return catConfig.default;
     }
 
-    // Simple number config (if simplified)
     if (typeof catConfig === 'number') return catConfig;
 
-    return 0;
+    return 99; // Default fallback
+}
+
+/**
+ * Calculate pricing for a product.
+ * @param {Object} product - Product object from JSON
+ * @returns {{ offerPrice: number, originalPrice: number, discountPercent: number }}
+ */
+export function getProductPrice(product) {
+    if (!product) {
+        return { offerPrice: 0, originalPrice: 0, discountPercent: 0 };
+    }
+
+    const category = (product.category || '').toLowerCase().replace(/\s+/g, '');
+    const offerPrice = calculateOfferPrice(product);
+
+    // Ensure we never return 0 for offer price
+    const safeOfferPrice = offerPrice > 0 ? offerPrice : 99;
+
+    // Calculate MRP using markup
+    const markup = MRP_MARKUP[category] || 0.20;
+    const rawMrp = safeOfferPrice / (1 - markup);
+    const originalPrice = roundToNicePrice(rawMrp);
+
+    // Calculate discount percentage
+    const discountPercent = originalPrice > safeOfferPrice
+        ? Math.round(((originalPrice - safeOfferPrice) / originalPrice) * 100)
+        : 0;
+
+    return {
+        offerPrice: safeOfferPrice,
+        originalPrice,
+        discountPercent
+    };
 }
