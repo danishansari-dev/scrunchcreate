@@ -7,14 +7,17 @@ export function generateWhatsAppMessage(items, subtotal) {
     let message = `Order from Scrunch & Create\n\nItems:\n`;
 
     items.forEach((item, index) => {
+        const price = item.offerPrice || item.price;
         message += `\n${index + 1}. ${item.name}`;
         if (item.category) message += `\n   Category: ${item.category}`;
         if (item.type || item.variant) message += `\n   Variant: ${item.type || item.variant}`;
         if (item.color) message += `\n   Color: ${item.color}`;
-        // Pack size is often part of the name, but if explicit field exists:
         if (item.pack) message += `\n   Pack: ${item.pack}`;
         message += `\n   Quantity: ${item.qty}`;
-        message += `\n   Price: ₹${item.price.toLocaleString('en-IN')}`;
+        message += `\n   Price: ₹${price.toLocaleString('en-IN')}`;
+        if (item.discountPercent > 0 && item.originalPrice) {
+            message += ` (MRP: ₹${item.originalPrice.toLocaleString('en-IN')}, ${item.discountPercent}% OFF)`;
+        }
         message += `\n`;
     });
 
