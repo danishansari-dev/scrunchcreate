@@ -123,7 +123,7 @@ export default function ProductDetail() {
     const variants = getProductVariants(product)
     // Include current product in the list and sort alphabetically
     const allVariants = [product, ...variants].sort((a, b) =>
-      (a.color || '').localeCompare(b.color || '')
+      (a.id === product.id ? -1 : b.id === product.id ? 1 : (a.color || '').localeCompare(b.color || ''))
     )
     return allVariants
   }, [product])
@@ -325,7 +325,7 @@ export default function ProductDetail() {
                     >
                       <span
                         className={styles.swatchInner}
-                        style={{ backgroundColor: variant.normalizedColor || '#ddd' }}
+                        style={{ background: variant.colorHex || '#ddd' }}
                       />
                       <span className={styles.swatchLabel}>{variant.color}</span>
                     </Link>
