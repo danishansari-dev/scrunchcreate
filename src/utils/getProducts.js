@@ -4,7 +4,7 @@
  */
 import productsData from '../data/products.json';
 import { getProductPrice } from './pricing';
-import { normalizeColor } from './colorNormalization';
+import { normalizeColor, getColorHex } from './colorNormalization';
 
 let cachedProducts = null;
 
@@ -17,7 +17,8 @@ export function getProducts() {
         ...product,
         ...pricing,  // Spread offerPrice, originalPrice, discountPercent
         price: pricing.offerPrice, // Keep backward-compatible price field
-        normalizedColor: normalizeColor(product.color)
+        normalizedColor: normalizeColor(product.color),
+        colorHex: getColorHex(product.color)
       };
     });
   }
@@ -32,6 +33,20 @@ export function getProductBySlug(slug) {
 export function getProductsByCategory(category) {
   const products = getProducts();
   return products.filter(p => p.category.toLowerCase() === category.toLowerCase());
+}
+
+/**
+ * Get color variants of a product (same category and type, different colors)
+ */
+export function getProductVariants(product) {
+  if (!product) return [];
+  const products = getProducts();
+  return products.filter(p =>
+    p.category === product.category &&
+    p.type === product.type &&
+    p.color &&
+    p.id !== product.id
+  );
 }
 
 /**
