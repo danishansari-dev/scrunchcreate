@@ -1,7 +1,7 @@
 import React, { useMemo, useState, useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import styles from './ProductDetail.module.css'
-import { getProductBySlug, resolveImagePath, getProductsByCategory } from '../../utils/getProducts'
+import { getProductBySlug, resolveImagePath, getProductsByCategory, getProductVariants } from '../../utils/getProducts'
 import { useCart } from '../../components/CartContext'
 import { useToast } from '../../components/ToastContext'
 import { useWishlist } from '../../context/WishlistContext'
@@ -115,6 +115,39 @@ export default function ProductDetail() {
     return categoryProducts
       .filter(p => p.id !== product.id)
       .slice(0, 4)
+  }, [product])
+
+  // Get color variants (same category+type, different colors)
+  const colorVariants = useMemo(() => {
+    if (!product || !product.color) return []
+    const variants = getProductVariants(product)
+    // Include current product in the list and sort alphabetically
+    const allVariants = [product, ...variants].sort((a, b) =>
+      (a.color || '').localeCompare(b.color || '')
+    )
+    return allVariants
+  }, [product])
+
+  // Derive fabric type from product type
+  const fabricType = useMemo(() => {
+    if (!product?.type) return null
+    const typeMap = {
+      'satin': 'Satin',
+      'satin-mini': 'Satin',
+      'satin-princes': 'Satin',
+      'satin-tulip': 'Satin',
+      'satin-hamper': 'Satin',
+      'velvet': 'Velvet',
+      'sheer-satin': 'Sheer Satin',
+      'scarf': 'Scarf',
+      'tulip': 'Satin',
+      'tulip-sheer': 'Sheer Satin',
+      'jimmychoo': 'Jimmy Choo',
+      'classic': 'Satin',
+      'combo': 'Combo Set',
+      'rose': 'Flower'
+    }
+    return typeMap[product.type.toLowerCase()] || product.type.charAt(0).toUpperCase() + product.type.slice(1).replace(/-/g, ' ')
   }, [product])
 
   const handleAddToCart = () => {
@@ -257,51 +290,57 @@ export default function ProductDetail() {
           {/* Product Info Section */}
           <div className={styles.info}>
             <div className={styles.header}>
-              <div className={styles.badgeRow}>
-                <div className={styles.stockBadge}>
-                  <CheckIcon />
-                  <span>In Stock</span>
-                </div>
-                {product.discountPercent > 0 && (
-                  <span className={styles.discountBadge}>
-                    {product.discountPercent}% OFF
-                  </span>
-                )}
-              </div>
               <h1 className={styles.title}>{product.name}</h1>
               <div className={styles.priceRow}>
                 <span className={styles.offerPrice}>₹{(product.offerPrice || product.price).toLocaleString('en-IN')}</span>
                 {product.discountPercent > 0 && product.originalPrice && (
-                  <span className={styles.originalPrice}>₹{product.originalPrice.toLocaleString('en-IN')}</span>
+                  <>
+                    <span className={styles.originalPrice}>₹{product.originalPrice.toLocaleString('en-IN')}</span>
+                    <span className={styles.discountBadge}>{product.discountPercent}% OFF</span>
+                  </>
                 )}
               </div>
             </div>
 
-            <div className={styles.description}>
-              <p className={styles.descriptionText}>{product.description}</p>
-            </div>
+            {/* Fabric & Material Section */}
+            {fabricType && (
+              <div className={styles.fabricSection}>
+                <span className={styles.fabricLabel}>Fabric & Material</span>
+                <span className={styles.fabricValue}>{fabricType}</span>
+              </div>
+            )}
 
-            {/* Attributes */}
-            <div className={styles.attributes}>
-              {product.material && (
-                <div className={styles.attributeRow}>
-                  <span className={styles.attributeLabel}>Material:</span>
-                  <span className={styles.attributeValue}>{product.material}</span>
+            {/* Available Colors Section */}
+            {colorVariants.length > 1 && (
+              <div className={styles.colorVariantsSection}>
+                <span className={styles.colorVariantsLabel}>Available Colors</span>
+                <div className={styles.colorSwatches}>
+                  {colorVariants.map((variant) => (
+                    <Link
+                      key={variant.id}
+                      to={`/product/${variant.slug}`}
+                      className={`${styles.colorSwatch} ${variant.id === product.id ? styles.colorSwatchActive : ''}`}
+                      aria-label={`View ${variant.color} variant`}
+                      title={variant.color}
+                    >
+                      <span
+                        className={styles.swatchInner}
+                        style={{ backgroundColor: variant.normalizedColor || '#ddd' }}
+                      />
+                      <span className={styles.swatchLabel}>{variant.color}</span>
+                    </Link>
+                  ))}
                 </div>
-              )}
-              {product.size && (
-                <div className={styles.attributeRow}>
-                  <span className={styles.attributeLabel}>Size:</span>
-                  <span className={styles.attributeValue}>{product.size}</span>
-                </div>
-              )}
-              {product.color && (
-                <div className={styles.attributeRow}>
-                  <span className={styles.attributeLabel}>Color:</span>
-                  <span className={styles.attributeValue}>{product.color}</span>
-                </div>
-              )}
-            </div>
+              </div>
+            )}
+
+            {/* Current Color Display (when no variants or single color) */}
+            {colorVariants.length <= 1 && product.color && (
+              <div className={styles.colorSection}>
+                <span className={styles.colorLabel}>Color</span>
+                <span className={styles.colorValue}>{product.color}</span>
+              </div>
+            )}
 
             {/* Quantity and Actions */}
             <div className={styles.actions}>
@@ -334,7 +373,7 @@ export default function ProductDetail() {
               </button>
             </div>
 
-            {/* Shipping Info */}
+            {/* Shipping Info - directly after Add to Cart */}
             <div className={styles.shippingInfo}>
               <div className={styles.shippingItem}>
                 <TruckIcon />
@@ -351,7 +390,6 @@ export default function ProductDetail() {
                 </div>
               </div>
             </div>
-
             {/* Trust Indicators */}
             <div className={styles.trustIndicators}>
               <div className={styles.trustItem}>
@@ -371,6 +409,66 @@ export default function ProductDetail() {
                 <span>Easy Returns</span>
               </div>
             </div>
+
+            {/* Advantages of Satin Section
+            <div className={styles.advantagesSection}>
+              <h3 className={styles.advantagesTitle}>Advantages of Satin</h3>
+              <div className={styles.advantagesGrid}>
+                <div className={styles.advantageItem}>
+                  <div className={styles.advantageIcon}>
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                      <path d="M12 2C8 2 4 6 4 10c0 6 8 12 8 12s8-6 8-12c0-4-4-8-8-8z" />
+                      <path d="M12 6c-2 0-4 2-4 4s2 4 4 4 4-2 4-4-2-4-4-4z" />
+                    </svg>
+                  </div>
+                  <span className={styles.advantageText}>Reduces Frizziness</span>
+                </div>
+                <div className={styles.advantageItem}>
+                  <div className={styles.advantageIcon}>
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                      <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
+                    </svg>
+                  </div>
+                  <span className={styles.advantageText}>Reduces Hair Breakage</span>
+                </div>
+                <div className={styles.advantageItem}>
+                  <div className={styles.advantageIcon}>
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                      <path d="M4 4c4-2 8 0 8 4s-4 6 0 10c4 4 8 2 8-2s-4-6 0-10" />
+                      <circle cx="12" cy="12" r="3" />
+                    </svg>
+                  </div>
+                  <span className={styles.advantageText}>Controls Hair Tangling</span>
+                </div>
+                <div className={styles.advantageItem}>
+                  <div className={styles.advantageIcon}>
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                      <path d="M12 2l2 7h7l-5.5 4 2 7-5.5-4-5.5 4 2-7L3 9h7z" />
+                    </svg>
+                  </div>
+                  <span className={styles.advantageText}>Retains Moisture</span>
+                </div>
+                <div className={styles.advantageItem}>
+                  <div className={styles.advantageIcon}>
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                      <path d="M12 3c-4.5 0-8 3.5-8 8 0 5 8 11 8 11s8-6 8-11c0-4.5-3.5-8-8-8z" />
+                      <path d="M12 7v6M9 10h6" />
+                    </svg>
+                  </div>
+                  <span className={styles.advantageText}>Improves Hair Texture</span>
+                </div>
+                <div className={styles.advantageItem}>
+                  <div className={styles.advantageIcon}>
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                      <path d="M9 12l2 2 4-4" />
+                      <circle cx="12" cy="12" r="10" />
+                    </svg>
+                  </div>
+                  <span className={styles.advantageText}>Reduces Split Ends</span>
+                </div>
+              </div>
+            </div> */}
+
           </div>
         </div>
 
