@@ -93,6 +93,13 @@ export default function ProductCard({ product, index = 0 }) {
                     )}
                 </button>
 
+                {/* Discount Badge */}
+                {product.discountPercent > 0 && (
+                    <span className={styles.discountBadge}>
+                        {product.discountPercent}% OFF
+                    </span>
+                )}
+
                 {/* Wishlist Button */}
                 <button
                     className={`${styles.wishlistBtn} ${inWishlist ? styles.wishlistBtnActive : ''}`}
@@ -115,7 +122,12 @@ export default function ProductCard({ product, index = 0 }) {
                 </div>
 
                 <div className={styles.meta}>
-                    <span className={styles.price}>₹{product.price?.toLocaleString('en-IN') || '0'}</span>
+                    <div className={styles.priceContainer}>
+                        <span className={styles.offerPrice}>₹{product.offerPrice?.toLocaleString('en-IN') || product.price?.toLocaleString('en-IN') || '0'}</span>
+                        {product.discountPercent > 0 && product.originalPrice && (
+                            <span className={styles.originalPrice}>₹{product.originalPrice.toLocaleString('en-IN')}</span>
+                        )}
+                    </div>
                     {product.rating && <span className={styles.rating}>★ {product.rating}</span>}
                 </div>
 
