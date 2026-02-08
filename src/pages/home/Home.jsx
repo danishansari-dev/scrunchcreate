@@ -16,6 +16,7 @@ export default function Home() {
     setProducts(data)
   }, [])
 
+
   // Filter products by category (case-insensitive matching) - limit to 8 for preview
   const hairbowsProducts = useMemo(() =>
     products.filter(p =>
