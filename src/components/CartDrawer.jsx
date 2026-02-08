@@ -107,7 +107,12 @@ export default function CartDrawer() {
                                     <div className={styles.details}>
                                         <div className={styles.itemName}>{item.name}</div>
                                         {item.color && <div className={styles.meta}>{item.color}</div>}
-                                        <div className={styles.itemPrice}>₹{item.price.toLocaleString('en-IN')}</div>
+                                        <div className={styles.priceContainer}>
+                                            <span className={styles.itemPrice}>₹{(item.offerPrice || item.price).toLocaleString('en-IN')}</span>
+                                            {item.discountPercent > 0 && item.originalPrice && (
+                                                <span className={styles.itemOriginalPrice}>₹{item.originalPrice.toLocaleString('en-IN')}</span>
+                                            )}
+                                        </div>
                                     </div>
 
                                     {/* Quantity Controls */}
