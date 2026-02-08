@@ -243,18 +243,18 @@
   align-items: center;
   background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
   color: white;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
-  padding: 6px 12px;
-  border-radius: 20px;
+  padding: 4px 8px;
+  border-radius: 4px;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3px;
 }
 
 .priceRow {
   display: flex;
-  align-items: baseline;
-  gap: 12px;
+  align-items: center;
+  gap: 10px;
   flex-wrap: wrap;
 }
 
@@ -293,28 +293,118 @@
   margin: 0;
 }
 
-.attributes {
-  display: grid;
-  gap: 12px;
+/* Fabric Section */
+.fabricSection {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
   background: var(--color-surface-soft);
-  padding: 20px;
+  border: 1px solid var(--color-border-soft);
   border-radius: var(--radius-md);
 }
 
-.attributeRow {
-  display: flex;
-  justify-content: space-between;
-  font-size: 14px;
-}
-
-.attributeLabel {
+.fabricLabel {
   color: var(--color-text-muted);
+  font-size: 14px;
   font-weight: 500;
 }
 
-.attributeValue {
+.fabricValue {
   color: var(--color-text-main);
   font-weight: 600;
+  font-size: 14px;
+}
+
+/* Color Variants Section */
+.colorVariantsSection {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.colorVariantsLabel {
+  color: var(--color-text-muted);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.colorSwatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.colorSwatch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.colorSwatch:hover {
+  transform: scale(1.05);
+}
+
+.swatchInner {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid var(--color-border-soft);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.colorSwatch:hover .swatchInner {
+  border-color: var(--color-primary);
+}
+
+.colorSwatchActive .swatchInner {
+  border-color: var(--color-primary);
+  border-width: 3px;
+  box-shadow: 0 0 0 2px var(--color-primary-soft);
+}
+
+.swatchLabel {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  text-transform: capitalize;
+  max-width: 50px;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.colorSwatchActive .swatchLabel {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+/* Color Section (single color) */
+.colorSection {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  background: var(--color-surface-soft);
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-md);
+}
+
+.colorLabel {
+  color: var(--color-text-muted);
+  font-size: 14px;
+}
+
+.colorValue {
+  color: var(--color-text-main);
+  font-weight: 500;
+  font-size: 14px;
+  text-transform: capitalize;
 }
 
 /* Actions */
@@ -375,6 +465,70 @@
   background: var(--color-primary-strong);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(231, 133, 146, 0.3);
+}
+
+/* Advantages Section */
+.advantagesSection {
+  margin-top: 8px;
+}
+
+.advantagesTitle {
+  font-family: var(--font-heading);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--color-text-main);
+  margin: 0 0 16px;
+  text-align: center;
+}
+
+.advantagesGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.advantageItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 16px 8px;
+  background: var(--color-surface-soft);
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-md);
+  transition: all 0.2s ease;
+}
+
+.advantageItem:hover {
+  border-color: var(--color-primary);
+  transform: translateY(-2px);
+}
+
+.advantageIcon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+  color: var(--color-primary);
+}
+
+.advantageIcon svg {
+  stroke: var(--color-primary);
+}
+
+.advantageText {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text-main);
+  line-height: 1.3;
+}
+
+@media (max-width: 480px) {
+  .advantagesGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 /* Shipping Info */
