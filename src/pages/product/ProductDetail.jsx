@@ -6,7 +6,6 @@ import { useCart } from '../../components/CartContext'
 import { useToast } from '../../components/ToastContext'
 import { useWishlist } from '../../context/WishlistContext'
 import ProductCard from '../../components/ProductCard'
-import ProductReviews from '../../components/ProductReviews'
 import { AnimatePresence } from 'framer-motion'
 
 // Heart Icon SVG components
@@ -275,7 +274,6 @@ export default function ProductDetail() {
                 {product.discountPercent > 0 && product.originalPrice && (
                   <span className={styles.originalPrice}>₹{product.originalPrice.toLocaleString('en-IN')}</span>
                 )}
-                {product.rating && <span className={styles.rating}>★ {product.rating}</span>}
               </div>
             </div>
 
@@ -375,9 +373,6 @@ export default function ProductDetail() {
             </div>
           </div>
         </div>
-
-        {/* Customer Reviews */}
-        <ProductReviews productId={product.id} />
 
         {/* Related Products */}
         {relatedProducts.length > 0 && (
