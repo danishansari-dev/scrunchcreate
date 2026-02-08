@@ -155,7 +155,19 @@
     font-size: 13px;
     font-weight: 600;
     color: var(--color-primary);
+}
+
+.priceContainer {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
     margin-top: 4px;
+}
+
+.itemOriginalPrice {
+    font-size: 11px;
+    color: var(--color-text-muted);
+    text-decoration: line-through;
 }
 
 /* Quantity Controls */
