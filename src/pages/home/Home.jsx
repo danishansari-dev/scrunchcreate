@@ -5,6 +5,7 @@ import CollectionsSection from '../../components/CollectionsSection'
 import BestSellersSection from '../../components/BestSellersSection'
 import WhyChooseSection from '../../components/WhyChooseSection'
 import ProductList from '../../components/ProductList'
+import InstagramSection from '../../components/InstagramSection'
 import { getProducts } from '../../utils/getProducts'
 
 export default function Home() {
@@ -52,6 +53,7 @@ export default function Home() {
           />
         </div>
       </div>
+      <InstagramSection />
     </>
   )
 }
