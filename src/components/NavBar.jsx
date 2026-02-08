@@ -143,7 +143,7 @@ const NavBar = () => {
 
         <nav className={styles.nav}>
           <ul className={styles.navLinks}>
-            <li><Link to="/products">Shop All</Link></li>
+            <li><Link to="/products">Shop</Link></li>
 
             {navCategories.map(category => {
               const slug = categoryToSlug[category];
