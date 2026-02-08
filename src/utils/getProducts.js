@@ -11,11 +11,15 @@ let cachedProducts = null;
 export function getProducts() {
   if (!cachedProducts) {
     // Enrich products with dynamic pricing and normalized colors
-    cachedProducts = productsData.map(product => ({
-      ...product,
-      price: getProductPrice(product),
-      normalizedColor: normalizeColor(product.color)
-    }));
+    cachedProducts = productsData.map(product => {
+      const pricing = getProductPrice(product);
+      return {
+        ...product,
+        ...pricing,  // Spread offerPrice, originalPrice, discountPercent
+        price: pricing.offerPrice, // Keep backward-compatible price field
+        normalizedColor: normalizeColor(product.color)
+      };
+    });
   }
   return cachedProducts;
 }
