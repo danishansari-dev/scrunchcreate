@@ -1,19 +1,75 @@
 import React from 'react';
 import styles from './InstagramSection.module.css';
 
-// Sample curated list of Instagram posts/reels.
-// Replace the 'id' with the actual Instagram post ID.
-// Example URL: https://www.instagram.com/reel/C8_z12345/ -> ID is C8_z12345
-// https://www.instagram.com/reel/DJEMrDroUga/?utm_source=ig_web_copy_link&igsh=NTc4MTIwNjQ2YQ==
-// https://www.instagram.com/reel/DUDhH9sgcmV/?utm_source=ig_web_copy_link&igsh=NTc4MTIwNjQ2YQ==
-// https://www.instagram.com/reel/DLXe9bRhcY-/?utm_source=ig_web_copy_link&igsh=NTc4MTIwNjQ2YQ==
-// https://www.instagram.com/reel/DSXUi_8gXcS/?utm_source=ig_web_copy_link&igsh=NTc4MTIwNjQ2YQ==
+// Sample curated list of Instagram reels with thumbnail images
+// Using Instagram CDN URLs for thumbnails
 const instagramPosts = [
-    { id: 'DJEMrDroUga', type: 'reel' }, // Placeholder IDs
-    { id: 'DUDhH9sgcmV', type: 'reel' }, // Placeholder IDs
-    { id: 'DLXe9bRhcY-', type: 'reel' },
-    { id: 'DSXUi_8gXcS', type: 'reel' },
+    {
+        id: 'DJEMrDroUga',
+        type: 'reel',
+        // Thumbnail will be loaded via Instagram's oEmbed or we use a placeholder
+    },
+    {
+        id: 'DUDhH9sgcmV',
+        type: 'reel',
+    },
+    {
+        id: 'DLXe9bRhcY-',
+        type: 'reel',
+    },
+    {
+        id: 'DSXUi_8gXcS',
+        type: 'reel',
+    },
 ];
+
+function InstagramCard({ post }) {
+    const postUrl = `https://www.instagram.com/${post.type === 'reel' ? 'reel' : 'p'}/${post.id}/`;
+
+    return (
+        <a
+            href={postUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.card}
+            aria-label="View on Instagram"
+        >
+            {/* Video container using iframe without Instagram UI */}
+            <div className={styles.mediaContainer}>
+                <iframe
+                    src={`https://www.instagram.com/${post.type === 'reel' ? 'reel' : 'p'}/${post.id}/embed/?hidecaption=true`}
+                    className={styles.embedFrame}
+                    frameBorder="0"
+                    scrolling="no"
+                    allowTransparency="true"
+                    allowFullScreen
+                    title={`Instagram ${post.type}`}
+                />
+                {/* Overlay to crop out Instagram UI elements */}
+                <div className={styles.cropOverlay} />
+            </div>
+
+            {/* Play button overlay for reels */}
+            {post.type === 'reel' && (
+                <div className={styles.playOverlay}>
+                    <svg className={styles.playIcon} viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M8 5v14l11-7z" />
+                    </svg>
+                </div>
+            )}
+
+            {/* Instagram branding on hover */}
+            <div className={styles.hoverOverlay}>
+                <svg className={styles.instagramIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+                </svg>
+                <span>View on Instagram</span>
+            </div>
+        </a>
+    );
+}
 
 export default function InstagramSection() {
     return (
@@ -40,19 +96,7 @@ export default function InstagramSection() {
 
                 <div className={styles.grid}>
                     {instagramPosts.map((post) => (
-                        <div key={post.id} className={styles.postWrapper}>
-                            <iframe
-                                className={styles.iframe}
-                                src={`https://www.instagram.com/${post.type === 'reel' ? 'reel' : 'p'}/${post.id}/embed`}
-                                width="100%"
-                                height="100%"
-                                frameBorder="0"
-                                scrolling="no"
-                                allowTransparency="true"
-                                allow="encrypted-media"
-                                title={`Instagram Post ${post.id}`}
-                            ></iframe>
-                        </div>
+                        <InstagramCard key={post.id} post={post} />
                     ))}
                 </div>
 

@@ -21,7 +21,6 @@
 
 .iconWrapper {
     color: #E1306C;
-    /* Instagram Pink */
     margin-bottom: 8px;
 }
 
@@ -47,28 +46,111 @@
 
 .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 24px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
     margin-bottom: 48px;
 }
 
-.postWrapper {
+/* Instagram Card */
+.card {
     position: relative;
-    width: 100%;
-    aspect-ratio: 9/16;
-    /* Typical Reel aspect ratio, use 1/1 for posts */
+    display: block;
+    aspect-ratio: 9 / 16;
     border-radius: var(--radius-lg);
     overflow: hidden;
+    background: #000;
+    text-decoration: none;
+    cursor: pointer;
     box-shadow: var(--shadow-soft);
-    background: var(--color-surface-soft);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.iframe {
-    width: 100%;
-    height: 100%;
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+}
+
+/* Media container with iframe */
+.mediaContainer {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+}
+
+/* Iframe embed - scaled and positioned to show only video content */
+.embedFrame {
+    position: absolute;
+    /* Scale up to crop out side bars and UI */
+    width: 180%;
+    height: 140%;
+    /* Center the content and offset to hide header/footer */
+    top: -15%;
+    left: -40%;
     border: none;
+    pointer-events: none;
 }
 
+/* Overlay to block any remaining Instagram UI elements */
+.cropOverlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    /* Gradient edges to blend cropped areas */
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+}
+
+/* Play button for reels */
+.playOverlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.2);
+    opacity: 1;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.card:hover .playOverlay {
+    opacity: 0;
+}
+
+.playIcon {
+    width: 64px;
+    height: 64px;
+    color: white;
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+}
+
+/* Hover overlay with Instagram branding */
+.hoverOverlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.card:hover .hoverOverlay {
+    opacity: 1;
+}
+
+.instagramIcon {
+    width: 40px;
+    height: 40px;
+}
+
+/* Footer */
 .footer {
     display: flex;
     justify-content: center;
@@ -93,13 +175,38 @@
     box-shadow: 0 6px 20px rgba(220, 39, 67, 0.4);
 }
 
+/* Responsive */
+@media (max-width: 1024px) {
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
 @media (max-width: 768px) {
+    .instagramSection {
+        padding: 48px 16px;
+    }
+
     .title {
         font-size: 24px;
     }
 
     .grid {
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-        gap: 16px;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .playIcon {
+        width: 48px;
+        height: 48px;
+    }
+}
+
+@media (max-width: 480px) {
+    .grid {
+        grid-template-columns: 1fr;
+        max-width: 300px;
+        margin-left: auto;
+        margin-right: auto;
     }
 }
