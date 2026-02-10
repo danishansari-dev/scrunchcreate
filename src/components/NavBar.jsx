@@ -67,7 +67,9 @@ const NavBar = () => {
           };
         }
         typeGroups[type].count++;
-        if (p.normalizedColor || p.color) {
+        if (p.availableColors && Array.isArray(p.availableColors)) {
+          p.availableColors.forEach(c => typeGroups[type].colors.add(c));
+        } else if (p.normalizedColor || p.color) {
           typeGroups[type].colors.add(p.normalizedColor || p.color);
         }
       });
