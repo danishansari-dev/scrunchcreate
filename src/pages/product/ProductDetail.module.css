@@ -317,70 +317,100 @@
 }
 
 /* Color Variants Section */
+/* Color Variants Section */
 .colorVariantsSection {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
+  /* Reduced gap */
+  margin-top: 4px;
+  /* Minimal spacing from previous element */
 }
 
 .colorVariantsLabel {
-  color: var(--color-text-muted);
-  font-size: 14px;
-  font-weight: 500;
+  color: var(--color-text-main);
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 4px;
 }
 
 .colorSwatches {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 12px;
+  /* Tight grid */
+  align-items: flex-start;
 }
 
 .colorSwatch {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
-  text-decoration: none;
+  gap: 4px;
+  padding: 0;
+  background: none;
+  border: none;
   cursor: pointer;
-  transition: transform 0.2s ease;
+  width: 48px;
+  /* Fixed width for alignment */
+  transition: transform 0.1s ease;
+
+  /* Button Reset */
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  appearance: none;
+  -webkit-appearance: none;
 }
 
 .colorSwatch:hover {
-  transform: scale(1.05);
+  transform: translateY(-1px);
 }
 
 .swatchInner {
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  /* Compact size */
+  height: 32px;
   border-radius: 50%;
-  border: 2px solid var(--color-border-soft);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  /* Subtle border for unselected */
+  box-shadow: none;
   transition: all 0.2s ease;
 }
 
 .colorSwatch:hover .swatchInner {
-  border-color: var(--color-primary);
+  border-color: var(--color-text-muted);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Active State */
+.colorSwatchActive {
+  background: none;
+  border: none;
+  box-shadow: none;
+  transform: scale(1.0);
 }
 
 .colorSwatchActive .swatchInner {
-  border-color: var(--color-primary);
-  border-width: 3px;
-  box-shadow: 0 0 0 2px var(--color-primary-soft);
+  border: 2px solid var(--color-border-strong);
+  /* Dark border for selected */
+  box-shadow: 0 0 0 2px #fff inset;
+  /* White ring effect inside */
+  transform: scale(1.1);
 }
 
 .swatchLabel {
-  font-size: 11px;
+  font-size: 10px;
   color: var(--color-text-muted);
-  text-transform: capitalize;
-  max-width: 50px;
   text-align: center;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  line-height: 1.2;
+  white-space: normal;
+  /* Allow wrapping if needed */
+  max-width: 100%;
 }
 
 .colorSwatchActive .swatchLabel {
-  color: var(--color-primary);
+  color: var(--color-text-main);
   font-weight: 600;
 }
 
