@@ -56,13 +56,35 @@ export default function ProductCard({ product, index = 0 }) {
 
     const handleAddToCart = (e) => {
         e.stopPropagation()
-        const ok = addToCart(product, 1)
+
+        // If product has multiple variants, redirect to details page
+        if (product.variants && product.variants.length > 1) {
+            navigate(`/product/${product.slug || createSlug(product.name)}`)
+            return
+        }
+
+        // Single variant case: Construct a cart item with the specific variant ID
+        const variant = product.variants && product.variants.length > 0 ? product.variants[0] : null
+
+        // Fallback for safety, though getProducts ensures variants exist
+        const cartItem = variant ? {
+            ...product, // Base properties (name, price, category)
+            id: variant.id, // Use variant ID for unique cart entry
+            variantId: variant.id,
+            color: variant.color,
+            image: variant.images[0] || product.image,
+            slug: product.slug // Keep parent slug for linking back
+        } : product
+
+        const ok = addToCart(cartItem, 1)
         if (!ok) {
             navigate('/signin')
         } else {
             show('Added to cart', 'success')
         }
     }
+
+    const isMultiVariant = product.variants && product.variants.length > 1
 
     return (
         <motion.li
@@ -101,6 +123,12 @@ export default function ProductCard({ product, index = 0 }) {
                             className={`${styles.thumbImage} ${isHovered ? styles.thumbImageVisible : ''}`}
                             style={{ backgroundImage: `url(${secondaryImage})` }}
                         />
+                    )}
+                    {/* Variant Count Badge (Optional but helpful) */}
+                    {isMultiVariant && (
+                        <span className={styles.variantBadge}>
+                            {product.variants.length} Colors
+                        </span>
                     )}
                 </button>
 
@@ -141,10 +169,10 @@ export default function ProductCard({ product, index = 0 }) {
 
                 <button
                     type="button"
-                    className={styles.addToCart}
+                    className={`${styles.addToCart} ${isMultiVariant ? styles.viewOptions : ''}`}
                     onClick={handleAddToCart}
                 >
-                    Add to Cart
+                    {isMultiVariant ? 'View Options' : 'Add to Cart'}
                 </button>
             </div>
         </motion.li>
