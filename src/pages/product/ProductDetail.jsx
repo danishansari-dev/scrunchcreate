@@ -87,6 +87,7 @@ export default function ProductDetail() {
 
   const [selectedImageIndex, setSelectedImageIndex] = useState(0)
   const [product, setProduct] = useState(null)
+  const [selectedVariant, setSelectedVariant] = useState(null)
   const [quantity, setQuantity] = useState(1)
 
   // Load product from JSON
@@ -98,6 +99,10 @@ export default function ProductDetail() {
     const productData = getProductBySlug(slug)
     if (productData) {
       setProduct(productData)
+      // Default to first variant if available
+      if (productData.variants && productData.variants.length > 0) {
+        setSelectedVariant(productData.variants[0])
+      }
       setSelectedImageIndex(0)
       setQuantity(1)
     } else {
@@ -117,15 +122,10 @@ export default function ProductDetail() {
       .slice(0, 4)
   }, [product])
 
-  // Get color variants (same category+type, different colors)
+  // Get color variants directly from the product
   const colorVariants = useMemo(() => {
-    if (!product || !product.color) return []
-    const variants = getProductVariants(product)
-    // Include current product in the list and sort alphabetically
-    const allVariants = [product, ...variants].sort((a, b) =>
-      (a.id === product.id ? -1 : b.id === product.id ? 1 : (a.color || '').localeCompare(b.color || ''))
-    )
-    return allVariants
+    if (!product || !product.variants) return []
+    return product.variants
   }, [product])
 
   // Derive fabric type from product type
@@ -152,7 +152,18 @@ export default function ProductDetail() {
 
   const handleAddToCart = () => {
     if (!product) return
-    const ok = addToCart(product, quantity)
+
+    // Construct cart item with specific variant details
+    const cartItem = selectedVariant ? {
+      ...product,
+      id: selectedVariant.id, // Use variant ID for unique cart entry
+      variantId: selectedVariant.id,
+      color: selectedVariant.color,
+      image: selectedVariant.images[0] || product.image,
+      slug: product.slug // Keep parent slug
+    } : product
+
+    const ok = addToCart(cartItem, quantity)
     if (!ok) {
       navigate('/signin')
     } else {
@@ -212,8 +223,11 @@ export default function ProductDetail() {
     )
   }
 
-  // Use images from product
-  const images = product.images || [];
+  // Use images from selected variant or fallback to product
+  const images = (selectedVariant && selectedVariant.images && selectedVariant.images.length > 0)
+    ? selectedVariant.images
+    : (product.images || []);
+
   const mainImage = resolveImagePath(images[selectedImageIndex] || images[0] || product.image);
   const inWishlist = isInWishlist(product.id)
 
@@ -314,14 +328,21 @@ export default function ProductDetail() {
             {/* Available Colors Section */}
             {colorVariants.length > 1 && (
               <div className={styles.colorVariantsSection}>
-                <span className={styles.colorVariantsLabel}>Available Colors</span>
+                <span className={styles.colorVariantsLabel}>
+                  Available Colors: <span style={{ fontWeight: 400, color: 'var(--color-text-muted)' }}>
+                    {selectedVariant ? selectedVariant.color : ''}
+                  </span>
+                </span>
                 <div className={styles.colorSwatches}>
                   {colorVariants.map((variant) => (
-                    <Link
+                    <button
                       key={variant.id}
-                      to={`/product/${variant.slug}`}
-                      className={`${styles.colorSwatch} ${variant.id === product.id ? styles.colorSwatchActive : ''}`}
-                      aria-label={`View ${variant.color} variant`}
+                      onClick={() => {
+                        setSelectedVariant(variant)
+                        setSelectedImageIndex(0) // Reset image index on variant change
+                      }}
+                      className={`${styles.colorSwatch} ${selectedVariant && variant.id === selectedVariant.id ? styles.colorSwatchActive : ''}`}
+                      aria-label={`Select ${variant.color} variant`}
                       title={variant.color}
                     >
                       <span
@@ -329,7 +350,7 @@ export default function ProductDetail() {
                         style={{ background: variant.colorHex || '#ddd' }}
                       />
                       <span className={styles.swatchLabel}>{variant.color}</span>
-                    </Link>
+                    </button>
                   ))}
                 </div>
               </div>
