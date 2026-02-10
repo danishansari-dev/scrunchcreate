@@ -15,8 +15,7 @@
       "/assets/products/flowerjewellery/rose/yellow/sc-flowerjewellery-rose-yellow-5.webp",
       "/assets/products/flowerjewellery/rose/yellow/sc-flowerjewellery-rose-yellow-6.webp",
       "/assets/products/flowerjewellery/rose/yellow/sc-flowerjewellery-rose-yellow-7.webp",
-      "/assets/products/flowerjewellery/rose/yellow/sc-flowerjewellery-rose-yellow-8.webp",
-      "/assets/products/flowerjewellery/rose/yellow/sc-flowerjewellery-rose-yellow-9.webp"
+      "/assets/products/flowerjewellery/rose/yellow/sc-flowerjewellery-rose-yellow-8.webp"
     ]
   },
   {
@@ -2130,6 +2129,18 @@
       "/assets/products/scrunchie/tulip-sheer/yellow/sc-scrunchie-tulip-sheer-yellow-6.webp",
       "/assets/products/scrunchie/tulip-sheer/yellow/sc-scrunchie-tulip-sheer-yellow-7.webp",
       "/assets/products/scrunchie/tulip-sheer/yellow/sc-scrunchie-tulip-sheer-yellow-9.webp"
+    ]
+  },
+  {
+    "id": "testtype-testcategory-testcolor",
+    "slug": "testtype-testcategory-testcolor",
+    "name": "Testtype Testcategory Testcolor",
+    "category": "TestCategory",
+    "type": "TestType",
+    "color": "TestColor",
+    "price": 0,
+    "images": [
+      "/assets/products/TestCategory/TestType/TestColor/test_image.webp"
     ]
   }
 ]
