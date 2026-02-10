@@ -94,14 +94,14 @@ export default function CartDrawer() {
                             {items.map((item) => (
                                 <li key={item.id} className={styles.item}>
                                     {/* Thumbnail */}
-                                    {item.images && item.images[0] ? (
+                                    {(item.image || (item.images && item.images[0])) ? (
                                         <div
                                             className={styles.thumb}
-                                            style={{ backgroundImage: `url(${item.images[0]})` }}
+                                            style={{ backgroundImage: `url(${item.image || item.images[0]})` }}
                                         >
                                             {/* Hidden probe to detect broken images */}
                                             <img
-                                                src={item.images[0]}
+                                                src={item.image || item.images[0]}
                                                 alt=""
                                                 style={{ display: 'none' }}
                                                 onError={(e) => {
