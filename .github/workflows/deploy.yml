@@ -4,6 +4,13 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - 'public/assets/products/**'
+      - 'public/assets/guides/**'
+      - 'public/assets/product-measurements/**'
+      - 'marketing/**'
+      - 'README.md'
+      - 'docs/**'
 jobs:
   web-deploy:
     name: 🎉 Deploy
