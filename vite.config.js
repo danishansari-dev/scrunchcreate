@@ -323,12 +323,24 @@ function generateProductsPlugin() {
       // Watch for changes in public/assets/products
       const productsDir = join(__dirname, 'public', 'assets', 'products')
       server.watcher.add(productsDir)
-      server.watcher.on('change', (path) => {
+
+      // Debounce regeneration to batch rapid filesystem changes
+      let debounceTimer = null
+      const debouncedRegenerate = (eventType, path) => {
         if (path.includes('assets/products') || path.includes('assets\\products')) {
-          console.log('Product images changed, regenerating products.json...')
-          generateProductsJson()
+          clearTimeout(debounceTimer)
+          debounceTimer = setTimeout(() => {
+            console.log(`Product images ${eventType}: regenerating products.json...`)
+            generateProductsJson()
+          }, 500)
         }
-      })
+      }
+
+      // Listen for all relevant file events (not just 'change')
+      server.watcher.on('change', (path) => debouncedRegenerate('changed', path))
+      server.watcher.on('add', (path) => debouncedRegenerate('added', path))
+      server.watcher.on('unlink', (path) => debouncedRegenerate('deleted', path))
+      server.watcher.on('unlinkDir', (path) => debouncedRegenerate('folder deleted', path))
     }
   }
 }
