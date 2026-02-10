@@ -74,28 +74,19 @@ Here's a preview of the Scrunch & Create website:
 ```
 scrunchcreate/
 ├── src/
-│   ├── assets/                    # Static assets
-│   │   ├── products/              # Product images
-│   │   │   ├── Hairbows/          # Hair bow products
-│   │   │   │   ├── Jimmi Choo Hair Bow/
-│   │   │   │   ├── Satin Hair Bow/
-│   │   │   │   ├── Satin Scarf Hairbow/
-│   │   │   │   ├── Sheer Satin Hair Bow/
-│   │   │   │   └── Velvet Hair Bow/
-│   │   │   └── Scrunchies/        # Scrunchie products
-│   │   │       ├── Scrunchies/
-│   │   │       └── Tulip Scrunchie/
-│   │   ├── slider1.png, slider2.png, slider3.png  # Banner images
-│   │   └── react.svg              # Logo
+│   ├── components/                # Reusable components
+│   │   ├── NavBar.jsx
+│   │   ├── Banner.jsx
+│   │   ├── Footer.jsx
+│   │   ├── ProductList.jsx
+│   │   ├── FilterSidebar.jsx
+│   │   ├── CartDrawer.jsx         # Cart UI & Context
+│   │   ├── ToastContext.jsx       # Toast notification context
+│   │   └── ...                    # Other components
 │   │
-│   ├── componets/                 # Reusable components
-│   │   ├── banner/                # Hero banner component
-│   │   ├── navbar/                # Navigation bar
-│   │   ├── footer/                # Footer component
-│   │   ├── productlist/           # Product listing component
-│   │   ├── filtersidebar/         # Product filter sidebar
-│   │   ├── cart/                  # Cart context
-│   │   └── toast/                 # Toast notification context
+│   ├── context/                   # Global state context
+│   │   ├── AuthContext.jsx
+│   │   └── WishlistContext.jsx
 │   │
 │   ├── pages/                     # Page components
 │   │   ├── home/                  # Home page
@@ -106,16 +97,21 @@ scrunchcreate/
 │   │   │   └── SignUp.jsx
 │   │   └── profile/               # User profile page
 │   │
+│   ├── data/
+│   │   └── products.json          # Product catalog data
+│   │
 │   ├── App.jsx                    # Main application component
 │   ├── App.css                    # Global styles
 │   ├── index.css                  # Base styles
 │   └── main.jsx                   # Entry point
 │
 ├── public/                        # Public assets
-│   ├── _redirects                 # Netlify redirects
+│   ├── assets/
+│   │   └── products/              # Product images
+│   │       ├── Hairbows/
+│   │       └── Scrunchies/
 │   ├── logotitle.png              # Logo variations
-│   ├── logotitle2.png
-│   └── logotitle3.png
+│   └── _redirects                 # Netlify redirects
 │
 ├── package.json                   # Project dependencies
 ├── vite.config.js                 # Vite configuration
@@ -133,7 +129,8 @@ scrunchcreate/
 ### Product Management
 - **ProductList**: Displays products with images and details
 - **FilterSidebar**: Advanced filtering options
-- **productsData.js**: Product catalog data
+- **CartDrawer**: Shopping cart slide-out
+- **products.json**: Product catalog data (in `src/data/`)
 
 ### User Features
 - **Cart**: Shopping cart functionality with context API
@@ -248,43 +245,45 @@ For inquiries about custom orders or collaborations, please reach out through th
 
 ## 🛍️ Product Data Structure
 
-```javascript
+The product data is stored in `src/data/products.json` and follows this structure:
+
+```json
 {
-  id: 1,
-  name: "Product Name",
-  category: "scrunchies|bows|premium|combos",
-  price: 299,
-  originalPrice: 399, // for sale items
-  colors: ["blush-pink", "lavender"],
-  images: ["url1", "url2"],
-  description: "Product description",
-  material: "100% Silk",
-  size: "One Size Fits All",
-  inStock: true,
-  featured: true,
-  tags: ["silk", "premium"]
+  "id": 1,
+  "name": "Product Name",
+  "category": "scrunchies|bows",
+  "price": 299,
+  "originalPrice": 399,
+  "colors": ["blush-pink", "lavender"],
+  "images": ["/assets/products/.../image.avif"],
+  "description": "Product description",
+  "material": "100% Silk",
+  "size": "One Size Fits All",
+  "inStock": true,
+  "featured": true,
+  "tags": ["silk", "premium"]
 }
 ```
 
 ## 🔧 Customization
 
 ### Adding Products
-Edit `src/data/products.js` to add new products:
+Edit `src/data/products.json` to add new products. Ensure you add valid JSON objects.
 
-```javascript
+```json
 {
-  id: 9,
-  name: "New Product",
-  category: "scrunchies",
-  price: 199,
-  colors: ["blush-pink"],
-  images: ["image-url"],
-  description: "Product description",
-  material: "100% Cotton",
-  size: "One Size Fits All",
-  inStock: true,
-  featured: false,
-  tags: ["cotton", "new"]
+  "id": 9,
+  "name": "New Product",
+  "category": "scrunchies",
+  "price": 199,
+  "colors": ["blush-pink"],
+  "images": ["/assets/products/..."],
+  "description": "Product description",
+  "material": "100% Cotton",
+  "size": "One Size Fits All",
+  "inStock": true,
+  "featured": false,
+  "tags": ["cotton", "new"]
 }
 ```
 
