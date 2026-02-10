@@ -15,45 +15,48 @@ export function getProducts() {
   if (!cachedProducts) {
     cachedProducts = productsData
       .map(product => {
-        // Ensure product has variants
-        if (!product.variants || product.variants.length === 0) return null;
+        const hasVariants = product.variants && product.variants.length > 0;
+        const mainImage = product.image || (hasVariants && product.variants[0].images && product.variants[0].images[0]);
 
-        // Find the first variant with images to serve as the default/preview
-        const defaultVariant = product.variants.find(v => v.images && v.images.length > 0);
+        // If the product has no image at all, skip it
+        if (!mainImage) return null;
 
-        // If no variant has images, exclude the product (Safety)
-        if (!defaultVariant) return null;
-
+        // Parent already has calculated/saved prices from the refactor script,
+        // but let's re-run getProductPrice for consistency and to get originalPrice/discount
         const pricing = getProductPrice(product);
 
-        // Get all variant colors for filtering
-        const availableColors = product.variants.map(v => normalizeColor(v.color));
-        const defaultColor = defaultVariant.color;
+        if (hasVariants) {
+          const availableColors = product.variants.map(v => normalizeColor(v.color));
+          const defaultVariant = product.variants[0];
 
-        return {
-          ...product,
-          ...pricing,
-          price: pricing.offerPrice,
-          // Hoist the first variant's images to the top level for card previews
-          // and backward compatibility
-          images: defaultVariant.images,
-          primaryImage: defaultVariant.images[0],
-          // Add color info for filtering
-          color: defaultColor, // Backward compatibility
-          normalizedColor: normalizeColor(defaultColor), // Backward compatibility
-          availableColors: availableColors, // New field for robust filtering
-
-          // Keep the original variants array
-          variants: product.variants.map(v => ({
-            ...v,
-            colorHex: getColorHex(v.color), // Helper to get hex if needed
-            normalizedColor: normalizeColor(v.color),
-            // Ensure images is an array
-            images: v.images || []
-          }))
-        };
+          return {
+            ...product,
+            ...pricing,
+            images: product.images || (defaultVariant.images && defaultVariant.images.length > 0 ? defaultVariant.images : [product.image]),
+            primaryImage: mainImage,
+            color: product.color || defaultVariant.color,
+            normalizedColor: normalizeColor(product.color || defaultVariant.color),
+            availableColors: [...new Set(availableColors)],
+            variants: product.variants.map(v => ({
+              ...v,
+              colorHex: getColorHex(v.color),
+              normalizedColor: normalizeColor(v.color),
+              images: v.images || []
+            }))
+          };
+        } else {
+          // Fallback for single products (though refactor should have made all nested)
+          return {
+            ...product,
+            ...pricing,
+            primaryImage: mainImage,
+            normalizedColor: normalizeColor(product.color),
+            availableColors: product.color ? [normalizeColor(product.color)] : [],
+            colorHex: getColorHex(product.color)
+          };
+        }
       })
-      .filter(Boolean); // Filter out nulls
+      .filter(Boolean);
   }
   return cachedProducts;
 }
