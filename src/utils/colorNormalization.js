@@ -121,7 +121,25 @@ const COLOR_ALIASES = {
     'ash': 'grey',
 
     // Satin Tulip special case (type, not color)
-    'satin-tulip': 'combo'
+    'satin-tulip': 'combo',
+
+    // Specific colors
+    'navy-blue': 'navy',
+    'dark-green': 'green',
+    'bottle-green': 'green',
+    'light-blue': 'sky-blue',
+    'dark-blue': 'navy',
+    'light-pink': 'baby-pink',
+    'dark-pink': 'hot-pink',
+    'light-pink': 'baby-pink',
+    'dark-pink': 'hot-pink',
+    'light-purple': 'lilac',
+    'dark-purple': 'purple',
+
+    // Additional requested fixes
+    'golden': 'gold',
+    'mint-green': 'mint',
+    'golden-brown': 'brown'
 };
 
 /**
