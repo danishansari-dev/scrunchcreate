@@ -41,6 +41,12 @@ jobs:
           password: ${{ secrets.HOSTINGER_FTP_PASSWORD }}
           local-dir: ./dist/
           server-dir: ./
-          state-name: .ftp-deploy-sync-state-v6.json
-          # Removed exclude for assets so they are uploaded!
-          # state-name=v6 forces a fresh check to ensure everything is synced
+          state-name: .ftp-deploy-sync-state-v7.json
+          exclude: |
+            assets/products/**
+            assets/guides/**
+            assets/marketing/**
+            **/*.md
+            **/*.map
+            **/.git*
+            **/.DS_Store
