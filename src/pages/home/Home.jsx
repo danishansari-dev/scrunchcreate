@@ -37,7 +37,7 @@ export default function Home() {
       <FeaturesSection />
       <CollectionsSection />
       <BestSellersSection />
-      <WhyChooseSection />
+
       <div className="home-shell">
         <div className="home-shell-inner">
           <ProductList
@@ -55,6 +55,7 @@ export default function Home() {
         </div>
       </div>
       <InstagramSection />
+      <WhyChooseSection />
     </>
   )
 }
