@@ -90,7 +90,11 @@ export default function Products() {
   const availableColors = useMemo(() => {
     const colors = new Set()
     searchFilteredProducts.forEach(p => {
-      if (p.normalizedColor) colors.add(p.normalizedColor)
+      if (p.availableColors && Array.isArray(p.availableColors)) {
+        p.availableColors.forEach(c => colors.add(c))
+      } else if (p.normalizedColor) {
+        colors.add(p.normalizedColor)
+      }
     })
     return Array.from(colors).sort()
   }, [searchFilteredProducts])
@@ -108,7 +112,13 @@ export default function Products() {
     let products = searchFilteredProducts
 
     if (selectedColors.length > 0) {
-      products = products.filter(p => p.normalizedColor && selectedColors.includes(p.normalizedColor))
+      products = products.filter(p => {
+        if (p.availableColors && Array.isArray(p.availableColors)) {
+          // Check if ANY of the product's colors match the selected filters
+          return p.availableColors.some(c => selectedColors.includes(c))
+        }
+        return p.normalizedColor && selectedColors.includes(p.normalizedColor)
+      })
     }
 
     if (selectedTypes.length > 0) {
