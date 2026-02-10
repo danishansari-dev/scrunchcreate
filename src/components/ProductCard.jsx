@@ -27,6 +27,7 @@ export default function ProductCard({ product, index = 0 }) {
     const { show } = useToast()
     const { isInWishlist, toggleWishlist } = useWishlist()
     const [isHovered, setIsHovered] = useState(false)
+    const [imageError, setImageError] = useState(false)
 
     const images = product.images || []
     // Handle both array of strings and product.image property
@@ -35,7 +36,7 @@ export default function ProductCard({ product, index = 0 }) {
 
     const primaryImage = primaryImageRaw ? resolveImagePath(primaryImageRaw) : null
     const secondaryImage = secondaryImageRaw ? resolveImagePath(secondaryImageRaw) : null
-    const hasMultipleImages = !!secondaryImage
+    const hasMultipleImages = !!secondaryImage && !imageError
 
     const inWishlist = isInWishlist(product.id)
 

@@ -245,7 +245,7 @@ export default function ProductDetail() {
                     onMouseEnter={() => setSelectedImageIndex(idx)}
                     onClick={() => setSelectedImageIndex(idx)}
                   >
-                    <img src={resolveImagePath(img)} alt={`${product.name} view ${idx + 1}`} />
+                    <img src={resolveImagePath(img)} alt={`${product.name} view ${idx + 1}`} onError={(e) => e.target.style.display = 'none'} />
                   </button>
                 ))}
               </div>
@@ -266,6 +266,7 @@ export default function ProductDetail() {
                   src={mainImage}
                   alt={product.name}
                   className={styles.mainImageImg}
+                  onError={(e) => e.target.style.opacity = '0'}
                 />
               )}
               <div className={styles.imageActions}>
