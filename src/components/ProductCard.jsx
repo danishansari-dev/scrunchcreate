@@ -40,6 +40,9 @@ export default function ProductCard({ product, index = 0 }) {
 
     const inWishlist = isInWishlist(product.id)
 
+    // Don't render the card at all if there are no images or primary image failed
+    if (!primaryImage || imageError) return null
+
     const handleWishlistClick = (e) => {
         e.stopPropagation()
         e.preventDefault()
@@ -80,6 +83,13 @@ export default function ProductCard({ product, index = 0 }) {
                     aria-label={`View ${product.name}`}
                     onClick={handleProductClick}
                 >
+                    {/* Hidden probe to detect background-image load failure */}
+                    <img
+                        src={primaryImage}
+                        alt=""
+                        style={{ display: 'none' }}
+                        onError={() => setImageError(true)}
+                    />
                     {/* Primary Image */}
                     <div
                         className={`${styles.thumbImage} ${!isHovered || !hasMultipleImages ? styles.thumbImageVisible : ''}`}
