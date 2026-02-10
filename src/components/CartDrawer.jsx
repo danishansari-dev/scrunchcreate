@@ -98,7 +98,18 @@ export default function CartDrawer() {
                                         <div
                                             className={styles.thumb}
                                             style={{ backgroundImage: `url(${item.images[0]})` }}
-                                        />
+                                        >
+                                            {/* Hidden probe to detect broken images */}
+                                            <img
+                                                src={item.images[0]}
+                                                alt=""
+                                                style={{ display: 'none' }}
+                                                onError={(e) => {
+                                                    // Hide the parent thumbnail div on error
+                                                    e.target.parentElement.style.display = 'none'
+                                                }}
+                                            />
+                                        </div>
                                     ) : (
                                         <div className={styles.thumb} />
                                     )}
