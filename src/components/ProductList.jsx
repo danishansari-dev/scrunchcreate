@@ -5,7 +5,7 @@ import ProductCard from './ProductCard'
 
 export default function ProductList({ title, products = [], showViewAllLink = false, viewAllHref = '/products' }) {
   // Filter out products without images or invalid data
-  const validProducts = products.filter(p => p && p.id && p.name)
+  const validProducts = products.filter(p => p && p.id && p.name && Array.isArray(p.images) && p.images.length > 0)
 
   if (validProducts.length === 0) {
     return null // Don't render empty sections
