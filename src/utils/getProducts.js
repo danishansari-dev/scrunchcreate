@@ -1,6 +1,9 @@
 /**
  * Load and return products from products.json
  * Uses absolute paths starting with /assets/products (no imports)
+ *
+ * SAFETY: Products with empty or missing image arrays are automatically
+ * excluded to prevent blank/broken cards in any view.
  */
 import productsData from '../data/products.json';
 import { getProductPrice } from './pricing';
@@ -10,17 +13,20 @@ let cachedProducts = null;
 
 export function getProducts() {
   if (!cachedProducts) {
-    // Enrich products with dynamic pricing and normalized colors
-    cachedProducts = productsData.map(product => {
-      const pricing = getProductPrice(product);
-      return {
-        ...product,
-        ...pricing,  // Spread offerPrice, originalPrice, discountPercent
-        price: pricing.offerPrice, // Keep backward-compatible price field
-        normalizedColor: normalizeColor(product.color),
-        colorHex: getColorHex(product.color)
-      };
-    });
+    // Enrich products with dynamic pricing and normalized colors,
+    // then filter out any product without at least one image
+    cachedProducts = productsData
+      .filter(product => Array.isArray(product.images) && product.images.length > 0)
+      .map(product => {
+        const pricing = getProductPrice(product);
+        return {
+          ...product,
+          ...pricing,  // Spread offerPrice, originalPrice, discountPercent
+          price: pricing.offerPrice, // Keep backward-compatible price field
+          normalizedColor: normalizeColor(product.color),
+          colorHex: getColorHex(product.color)
+        };
+      });
   }
   return cachedProducts;
 }
