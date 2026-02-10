@@ -29,19 +29,18 @@ export default function ProductCard({ product, index = 0 }) {
     const [isHovered, setIsHovered] = useState(false)
     const [imageError, setImageError] = useState(false)
 
-    const images = product.images || []
-    // Handle both array of strings and product.image property
-    const primaryImageRaw = images[0] || product.image || null
-    const secondaryImageRaw = images.length > 1 ? images[1] : null
+    // Use the top-level image or the first variant image as primary
+    const primaryImageRaw = product.image || (product.variants?.[0]?.images?.[0]) || null;
+    const secondaryImageRaw = (product.variants?.[0]?.images?.length > 1) ? product.variants[0].images[1] : null;
 
-    const primaryImage = primaryImageRaw ? resolveImagePath(primaryImageRaw) : null
-    const secondaryImage = secondaryImageRaw ? resolveImagePath(secondaryImageRaw) : null
-    const hasMultipleImages = !!secondaryImage && !imageError
+    const primaryImage = primaryImageRaw ? resolveImagePath(primaryImageRaw) : null;
+    const secondaryImage = secondaryImageRaw ? resolveImagePath(secondaryImageRaw) : null;
+    const hasMultipleImages = !!secondaryImage && !imageError;
 
-    const inWishlist = isInWishlist(product.id)
+    const inWishlist = isInWishlist(product.id);
 
-    // Don't render the card at all if there are no images or primary image failed
-    if (!primaryImage || imageError) return null
+    // Don't render the card at all if there's no primary image or it failed to load
+    if (!primaryImage || imageError) return null;
 
     const handleWishlistClick = (e) => {
         e.stopPropagation()
