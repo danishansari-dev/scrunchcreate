@@ -19,8 +19,18 @@ function writeCartToStorage(items) {
   }
 }
 
+function normalizeItem(item) {
+  return {
+    ...item,
+    price: item.offerPrice || item.price || 0
+  }
+}
+
 export function CartProvider({ children }) {
-  const [items, setItems] = useState(() => readCartFromStorage())
+  const [items, setItems] = useState(() => {
+    const stored = readCartFromStorage()
+    return stored.map(normalizeItem)
+  })
   const [isCartOpen, setIsCartOpen] = useState(false)
 
   useEffect(() => {
@@ -33,15 +43,16 @@ export function CartProvider({ children }) {
   const toggleCart = () => setIsCartOpen((prev) => !prev)
 
   const addToCart = (product, qty = 1) => {
+    const itemToAdd = normalizeItem({ ...product, qty })
+
     setItems((prev) => {
-      const idx = prev.findIndex((p) => p.id === product.id)
+      const idx = prev.findIndex((p) => p.id === itemToAdd.id)
       if (idx !== -1) {
         const next = [...prev]
         next[idx] = { ...next[idx], qty: next[idx].qty + qty }
         return next
       }
-      // Store full product details for WhatsApp checkout
-      return [...prev, { ...product, qty }]
+      return [...prev, itemToAdd]
     })
     // Open cart drawer when item is added
     setIsCartOpen(true)
@@ -62,7 +73,13 @@ export function CartProvider({ children }) {
   }
 
   const decrement = (id) => {
-    setItems((prev) => prev.map((p) => (p.id === id ? { ...p, qty: Math.max(1, p.qty - 1) } : p)))
+    setItems((prev) => {
+      const item = prev.find((p) => p.id === id) // Find the item
+      if (item?.qty === 1) {
+        return prev.filter((p) => p.id !== id) // Remove if qty is 1
+      }
+      return prev.map((p) => (p.id === id ? { ...p, qty: p.qty - 1 } : p)) // Else decrement
+    })
   }
 
   const clearCart = () => setItems([])
