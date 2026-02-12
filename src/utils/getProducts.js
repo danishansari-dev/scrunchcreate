@@ -15,8 +15,12 @@ export function getProducts() {
   if (!cachedProducts) {
     cachedProducts = productsData
       .map(product => {
+        // The generated products.json has a flat structure with an 'images' array.
+        // It does NOT have a top-level 'image' string or 'variants' array in the current generation script.
         const hasVariants = product.variants && product.variants.length > 0;
-        const mainImage = product.image || (hasVariants && product.variants[0].images && product.variants[0].images[0]);
+
+        // Use the first image from the images array if 'image' property is missing
+        const mainImage = product.image || (product.images && product.images.length > 0 ? product.images[0] : null) || (hasVariants && product.variants[0].images && product.variants[0].images[0]);
 
         // If the product has no image at all, skip it
         if (!mainImage) return null;
@@ -32,7 +36,7 @@ export function getProducts() {
           return {
             ...product,
             ...pricing,
-            images: product.images || (defaultVariant.images && defaultVariant.images.length > 0 ? defaultVariant.images : [product.image]),
+            images: product.images || (defaultVariant.images && defaultVariant.images.length > 0 ? defaultVariant.images : [mainImage]),
             primaryImage: mainImage,
             color: product.color || defaultVariant.color,
             normalizedColor: normalizeColor(product.color || defaultVariant.color),
@@ -45,10 +49,11 @@ export function getProducts() {
             }))
           };
         } else {
-          // Fallback for single products (though refactor should have made all nested)
+          // Standard case for the current flat products.json
           return {
             ...product,
             ...pricing,
+            images: product.images || [mainImage],
             primaryImage: mainImage,
             normalizedColor: normalizeColor(product.color),
             availableColors: product.color ? [normalizeColor(product.color)] : [],
