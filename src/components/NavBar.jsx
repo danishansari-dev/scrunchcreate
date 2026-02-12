@@ -2,7 +2,6 @@ import React, { useState, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from './NavBar.module.css';
 import { useCart } from '../components/CartContext';
-import { useAuth } from '../context/AuthContext';
 import { getProducts } from '../utils/getProducts';
 import { useWishlist } from '../context/WishlistContext';
 
@@ -34,17 +33,11 @@ const navCategories = ['HairBow', 'Scrunchie', 'GiftHamper', 'FlowerJewellery'];
 const NavBar = () => {
   const { totalItems, toggleCart } = useCart();
   const { wishlist } = useWishlist();
-  const { isAuthenticated, currentUser, logout } = useAuth();
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-
-  const handleLogout = () => {
-    logout();
-    navigate('/');
-  };
 
   // Get all products and derive categories with their types and colors
   const categoryData = useMemo(() => {
@@ -251,35 +244,6 @@ const NavBar = () => {
             </svg>
             {wishlist.length > 0 && <span className={styles.cartCount}>{wishlist.length}</span>}
           </Link>
-          {isAuthenticated ? (
-            <>
-              <Link to="/profile" aria-label="Account" title={currentUser?.name || 'Account'}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                  <circle cx="12" cy="7" r="4"></circle>
-                </svg>
-              </Link>
-              <button
-                onClick={handleLogout}
-                aria-label="Logout"
-                className={styles.iconButton}
-                title="Logout"
-              >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                  <polyline points="16 17 21 12 16 7"></polyline>
-                  <line x1="21" y1="12" x2="9" y2="12"></line>
-                </svg>
-              </button>
-            </>
-          ) : (
-            <Link to="/signin" aria-label="Sign In" title="Sign In">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                <circle cx="12" cy="7" r="4"></circle>
-              </svg>
-            </Link>
-          )}
           <button onClick={toggleCart} className={styles.cartBadge} aria-label="Shopping cart">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
               <circle cx="9" cy="21" r="1"></circle>
