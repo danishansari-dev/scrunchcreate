@@ -59,23 +59,18 @@ export default function ProductCard({ product, index = 0 }) {
     const handleAddToCart = (e) => {
         e.stopPropagation()
 
-        // If product has multiple variants, redirect to details page
-        if (product.variants && product.variants.length > 1) {
-            navigate(`/product/${product.slug || createSlug(product.name)}`)
-            return
-        }
-
-        // Single variant case: Construct a cart item with the specific variant ID
+        // ALWAYS Add to Cart, even for multi-variant (use first variant by default)
         const variant = product.variants && product.variants.length > 0 ? product.variants[0] : null
 
-        // Fallback for safety, though getProducts ensures variants exist
         const cartItem = variant ? {
-            ...product, // Base properties (name, price, category)
-            id: variant.id, // Use variant ID for unique cart entry
+            ...product, // Base properties
+            id: variant.id,
             variantId: variant.id,
             color: variant.color,
-            image: variant.images[0] || product.image,
-            slug: product.slug // Keep parent slug for linking back
+            image: resolveImagePath(variant.images[0] || product.image),
+            // If variant has specific price, use it? Usually variants share price in this app context unless specified.
+            // If logic required using variant price, we'd do: price: variant.price || product.price
+            slug: product.slug
         } : product
 
         const ok = addToCart(cartItem, 1)
@@ -107,23 +102,21 @@ export default function ProductCard({ product, index = 0 }) {
                     aria-label={`View ${product.name}`}
                     onClick={handleProductClick}
                 >
-                    {/* Hidden probe to detect background-image load failure */}
+                    {/* Primary Image */}
                     <img
                         src={primaryImage}
-                        alt=""
-                        style={{ display: 'none' }}
-                        onError={() => setImageError(true)}
-                    />
-                    {/* Primary Image */}
-                    <div
+                        alt={product.name}
                         className={`${styles.thumbImage} ${!isHovered || !hasMultipleImages ? styles.thumbImageVisible : ''}`}
-                        style={primaryImage ? { backgroundImage: `url(${primaryImage})` } : {}}
+                        loading="lazy"
+                        onError={() => setImageError(true)}
                     />
                     {/* Secondary Image (only rendered if exists) */}
                     {hasMultipleImages && (
-                        <div
+                        <img
+                            src={secondaryImage}
+                            alt={`${product.name} alternate view`}
                             className={`${styles.thumbImage} ${isHovered ? styles.thumbImageVisible : ''}`}
-                            style={{ backgroundImage: `url(${secondaryImage})` }}
+                            loading="lazy"
                         />
                     )}
                     {/* Variant Count Badge (Optional but helpful) */}
@@ -171,10 +164,10 @@ export default function ProductCard({ product, index = 0 }) {
 
                 <button
                     type="button"
-                    className={`${styles.addToCart} ${isMultiVariant ? styles.viewOptions : ''}`}
+                    className={styles.addToCart}
                     onClick={handleAddToCart}
                 >
-                    {isMultiVariant ? 'View Options' : 'Add to Cart'}
+                    Add to Cart
                 </button>
             </div>
         </motion.li>
