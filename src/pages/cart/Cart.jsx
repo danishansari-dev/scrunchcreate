@@ -37,11 +37,17 @@ export default function Cart() {
                 <div className={styles.info}>
                   {/* Thumbnail logic: if image exists, show it, else generic */}
                   {item.images && item.images[0] ? (
-                    <div
-                      className={styles.thumb}
-                      style={{ backgroundImage: `url(${item.images[0]})` }}
-                      aria-hidden="true"
-                    />
+                    <div className={styles.thumb}>
+                      <img
+                        src={item.images[0]}
+                        alt={item.name}
+                        className={styles.thumbImg}
+                        loading="lazy"
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                        }}
+                      />
+                    </div>
                   ) : (
                     <div className={styles.thumb} aria-hidden="true" />
                   )}

@@ -13,11 +13,17 @@
   --color-on-primary: #ffffff;
   --color-error: #d20000;
   --color-rating: #ffd700;
-  --shadow-soft: 0 0 5px rgba(0,0,0,0.08);
+  --shadow-soft: 0 0 5px rgba(0, 0, 0, 0.08);
   --font-heading: 'Figtree', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-body: 'Figtree', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --radius-sm: 4px;
   --radius-md: 6px;
   --radius-lg: 10px;
   --transition-fast: all 0.25s ease;
+
+  /* Breakpoints */
+  --mobile: 480px;
+  --tablet: 768px;
+  --desktop: 1024px;
+  --wide: 1280px;
 }

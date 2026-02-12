@@ -194,13 +194,13 @@
 
 .socials {
   display: flex;
-  gap: 8px;
+  gap: 12px;
   flex-wrap: wrap;
 }
 
 .socialLink {
-  width: 28px;
-  height: 28px;
+  width: 44px;
+  height: 44px;
   border-radius: 4px;
   background: transparent;
   display: flex;
@@ -213,6 +213,7 @@
 
 .socialLink:hover {
   color: #e78592;
+  background: rgba(231, 133, 146, 0.1);
   transform: translateY(-2px);
 }
 

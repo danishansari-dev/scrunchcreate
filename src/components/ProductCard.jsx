@@ -94,45 +94,51 @@ export default function ProductCard({ product, index = 0 }) {
             initial={{ opacity: 0, y: 12, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 8, scale: 0.98 }}
+            whileTap={{ scale: 0.98 }} // Add touch feedback
             transition={{ delay: index * 0.05, type: 'spring', stiffness: 400, damping: 30 }}
-            layout // Add layout prop for smooth list reordering
+            layout
+            onClick={handleProductClick} // Make entire card clickable
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    handleProductClick()
+                }
+            }}
         >
             <div className={styles.imageContainer}>
-                <button
+                <div
                     className={styles.thumb}
                     onMouseEnter={() => setIsHovered(true)}
                     onMouseLeave={() => setIsHovered(false)}
-                    onFocus={() => setIsHovered(true)}
-                    onBlur={() => setIsHovered(false)}
-                    aria-label={`View ${product.name}`}
-                    onClick={handleProductClick}
+                // onClick removed as parent handles it
                 >
-                    {/* Hidden probe to detect background-image load failure */}
+                    {/* Primary Image */}
                     <img
                         src={primaryImage}
-                        alt=""
-                        style={{ display: 'none' }}
-                        onError={() => setImageError(true)}
-                    />
-                    {/* Primary Image */}
-                    <div
+                        alt={product.name}
                         className={`${styles.thumbImage} ${!isHovered || !hasMultipleImages ? styles.thumbImageVisible : ''}`}
-                        style={primaryImage ? { backgroundImage: `url(${primaryImage})` } : {}}
+                        onError={() => setImageError(true)}
+                        loading="lazy"
                     />
+
                     {/* Secondary Image (only rendered if exists) */}
                     {hasMultipleImages && (
-                        <div
+                        <img
+                            src={secondaryImage}
+                            alt={`${product.name} (alternate)`}
                             className={`${styles.thumbImage} ${isHovered ? styles.thumbImageVisible : ''}`}
-                            style={{ backgroundImage: `url(${secondaryImage})` }}
+                            loading="lazy"
                         />
                     )}
-                    {/* Variant Count Badge (Optional but helpful) */}
+
+                    {/* Variant Count Badge */}
                     {isMultiVariant && (
-                        <span className={styles.variantBadge}>
+                        <div className={styles.variantBadge}>
                             {product.variants.length} Colors
-                        </span>
+                        </div>
                     )}
-                </button>
+                </div>
 
                 {/* Wishlist Button */}
                 <button
@@ -147,12 +153,9 @@ export default function ProductCard({ product, index = 0 }) {
 
             <div className={styles.cardBody}>
                 <div className={styles.titleRow}>
-                    <button
-                        className={styles.titleButton}
-                        onClick={handleProductClick}
-                    >
+                    <div className={styles.titleButton}>
                         <h3 className={styles.cardTitle}>{product.name}</h3>
-                    </button>
+                    </div>
                 </div>
 
                 <div className={styles.meta}>

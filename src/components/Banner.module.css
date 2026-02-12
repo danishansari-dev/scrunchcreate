@@ -50,11 +50,22 @@
   background: var(--color-surface);
   border-radius: 999px;
   border: 1px solid var(--color-border-soft);
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+}
+
+.prev:hover,
+.next:hover {
+  transform: translateY(-50%) scale(1.1);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
 }
 
 .prev {
