@@ -281,19 +281,46 @@
         max-width: 100%;
     }
 
+    .header {
+        padding: 12px 16px;
+    }
+
+    .content {
+        padding: 12px 16px;
+    }
+
     .item {
-        grid-template-columns: 50px 1fr auto;
+        grid-template-columns: 50px 1fr auto auto;
         gap: 8px;
+        padding: 10px;
     }
 
     .removeBtn {
-        position: absolute;
-        top: 8px;
-        right: 8px;
+        position: static;
     }
 
-    .item {
-        position: relative;
-        padding-right: 36px;
+    .thumb {
+        width: 50px;
+        height: 50px;
+    }
+
+    .itemName {
+        font-size: 13px;
+    }
+
+    .footer {
+        padding: 12px 16px;
+        margin-top: auto;
+        /* Push footer to bottom */
+    }
+
+    .summaryTotal {
+        margin: 8px 0 12px;
+        font-size: 15px;
+    }
+
+    .checkoutBtn {
+        height: 44px;
+        font-size: 14px;
     }
 }
