@@ -64,3 +64,24 @@
 .next {
   right: 16px;
 }
+
+@media (max-width: 768px) {
+  .image {
+    height: 350px;
+    object-position: center;
+  }
+
+  .prev,
+  .next {
+    width: 32px;
+    height: 32px;
+  }
+
+  .prev {
+    left: 8px;
+  }
+
+  .next {
+    right: 8px;
+  }
+}
