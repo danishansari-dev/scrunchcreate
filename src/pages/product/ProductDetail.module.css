@@ -153,6 +153,13 @@
     width: 100%;
     cursor: default;
     /* Disable zoom cursor on mobile */
+    aspect-ratio: 4/5;
+    max-height: 70vh;
+  }
+
+  .mainImageImg {
+    height: 100%;
+    object-position: top center;
   }
 
   .mainImage:hover .mainImageImg {
