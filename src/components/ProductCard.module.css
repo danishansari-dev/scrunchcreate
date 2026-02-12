@@ -38,9 +38,8 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    object-fit: cover;
+    object-position: center;
     opacity: 0;
     transition: opacity 0.3s ease;
 }
@@ -193,4 +192,51 @@
 
 .addToCart:hover {
     background: var(--color-primary-strong);
+}
+
+@media (max-width: 768px) {
+    .thumb {
+        height: auto;
+        aspect-ratio: 4/5;
+    }
+
+    .cardBody {
+        padding: 10px;
+        gap: 8px;
+    }
+
+    .cardTitle {
+        font-size: 14px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        min-height: 2.4em;
+        /* Approximate height for 2 lines */
+    }
+
+    .offerPrice {
+        font-size: 16px;
+    }
+
+    .originalPrice {
+        font-size: 12px;
+    }
+
+    .addToCart {
+        height: 36px;
+        font-size: 13px;
+        margin-top: 8px;
+    }
+
+    .wishlistBtn {
+        width: 30px;
+        height: 30px;
+    }
+
+    .wishlistBtn svg {
+        width: 16px;
+        height: 16px;
+    }
 }
