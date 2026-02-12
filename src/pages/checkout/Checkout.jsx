@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useCart } from '../../components/CartContext'
 import { useToast } from '../../components/ToastContext'
+import { generateWhatsAppMessage } from '../../utils/whatsappUtils'
 import styles from './Checkout.module.css'
 
 const initialFormState = {
@@ -30,10 +31,6 @@ function validateForm(form) {
   else if (!/^\d{6}$/.test(form.pincode.trim())) errors.pincode = 'Enter a valid 6-digit pincode'
   if (!form.country.trim()) errors.country = 'Country is required'
   return errors
-}
-
-function generateOrderId() {
-  return 'ORD-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).substring(2, 6).toUpperCase()
 }
 
 export default function Checkout() {
@@ -67,35 +64,16 @@ export default function Checkout() {
 
     setIsSubmitting(true)
 
-    // Create order object
-    const order = {
-      id: generateOrderId(),
-      date: new Date().toISOString(),
-      items: items.map((item) => ({
-        id: item.id,
-        name: item.name,
-        price: item.price,
-        qty: item.qty,
-      })),
-      subtotal,
-      delivery,
-      total,
-      shippingAddress: { ...form },
-    }
+    // Generate WhatsApp URL with full details
+    const whatsappUrl = generateWhatsAppMessage(items, subtotal, form)
 
-    // Save to localStorage
-    try {
-      const existingOrders = JSON.parse(localStorage.getItem('orders') || '[]')
-      existingOrders.push(order)
-      localStorage.setItem('orders', JSON.stringify(existingOrders))
-    } catch (err) {
-      console.error('Error saving order:', err)
-    }
+    // Open WhatsApp
+    window.open(whatsappUrl, '_blank')
 
     // Clear cart and redirect
     clearCart()
-    show('Order placed successfully!', 'success')
-    navigate('/order-success', { state: { orderId: order.id } })
+    show('Redirecting to WhatsApp...', 'success')
+    navigate('/order-success')
   }
 
   if (items.length === 0) {
@@ -280,7 +258,7 @@ export default function Checkout() {
               className={styles.placeOrderBtn}
               disabled={isSubmitting}
             >
-              {isSubmitting ? 'Placing Order...' : 'Place Order'}
+              {isSubmitting ? 'Opening WhatsApp...' : 'Place Order on WhatsApp'}
             </button>
           </aside>
         </form>
