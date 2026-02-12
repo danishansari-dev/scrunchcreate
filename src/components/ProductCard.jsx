@@ -30,8 +30,11 @@ export default function ProductCard({ product, index = 0 }) {
     const [imageError, setImageError] = useState(false)
 
     // Use the top-level image or the first variant image as primary
-    const primaryImageRaw = product.image || (product.variants?.[0]?.images?.[0]) || null;
-    const secondaryImageRaw = (product.variants?.[0]?.images?.length > 1) ? product.variants[0].images[1] : null;
+    // PRIORITIZE: pre-calculated primaryImage > images array > legacy image field > variants
+    const primaryImageRaw = product.primaryImage || (product.images && product.images.length > 0 ? product.images[0] : null) || product.image || (product.variants?.[0]?.images?.[0]) || null;
+
+    // For secondary image (hover effect), check images array index 1
+    const secondaryImageRaw = (product.images && product.images.length > 1 ? product.images[1] : null) || (product.variants?.[0]?.images?.length > 1 ? product.variants[0].images[1] : null);
 
     const primaryImage = primaryImageRaw ? resolveImagePath(primaryImageRaw) : null;
     const secondaryImage = secondaryImageRaw ? resolveImagePath(secondaryImageRaw) : null;
