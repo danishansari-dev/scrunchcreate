@@ -46,16 +46,14 @@
     line-height: 1.5;
 }
 
-.orderId {
-    display: inline-block;
-    padding: 8px 16px;
-    background: var(--color-surface-soft);
-    border: 1px solid var(--color-border-soft);
+.warning {
+    padding: 12px;
+    background: #fff3e0;
+    color: #e65100;
     border-radius: var(--radius-md);
-    font-family: monospace;
-    font-size: 14px;
-    color: var(--color-text-main);
     margin-bottom: 32px;
+    font-size: 15px;
+    line-height: 1.5;
 }
 
 .actions {
