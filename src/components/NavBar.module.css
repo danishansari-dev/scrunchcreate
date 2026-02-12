@@ -298,4 +298,40 @@
   .searchWrapper.searchOpen .searchInput {
     width: 140px;
   }
+
+  .header {
+    padding: 12px 16px;
+  }
+
+  .brandText {
+    font-size: 20px;
+  }
+
+  .headerContainer {
+    gap: 12px;
+  }
+
+  .utilityLinks {
+    gap: 12px;
+  }
+
+  .iconButton,
+  .cartBadge,
+  .menuButton {
+    padding: 6px;
+  }
+
+  /* Prevent cart badge overflow */
+  .cartBadge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Make search input smaller on mobile */
+  .searchWrapper.searchOpen .searchInput {
+    width: 120px;
+    font-size: 13px;
+    padding: 6px 10px;
+  }
 }
