@@ -17,6 +17,7 @@ const categorySlugMap = {
   'flower-jewellery': 'FlowerJewellery'
 }
 
+
 // Friendly display names for categories
 const categoryDisplayNames = {
   'HairBow': 'Hair Bows',
