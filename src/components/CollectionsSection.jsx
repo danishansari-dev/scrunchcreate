@@ -10,6 +10,7 @@ const collectionDefs = [
         description: 'Luxurious fabric scrunchies that care for your hair',
         category: 'Scrunchie',
         href: '/products/scrunchies',
+        image: '/assets/products/scrunchie/classic/white/sc-scrunchie-classic-white-1.webp'
     },
     {
         id: 'hairbows',
@@ -17,6 +18,7 @@ const collectionDefs = [
         description: 'Elegant bows for a sophisticated touch',
         category: 'HairBow',
         href: '/products/hair-bows',
+        image: '/assets/products/hairbow/jimmychoo/peach-pink/sc-hairbow-jimmychoo-peach-pink-1.webp'
     },
     {
         id: 'flowerjewellery',
@@ -42,6 +44,9 @@ export default function CollectionsSection() {
     const collections = useMemo(() => {
         return collectionDefs
             .map(def => {
+                // If image is already defined in collectionDefs, use it
+                if (def.image) return def
+
                 const products = getProductsByCategory(def.category)
                 // Find first product with valid images
                 const productWithImage = products.find(p => p.images && p.images.length > 0)
