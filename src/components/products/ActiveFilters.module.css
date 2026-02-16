@@ -1,0 +1,51 @@
+@import '../../theme/theme.css';
+
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+    align-items: center;
+}
+
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: var(--color-surface-soft);
+    border: 1px solid var(--color-border-soft);
+    border-radius: 20px;
+    font-size: 13px;
+    color: var(--color-text-main);
+    transition: all 0.2s;
+}
+
+.chip:hover {
+    background: var(--color-border-soft);
+}
+
+.remove {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    color: var(--color-text-muted);
+}
+
+.remove:hover {
+    color: var(--color-error);
+}
+
+.clearAll {
+    background: none;
+    border: none;
+    color: var(--color-primary);
+    font-size: 13px;
+    cursor: pointer;
+    text-decoration: underline;
+    margin-left: 8px;
+}

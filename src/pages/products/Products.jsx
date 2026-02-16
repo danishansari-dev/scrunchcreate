@@ -2,9 +2,12 @@ import React, { useState, useEffect, useMemo } from 'react'
 import styles from './Products.module.css'
 import { useParams, useSearchParams } from 'react-router-dom'
 import { getProducts } from '../../utils/getProducts'
-import { getColorDisplayName } from '../../utils/colorNormalization'
 import { AnimatePresence } from 'framer-motion'
 import ProductCard from '../../components/ProductCard'
+import { useProductsFilter } from '../../hooks/useProductsFilter'
+import FilterSidebar from '../../components/products/FilterSidebar'
+import ActiveFilters from '../../components/products/ActiveFilters'
+import ProductSearch from '../../components/products/ProductSearch'
 
 // Map URL slugs to actual category names
 const categorySlugMap = {
@@ -16,7 +19,6 @@ const categorySlugMap = {
   'paraandi': 'Paraandi',
   'flower-jewellery': 'FlowerJewellery'
 }
-
 
 // Friendly display names for categories
 const categoryDisplayNames = {
@@ -32,22 +34,11 @@ const categoryDisplayNames = {
 // Categories that should show filters
 const categoriesWithFilters = ['HairBow', 'Scrunchie']
 
-
-
 export default function Products() {
-
   const { category: categorySlug } = useParams()
   const [searchParams] = useSearchParams()
   const [allProducts, setAllProducts] = useState([])
-
-  // Get initial filter values from URL query params
-  const urlType = searchParams.get('type')
-  const urlColor = searchParams.get('color')
-  const urlSearch = searchParams.get('search')
-
-  // Filter state - initialize from URL params
-  const [selectedColors, setSelectedColors] = useState(() => urlColor ? [urlColor] : [])
-  const [selectedTypes, setSelectedTypes] = useState(() => urlType ? [urlType] : [])
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false)
 
   // Load products on mount
   useEffect(() => {
@@ -55,219 +46,129 @@ export default function Products() {
     setAllProducts(products)
   }, [])
 
-  // Update filters when URL params change
-  useEffect(() => {
-    setSelectedColors(urlColor ? [urlColor] : [])
-    setSelectedTypes(urlType ? [urlType] : [])
-  }, [categorySlug, urlType, urlColor])
-
-  // Get the actual category name from the URL slug
+  // Resolve category name
   const selectedCategory = categorySlug ? categorySlugMap[categorySlug] : null
+
+  // Initial filters from URL
+  const initialFilters = useMemo(() => ({
+    category: selectedCategory,
+    search: searchParams.get('search') || '',
+    type: searchParams.get('type') || '',
+    color: searchParams.get('color') || '',
+    sort: searchParams.get('sort') || ''
+  }), [selectedCategory, searchParams])
+
+  // Use Custom Hook
+  const {
+    products: filteredProducts,
+    availableFilters,
+    state: filterState,
+    setters,
+    handlers
+  } = useProductsFilter(allProducts, initialFilters)
+
 
   // Determine if filters should be shown
   const showFilters = !selectedCategory || categoriesWithFilters.includes(selectedCategory)
 
-  // Filter products by category if one is selected
-  const categoryProducts = useMemo(() => {
-    if (!selectedCategory) return allProducts
-    return allProducts.filter(p =>
-      p.category && p.category.toLowerCase() === selectedCategory.toLowerCase()
-    )
-  }, [allProducts, selectedCategory])
-
-  // Apply search filter
-  const searchFilteredProducts = useMemo(() => {
-    if (!urlSearch || !urlSearch.trim()) return categoryProducts
-    const searchTerm = urlSearch.trim().toLowerCase()
-    return categoryProducts.filter(p => {
-      const nameMatch = p.name && p.name.toLowerCase().includes(searchTerm)
-      const tagMatch = p.tags && Array.isArray(p.tags) && p.tags.some(tag => tag.toLowerCase().includes(searchTerm))
-      const categoryMatch = p.category && p.category.toLowerCase().includes(searchTerm)
-      return nameMatch || tagMatch || categoryMatch
-    })
-  }, [categoryProducts, urlSearch])
-
-  // Extract unique normalized colors from filtered products
-  const availableColors = useMemo(() => {
-    const colors = new Set()
-    searchFilteredProducts.forEach(p => {
-      if (p.availableColors && Array.isArray(p.availableColors)) {
-        p.availableColors.forEach(c => colors.add(c))
-      } else if (p.normalizedColor) {
-        colors.add(p.normalizedColor)
-      }
-    })
-    return Array.from(colors).sort()
-  }, [searchFilteredProducts])
-
-  const availableTypes = useMemo(() => {
-    const types = new Set()
-    searchFilteredProducts.forEach(p => {
-      if (p.type) types.add(p.type)
-    })
-    return Array.from(types).sort()
-  }, [searchFilteredProducts])
-
-  // Apply color and type filters
-  const filteredProducts = useMemo(() => {
-    let products = searchFilteredProducts
-
-    if (selectedColors.length > 0) {
-      products = products.filter(p => {
-        if (p.availableColors && Array.isArray(p.availableColors)) {
-          // Check if ANY of the product's colors match the selected filters
-          return p.availableColors.some(c => selectedColors.includes(c))
-        }
-        return p.normalizedColor && selectedColors.includes(p.normalizedColor)
-      })
-    }
-
-    if (selectedTypes.length > 0) {
-      products = products.filter(p => p.type && selectedTypes.includes(p.type))
-    }
-
-    return products
-  }, [searchFilteredProducts, selectedColors, selectedTypes])
-
-  // Group products by category
+  // Group products by category for display
   const productsByCategory = useMemo(() => {
     const grouped = new Map()
     filteredProducts.forEach(product => {
-      const category = product.category || 'Uncategorized'
-      if (!grouped.has(category)) {
-        grouped.set(category, [])
+      // Use the friendly name for grouping key if possible, or category code
+      const catKey = product.category || 'Uncategorized'
+      if (!grouped.has(catKey)) {
+        grouped.set(catKey, [])
       }
-      grouped.get(category).push(product)
+      grouped.get(catKey).push(product)
     })
     return grouped
   }, [filteredProducts])
 
-  // Get all categories dynamically
-  const categories = useMemo(() => {
-    return Array.from(productsByCategory.keys()).sort()
-  }, [productsByCategory])
+  // Get displayed categories
+  const displayCategories = Array.from(productsByCategory.keys()).sort()
 
-  // Page title based on selection
-  const pageTitle = urlSearch
-    ? `Search: "${urlSearch}"`
+  const pageTitle = filterState.search
+    ? `Search: "${filterState.search}"`
     : selectedCategory
       ? (categoryDisplayNames[selectedCategory] || selectedCategory)
       : 'Products'
 
-  // Toggle filter handlers
-  const toggleColor = (color) => {
-    setSelectedColors(prev =>
-      prev.includes(color) ? prev.filter(c => c !== color) : [...prev, color]
-    )
-  }
-
-  const toggleType = (type) => {
-    setSelectedTypes(prev =>
-      prev.includes(type) ? prev.filter(t => t !== type) : [...prev, type]
-    )
-  }
-
-  const clearFilters = () => {
-    setSelectedColors([])
-    setSelectedTypes([])
-  }
-
-  const hasActiveFilters = selectedColors.length > 0 || selectedTypes.length > 0
-
-  if (categoryProducts.length === 0) {
-    return (
-      <main className={styles.page}>
-        <div className={styles.header}>
-          <h1 className={styles.title}>{pageTitle}</h1>
-          <p className={styles.subtitle}>No products found in this category.</p>
-        </div>
-      </main>
-    )
-  }
+  const activeFilterCount = filterState.types.length + filterState.colors.length
 
   return (
     <main className={styles.page}>
+
       <div className={styles.header}>
         <h1 className={styles.title}>{pageTitle}</h1>
         <p className={styles.subtitle}>
-          {selectedCategory ? `Browse our ${pageTitle.toLowerCase()} collection.` : 'Explore our bestsellers and latest drops.'}
+          {filteredProducts.length} products found
         </p>
+
+        {/* Search + Filter row */}
+        <div className={styles.searchFilterRow}>
+          <ProductSearch
+            initialValue={filterState.search}
+            onSearch={(val) => setters.setSearch(val)}
+          />
+          {showFilters && (
+            <button
+              className={styles.filterToggleBtn}
+              onClick={() => setIsMobileFilterOpen(true)}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="4" y1="6" x2="20" y2="6" />
+                <line x1="8" y1="12" x2="20" y2="12" />
+                <line x1="12" y1="18" x2="20" y2="18" />
+                <circle cx="4" cy="6" r="0" />
+                <circle cx="8" cy="12" r="0" />
+                <circle cx="12" cy="18" r="0" />
+              </svg>
+              Filter
+              {activeFilterCount > 0 && (
+                <span className={styles.filterBadge}>{activeFilterCount}</span>
+              )}
+            </button>
+          )}
+        </div>
       </div>
 
       <div className={showFilters ? styles.contentWithFilters : styles.content}>
-        {/* Filter Sidebar - Only for Hair Bows and Scrunchies */}
+
+        {/* Filter Sidebar (desktop: inline, mobile: drawer overlay) */}
         {showFilters && (
-          <aside className={styles.filterSidebar}>
-            <div className={styles.filterHeader}>
-              <h3 className={styles.filterTitle}>Filters</h3>
-              {hasActiveFilters && (
-                <button className={styles.clearFilters} onClick={clearFilters}>
-                  Clear all
-                </button>
-              )}
-            </div>
-
-            {/* Type Filter */}
-            {availableTypes.length > 0 && (
-              <div className={styles.filterGroup}>
-                <h4 className={styles.filterGroupTitle}>Type</h4>
-                <ul className={styles.filterList}>
-                  {availableTypes.map(type => (
-                    <li key={type}>
-                      <label className={styles.filterLabel}>
-                        <input
-                          type="checkbox"
-                          checked={selectedTypes.includes(type)}
-                          onChange={() => toggleType(type)}
-                          className={styles.filterCheckbox}
-                        />
-                        <span>{type}</span>
-                      </label>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            {/* Color Filter */}
-            {availableColors.length > 0 && (
-              <div className={styles.filterGroup}>
-                <h4 className={styles.filterGroupTitle}>Color</h4>
-                <ul className={styles.filterList}>
-                  {availableColors.map(color => (
-                    <li key={color}>
-                      <label className={styles.filterLabel}>
-                        <input
-                          type="checkbox"
-                          checked={selectedColors.includes(color)}
-                          onChange={() => toggleColor(color)}
-                          className={styles.filterCheckbox}
-                        />
-                        <span>{getColorDisplayName(color)}</span>
-                      </label>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </aside>
+          <FilterSidebar
+            availableFilters={availableFilters}
+            activeFilters={filterState}
+            handlers={handlers}
+            isOpen={isMobileFilterOpen}
+            onClose={() => setIsMobileFilterOpen(false)}
+          />
         )}
 
         {/* Products Grid */}
         <section className={styles.productsSection}>
+
+          <ActiveFilters
+            activeFilters={filterState}
+            handlers={handlers}
+          />
+
           {filteredProducts.length === 0 ? (
             <div className={styles.noResults}>
               <p>No products match your filters.</p>
-              <button className={styles.clearFiltersBtn} onClick={clearFilters}>
+              <button className={styles.clearFiltersBtn} onClick={handlers.clearAllFilters}>
                 Clear filters
               </button>
             </div>
           ) : (
-            categories.map((category) => {
-              const products = productsByCategory.get(category) || []
+            displayCategories.map((category) => {
+              const products = productsByCategory.get(category) || [] // Use category key directly
               return (
                 <div key={category} style={{ marginBottom: '3rem' }}>
-                  {!selectedCategory && (
+                  {/* Only show category heading if we are NOT in a specific category page 
+                        OR if we are searching (mixed results) */}
+                  {(!selectedCategory || filterState.search) && (
                     <h2 className={styles.categoryTitle} style={{ marginBottom: '1.5rem', fontSize: '1.5rem', fontWeight: '600' }}>
                       {categoryDisplayNames[category] || category}
                     </h2>

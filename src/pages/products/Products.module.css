@@ -20,19 +20,19 @@
   margin: 0;
 }
 
-/* Content layout without filters */
+/* Content layout */
 .content {
   max-width: 1280px;
   margin: 0 auto;
 }
 
-/* Content layout with filters (sidebar + products) */
+/* Content layout with sidebar filters */
 .contentWithFilters {
   max-width: 1280px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 240px 1fr;
-  gap: 32px;
+  grid-template-columns: 230px 1fr;
+  gap: 28px;
 }
 
 @media (max-width: 900px) {
@@ -41,95 +41,59 @@
   }
 }
 
-/* Filter Sidebar */
-.filterSidebar {
-  background: var(--color-surface-soft);
-  border: 1px solid var(--color-border-soft);
-  border-radius: var(--radius-lg);
-  padding: 20px;
-  height: fit-content;
-  max-height: calc(100vh - 140px);
-  overflow-y: auto;
-  position: sticky;
-  top: 100px;
-}
-
-@media (max-width: 900px) {
-  .filterSidebar {
-    position: static;
-    margin-bottom: 24px;
-  }
-}
-
-.filterHeader {
+/* Search + Filter Row */
+.searchFilterRow {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--color-border-soft);
+  gap: 12px;
+  margin-top: 16px;
 }
 
-.filterTitle {
-  font-size: 16px;
-  font-weight: 600;
-  margin: 0;
-  color: var(--color-text-main);
+.searchFilterRow>*:first-child {
+  flex: 1;
 }
 
-.clearFilters {
-  background: none;
-  border: none;
-  color: var(--color-primary);
-  font-size: 13px;
-  cursor: pointer;
-  padding: 0;
-}
-
-.clearFilters:hover {
-  text-decoration: underline;
-}
-
-.filterGroup {
-  margin-bottom: 20px;
-}
-
-.filterGroup:last-child {
-  margin-bottom: 0;
-}
-
-.filterGroupTitle {
-  font-size: 14px;
-  font-weight: 600;
-  margin: 0 0 12px;
-  color: var(--color-text-main);
-}
-
-.filterList {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
+/* Filter Toggle Button */
+.filterToggleBtn {
+  display: inline-flex;
+  align-items: center;
   gap: 8px;
-  max-height: 200px;
-  overflow-y: auto;
-}
-
-.filterLabel {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  cursor: pointer;
-  font-size: 14px;
+  height: 44px;
+  padding: 0 20px;
+  border: 1.5px solid var(--color-border-soft);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
   color: var(--color-text-main);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+  flex-shrink: 0;
 }
 
-.filterCheckbox {
-  width: 16px;
-  height: 16px;
-  accent-color: var(--color-primary);
-  cursor: pointer;
+.filterToggleBtn:hover {
+  border-color: var(--color-primary);
+  background: var(--color-surface-soft);
+}
+
+.filterToggleBtn svg {
+  flex-shrink: 0;
+}
+
+.filterBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  border-radius: 10px;
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
 }
 
 /* Products Section */
@@ -149,7 +113,8 @@
 
 @media (max-width: 600px) {
   .grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
   }
 }
 
@@ -179,8 +144,6 @@
 .clearFiltersBtn:hover {
   background: var(--color-primary-strong);
 }
-
-
 
 .categoryTitle {
   color: var(--color-text-main);

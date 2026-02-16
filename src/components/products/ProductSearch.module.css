@@ -1,0 +1,33 @@
+@import '../../theme/theme.css';
+
+.searchContainer {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 24px;
+}
+
+.input {
+    width: 100%;
+    padding: 10px 16px;
+    padding-right: 40px;
+    border: 1px solid var(--color-border-input);
+    border-radius: var(--radius-full);
+    font-size: 15px;
+    transition: all 0.2s;
+}
+
+.input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px var(--color-primary-light);
+}
+
+.icon {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-text-muted);
+    pointer-events: none;
+}

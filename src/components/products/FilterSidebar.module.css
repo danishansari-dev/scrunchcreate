@@ -1,0 +1,364 @@
+@import '../../theme/theme.css';
+
+/* ───────────────── Overlay (Mobile-only) ───────────────── */
+.overlay {
+    display: none;
+}
+
+@media (max-width: 900px) {
+    .overlay {
+        display: block;
+        position: fixed;
+        inset: 0;
+        z-index: 900;
+        background: rgba(0, 0, 0, 0);
+        backdrop-filter: blur(0);
+        pointer-events: none;
+        transition: background 0.3s ease, backdrop-filter 0.3s ease;
+    }
+
+    .overlay.open {
+        background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(2px);
+        pointer-events: auto;
+    }
+}
+
+/* ───────────────── Desktop: Inline Sidebar ───────────────── */
+.drawer {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    height: fit-content;
+    max-height: calc(100vh - 110px);
+    position: sticky;
+    top: 90px;
+}
+
+/* ───────────────── Mobile: Left-Slide Drawer ───────────────── */
+@media (max-width: 900px) {
+    .drawer {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 300px;
+        max-width: 82vw;
+        height: 100vh;
+        height: 100dvh;
+        z-index: 910;
+        border: none;
+        border-radius: 0;
+        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
+        transform: translateX(-100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        max-height: none;
+    }
+
+    .drawer.open {
+        transform: translateX(0);
+    }
+}
+
+/* ───────────────── Drawer Header (Mobile-only) ───────────────── */
+.drawerHeader {
+    display: none;
+}
+
+@media (max-width: 900px) {
+    .drawerHeader {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 18px 20px 14px;
+        border-bottom: 1px solid var(--color-border);
+        flex-shrink: 0;
+    }
+}
+
+.drawerTitle {
+    font-family: var(--font-heading);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--color-text-main);
+    margin: 0;
+}
+
+.closeBtn {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    border-radius: 50%;
+    color: var(--color-text-main);
+    font-size: 20px;
+    transition: background 0.2s;
+    margin: -8px -10px -8px 0;
+}
+
+.closeBtn:hover {
+    background: var(--color-surface-soft);
+}
+
+/* ───────────────── Scrollable Content ───────────────── */
+.drawerContent {
+    flex: 1;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 20px;
+    -webkit-overflow-scrolling: touch;
+}
+
+.drawerContent::-webkit-scrollbar {
+    width: 4px;
+}
+
+.drawerContent::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.drawerContent::-webkit-scrollbar-thumb {
+    background: var(--color-border-soft);
+    border-radius: 4px;
+}
+
+/* ───────────────── Section ───────────────── */
+.section {
+    margin-bottom: 28px;
+}
+
+.section:last-child {
+    margin-bottom: 0;
+}
+
+.sectionTitle {
+    font-family: var(--font-heading);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.6px;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin: 0 0 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--color-border);
+}
+
+/* ─────────── Color Swatches Grid ─────────── */
+.swatchGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+@media (min-width: 901px) {
+    .swatchGrid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+    }
+}
+
+.swatchItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 3px;
+    border-radius: var(--radius-md);
+    transition: transform 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.swatchItem:active {
+    transform: scale(0.92);
+}
+
+.swatchCircle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 2px solid var(--color-border);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+    position: relative;
+    flex-shrink: 0;
+}
+
+@media (max-width: 900px) {
+    .swatchCircle {
+        width: 44px;
+        height: 44px;
+    }
+
+    .swatchGrid {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 10px;
+    }
+}
+
+/* White swatch needs visible border */
+.swatchCircle[data-color="white"],
+.swatchCircle[data-color="cream"] {
+    border-color: var(--color-border-soft);
+}
+
+.swatchItem.active .swatchCircle {
+    border-color: var(--color-primary-strong);
+    border-width: 2.5px;
+    box-shadow: 0 0 0 2px var(--color-primary);
+    transform: scale(1.06);
+}
+
+/* Checkmark on active swatch */
+.swatchItem.active .swatchCircle::after {
+    content: '✓';
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.swatchLabel {
+    font-size: 9px;
+    color: var(--color-text-muted);
+    text-align: center;
+    line-height: 1.2;
+    max-width: 52px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.swatchItem.active .swatchLabel {
+    color: var(--color-text-main);
+    font-weight: 600;
+}
+
+.swatchCount {
+    font-size: 8px;
+    color: var(--color-text-muted);
+    margin-left: 1px;
+}
+
+/* ─────────── Category Pills ─────────── */
+.categoryList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.categoryPill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 36px;
+    padding: 0 14px;
+    border-radius: 18px;
+    border: 1.5px solid var(--color-border-soft);
+    background: var(--color-surface);
+    color: var(--color-text-main);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    -webkit-tap-highlight-color: transparent;
+}
+
+@media (max-width: 900px) {
+    .categoryPill {
+        height: 44px;
+        padding: 0 18px;
+        font-size: 13px;
+    }
+}
+
+.categoryPill:hover {
+    border-color: var(--color-primary);
+    background: var(--color-surface-soft);
+}
+
+.categoryPill.active {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-on-primary);
+}
+
+.categoryPill.active:hover {
+    background: var(--color-primary-strong);
+    border-color: var(--color-primary-strong);
+}
+
+.pillCount {
+    font-size: 10px;
+    opacity: 0.7;
+}
+
+/* ───────────────── Drawer Footer ───────────────── */
+.drawerFooter {
+    display: none;
+}
+
+@media (max-width: 900px) {
+    .drawerFooter {
+        display: flex;
+        padding: 14px 20px;
+        border-top: 1px solid var(--color-border);
+        gap: 10px;
+        flex-shrink: 0;
+        background: var(--color-surface);
+    }
+}
+
+.clearAllBtn {
+    flex: 1;
+    height: 44px;
+    border: 1.5px solid var(--color-border-soft);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    color: var(--color-text-main);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.clearAllBtn:hover {
+    border-color: var(--color-text-muted);
+}
+
+.clearAllBtn:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+.applyBtn {
+    flex: 2;
+    height: 44px;
+    border: none;
+    border-radius: var(--radius-md);
+    background: var(--color-primary);
+    color: var(--color-on-primary);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.applyBtn:hover {
+    background: var(--color-primary-strong);
+}
