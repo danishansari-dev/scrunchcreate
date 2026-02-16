@@ -107,6 +107,19 @@
   transition: opacity 0.2s ease, visibility 0.2s ease;
 }
 
+/* Fix for specific dropdown alignments */
+/* Target the first category (Hair Bows) which is the 2nd li item (after Shop) */
+.navLinks>li:nth-child(2) .dropdown {
+  left: 50%;
+  transform: translateX(-25%);
+}
+
+.navLinks>li:last-child .dropdown {
+  left: auto;
+  right: 0;
+  transform: none;
+}
+
 @keyframes dropdownIn {
   from {
     opacity: 0;

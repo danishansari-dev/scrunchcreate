@@ -21,6 +21,14 @@ const collectionDefs = [
         image: '/assets/products/hairbow/jimmychoo/peach-pink/sc-hairbow-jimmychoo-peach-pink-1.webp'
     },
     {
+        id: 'hairclips',
+        name: 'Hairclips',
+        description: 'Elegant clips for a stylish look',
+        category: 'Hairclip',
+        href: '/products/hairclips',
+        image: '/assets/products/hairclip/rose/red/sc-hairclip-rose-red-1.webp'
+    },
+    {
         id: 'flowerjewellery',
         name: 'Flower Jewellery',
         description: 'Beautiful floral accessories for special occasions',

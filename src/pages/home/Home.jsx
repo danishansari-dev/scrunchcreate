@@ -21,14 +21,20 @@ export default function Home() {
   const hairbowsProducts = useMemo(() =>
     products.filter(p =>
       p.category && (p.category.toLowerCase() === 'hairbows' || p.category.toLowerCase() === 'hairbow')
-    ).slice(0, 8), [products]
+    ).reverse().slice(0, 8), [products]
   )
 
 
   const scrunchiesProducts = useMemo(() =>
     products.filter(p =>
       p.category && (p.category.toLowerCase() === 'scrunchies' || p.category.toLowerCase() === 'scrunchie')
-    ).slice(0, 8), [products]
+    ).reverse().slice(0, 8), [products]
+  )
+
+  const hairclipProducts = useMemo(() =>
+    products.filter(p =>
+      p.category && (p.category.toLowerCase() === 'hairclips' || p.category.toLowerCase() === 'hairclip')
+    ).reverse().slice(0, 8), [products]
   )
 
   return (
@@ -51,6 +57,12 @@ export default function Home() {
             products={scrunchiesProducts}
             showViewAllLink
             viewAllHref="/products?category=Scrunchies"
+          />
+          <ProductList
+            title="Hairclips Collection"
+            products={hairclipProducts}
+            showViewAllLink
+            viewAllHref="/products?category=Hairclips"
           />
         </div>
       </div>

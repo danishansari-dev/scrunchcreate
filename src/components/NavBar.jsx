@@ -13,7 +13,8 @@ const categoryToSlug = {
   'Earring': 'earings',
   'GiftHamper': 'hamper',
   'Paraandi': 'paraandi',
-  'FlowerJewellery': 'flower-jewellery'
+  'FlowerJewellery': 'flower-jewellery',
+  'Hairclip': 'hairclips'
 };
 
 // Friendly display names
@@ -24,11 +25,12 @@ const categoryDisplayNames = {
   'Earring': 'Earrings',
   'GiftHamper': 'Hamper',
   'Paraandi': 'Paraandi',
-  'FlowerJewellery': 'Flower Jewellery'
+  'FlowerJewellery': 'Flower Jewellery',
+  'Hairclip': 'Hairclips'
 };
 
 // Categories to show in navbar with dropdowns
-const navCategories = ['HairBow', 'Scrunchie', 'GiftHamper', 'FlowerJewellery'];
+const navCategories = ['HairBow', 'Scrunchie', 'GiftHamper', 'FlowerJewellery', 'Hairclip'];
 
 const NavBar = () => {
   const { totalItems, toggleCart } = useCart();
@@ -45,7 +47,7 @@ const NavBar = () => {
     const data = {};
 
     navCategories.forEach(cat => {
-      const catProducts = products.filter(p => p.category === cat);
+      const catProducts = products.filter(p => p.category && p.category.toLowerCase() === cat.toLowerCase());
 
       // Group by Type
       const typeGroups = {};

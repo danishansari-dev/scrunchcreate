@@ -197,10 +197,6 @@
           "/assets/products/hairbow/combo/sc-hairbow-2.webp",
           "/assets/products/hairbow/combo/sc-hairbow-3.webp",
           "/assets/products/hairbow/combo/sc-hairbow-4.webp",
-          "/assets/products/hairbow/combo/sc-hairbow-5.webp",
-          "/assets/products/hairbow/combo/sc-hairbow-6.webp",
-          "/assets/products/hairbow/combo/sc-hairbow-7.webp",
-          "/assets/products/hairbow/combo/sc-hairbow-combo-1.webp",
           "/assets/products/hairbow/combo/sc-hairbow-combo-10.webp",
           "/assets/products/hairbow/combo/sc-hairbow-combo-11.webp",
           "/assets/products/hairbow/combo/sc-hairbow-combo-12.webp",
@@ -211,7 +207,6 @@
           "/assets/products/hairbow/combo/sc-hairbow-combo-17.webp",
           "/assets/products/hairbow/combo/sc-hairbow-combo-18.webp",
           "/assets/products/hairbow/combo/sc-hairbow-combo-19.webp",
-          "/assets/products/hairbow/combo/sc-hairbow-combo-2.webp",
           "/assets/products/hairbow/combo/sc-hairbow-combo-20.webp",
           "/assets/products/hairbow/combo/sc-hairbow-combo-21.webp",
           "/assets/products/hairbow/combo/sc-hairbow-combo-22.webp",
@@ -222,7 +217,6 @@
           "/assets/products/hairbow/combo/sc-hairbow-combo-27.webp",
           "/assets/products/hairbow/combo/sc-hairbow-combo-28.webp",
           "/assets/products/hairbow/combo/sc-hairbow-combo-29.webp",
-          "/assets/products/hairbow/combo/sc-hairbow-combo-3.webp",
           "/assets/products/hairbow/combo/sc-hairbow-combo-30.webp",
           "/assets/products/hairbow/combo/sc-hairbow-combo-31.webp",
           "/assets/products/hairbow/combo/sc-hairbow-combo-32.webp",
@@ -246,6 +240,77 @@
           "/assets/products/hairbow/combo/satin-tulip/sc-hairbow-combo-satin-tulip-5.webp",
           "/assets/products/hairbow/combo/satin-tulip/sc-hairbow-combo-satin-tulip-6.webp",
           "/assets/products/hairbow/combo/satin-tulip/sc-hairbow-combo-satin-tulip-7.webp"
+        ]
+      },
+      {
+        "id": "combo-hairbow-3-layered",
+        "slug": "combo-hairbow-3-layered",
+        "color": "3-layered",
+        "images": [
+          "/assets/products/hairbow/combo/3-layered-bow-combo/sc-hairbow-combo-3-layered-bow-combo-1.webp",
+          "/assets/products/hairbow/combo/3-layered-bow-combo/sc-hairbow-combo-3-layered-bow-combo-2.webp",
+          "/assets/products/hairbow/combo/3-layered-bow-combo/sc-hairbow-combo-3-layered-bow-combo-3.webp",
+          "/assets/products/hairbow/combo/3-layered-bow-combo/sc-hairbow-combo-3-layered-bow-combo-4.webp",
+          "/assets/products/hairbow/combo/3-layered-bow-combo/sc-hairbow-combo-3-layered-bow-combo-5.webp"
+        ]
+      },
+      {
+        "id": "combo-hairbow-jimmi-choo",
+        "slug": "combo-hairbow-jimmi-choo",
+        "color": "jimmi-choo",
+        "images": [
+          "/assets/products/hairbow/combo/jimmi-choo-bow-combo/sc-hairbow-combo-jimmi-choo-bow-combo-1.webp"
+        ]
+      },
+      {
+        "id": "combo-hairbow-mini-bow",
+        "slug": "combo-hairbow-mini-bow",
+        "color": "mini-bow",
+        "images": [
+          "/assets/products/hairbow/combo/mini-bow-combo/sc-hairbow-combo-mini-bow-combo-1.webp"
+        ]
+      },
+      {
+        "id": "combo-hairbow-pigtail",
+        "slug": "combo-hairbow-pigtail",
+        "color": "pigtail",
+        "images": [
+          "/assets/products/hairbow/combo/pigtail-bow-combo/sc-hairbow-combo-pigtail-bow-combo-1.webp",
+          "/assets/products/hairbow/combo/pigtail-bow-combo/sc-hairbow-combo-pigtail-bow-combo-2.webp",
+          "/assets/products/hairbow/combo/pigtail-bow-combo/sc-hairbow-combo-pigtail-bow-combo-3.webp",
+          "/assets/products/hairbow/combo/pigtail-bow-combo/sc-hairbow-combo-pigtail-bow-combo-4.webp"
+        ]
+      },
+      {
+        "id": "combo-hairbow-princess",
+        "slug": "combo-hairbow-princess",
+        "color": "princess",
+        "images": [
+          "/assets/products/hairbow/combo/princess-bow-combo/sc-hairbow-combo-princess-bow-combo-1.webp",
+          "/assets/products/hairbow/combo/princess-bow-combo/sc-hairbow-combo-princess-bow-combo-2.webp",
+          "/assets/products/hairbow/combo/princess-bow-combo/sc-hairbow-combo-princess-bow-combo-3.webp",
+          "/assets/products/hairbow/combo/princess-bow-combo/sc-hairbow-combo-princess-bow-combo-4.webp",
+          "/assets/products/hairbow/combo/princess-bow-combo/sc-hairbow-combo-princess-bow-combo-5.webp"
+        ]
+      },
+      {
+        "id": "combo-hairbow-scarf",
+        "slug": "combo-hairbow-scarf",
+        "color": "scarf",
+        "images": [
+          "/assets/products/hairbow/combo/scarf-bow-combo/sc-hairbow-combo-scarf-bow-combo-1.webp",
+          "/assets/products/hairbow/combo/scarf-bow-combo/sc-hairbow-combo-scarf-bow-combo-2.webp"
+        ]
+      },
+      {
+        "id": "combo-hairbow-tulip",
+        "slug": "combo-hairbow-tulip",
+        "color": "tulip",
+        "images": [
+          "/assets/products/hairbow/combo/tulip-bow-combo/sc-hairbow-combo-tulip-bow-combo-1.webp",
+          "/assets/products/hairbow/combo/tulip-bow-combo/sc-hairbow-combo-tulip-bow-combo-2.webp",
+          "/assets/products/hairbow/combo/tulip-bow-combo/sc-hairbow-combo-tulip-bow-combo-3.webp",
+          "/assets/products/hairbow/combo/tulip-bow-combo/sc-hairbow-combo-tulip-bow-combo-4.webp"
         ]
       }
     ]
@@ -399,11 +464,11 @@
         ]
       },
       {
-        "id": "satin-hairbow-metalic-olive",
-        "slug": "satin-hairbow-metalic-olive",
-        "color": "metalic-olive",
+        "id": "satin-hairbow-metallic-olive",
+        "slug": "satin-hairbow-metallic-olive",
+        "color": "metallic-olive",
         "images": [
-          "/assets/products/hairbow/satin/metalic-olive/sc-hairbow-satin-metalic-olive-1.webp"
+          "/assets/products/hairbow/satin/metallic-olive/sc-hairbow-satin-metallic-olive-1.webp"
         ]
       },
       {
@@ -1272,6 +1337,34 @@
           "/assets/products/scrunchie/classic/yellow/sc-scrunchie-classic-yellow-1.webp",
           "/assets/products/scrunchie/classic/yellow/sc-scrunchie-classic-yellow-2.webp"
         ]
+      },
+      {
+        "id": "classic-scrunchie-triple-colour",
+        "slug": "classic-scrunchie-triple-colour",
+        "color": "triple-colour",
+        "images": [
+          "/assets/products/scrunchie/classic/triple-colour/sc-scrunchie-classic-triple-colour-1.webp",
+          "/assets/products/scrunchie/classic/triple-colour/sc-scrunchie-classic-triple-colour-2.webp",
+          "/assets/products/scrunchie/classic/triple-colour/sc-scrunchie-classic-triple-colour-3.webp",
+          "/assets/products/scrunchie/classic/triple-colour/sc-scrunchie-classic-triple-colour-4.webp",
+          "/assets/products/scrunchie/classic/triple-colour/sc-scrunchie-classic-triple-colour-5.webp",
+          "/assets/products/scrunchie/classic/triple-colour/sc-scrunchie-classic-triple-colour-6.webp",
+          "/assets/products/scrunchie/classic/triple-colour/sc-scrunchie-classic-triple-colour-7.webp",
+          "/assets/products/scrunchie/classic/triple-colour/sc-scrunchie-classic-triple-colour-8.webp",
+          "/assets/products/scrunchie/classic/triple-colour/sc-scrunchie-classic-triple-colour-9.webp",
+          "/assets/products/scrunchie/classic/triple-colour/sc-scrunchie-classic-triple-colour-10.webp",
+          "/assets/products/scrunchie/classic/triple-colour/sc-scrunchie-classic-triple-colour-11.webp",
+          "/assets/products/scrunchie/classic/triple-colour/sc-scrunchie-classic-triple-colour-12.webp",
+          "/assets/products/scrunchie/classic/triple-colour/sc-scrunchie-classic-triple-colour-13.webp",
+          "/assets/products/scrunchie/classic/triple-colour/sc-scrunchie-classic-triple-colour-14.webp",
+          "/assets/products/scrunchie/classic/triple-colour/sc-scrunchie-classic-triple-colour-15.webp",
+          "/assets/products/scrunchie/classic/triple-colour/sc-scrunchie-classic-triple-colour-16.webp",
+          "/assets/products/scrunchie/classic/triple-colour/sc-scrunchie-classic-triple-colour-17.webp",
+          "/assets/products/scrunchie/classic/triple-colour/sc-scrunchie-classic-triple-colour-18.webp",
+          "/assets/products/scrunchie/classic/triple-colour/sc-scrunchie-classic-triple-colour-19.webp",
+          "/assets/products/scrunchie/classic/triple-colour/sc-scrunchie-classic-triple-colour-20.webp",
+          "/assets/products/scrunchie/classic/triple-colour/sc-scrunchie-classic-triple-colour-21.webp"
+        ]
       }
     ]
   },
@@ -1301,7 +1394,6 @@
           "/assets/products/scrunchie/combo/sc-scrunchie-combo-107.webp",
           "/assets/products/scrunchie/combo/sc-scrunchie-combo-108.webp",
           "/assets/products/scrunchie/combo/sc-scrunchie-combo-109.webp",
-          "/assets/products/scrunchie/combo/sc-scrunchie-combo-11.webp",
           "/assets/products/scrunchie/combo/sc-scrunchie-combo-110.webp",
           "/assets/products/scrunchie/combo/sc-scrunchie-combo-111.webp",
           "/assets/products/scrunchie/combo/sc-scrunchie-combo-112.webp",
@@ -1755,7 +1847,6 @@
           "/assets/products/scrunchie/tulip-sheer/yellow/sc-scrunchie-tulip-sheer-yellow-3.webp",
           "/assets/products/scrunchie/tulip-sheer/yellow/sc-scrunchie-tulip-sheer-yellow-4.webp",
           "/assets/products/scrunchie/tulip-sheer/yellow/sc-scrunchie-tulip-sheer-yellow-5.webp",
-          "/assets/products/scrunchie/tulip-sheer/yellow/sc-scrunchie-tulip-sheer-yellow-6.webp",
           "/assets/products/scrunchie/tulip-sheer/yellow/sc-scrunchie-tulip-sheer-yellow-7.webp",
           "/assets/products/scrunchie/tulip-sheer/yellow/sc-scrunchie-tulip-sheer-yellow-9.webp"
         ]
@@ -1763,20 +1854,121 @@
     ]
   },
   {
-    "id": "test-product-grouped",
-    "slug": "test-product-grouped",
-    "name": "Test Grouped Product",
-    "category": "TestCategory",
-    "type": "TestType",
+    "id": "hairbow-printed-mini",
+    "slug": "hairbow-printed-mini",
+    "name": "Printed Mini Hairbow",
+    "category": "hairbow",
+    "type": "printed-mini",
     "price": 0,
-    "description": "Test Product for grouping.",
+    "description": "Lovely Printed Mini Hairbows.",
     "variants": [
       {
-        "id": "testtype-testcategory-testcolor",
-        "slug": "testtype-testcategory-testcolor",
-        "color": "TestColor",
+        "id": "hairbow-printed-mini-standard",
+        "slug": "hairbow-printed-mini-standard",
+        "color": "Standard",
         "images": [
-          "/assets/products/TestCategory/TestType/TestColor/test_image.webp"
+          "/assets/products/hairbow/printed-mini/sc-hairbow-printed-mini-1.webp",
+          "/assets/products/hairbow/printed-mini/sc-hairbow-printed-mini-2.webp",
+          "/assets/products/hairbow/printed-mini/sc-hairbow-printed-mini-3.webp",
+          "/assets/products/hairbow/printed-mini/sc-hairbow-printed-mini-4.webp",
+          "/assets/products/hairbow/printed-mini/sc-hairbow-printed-mini-5.webp",
+          "/assets/products/hairbow/printed-mini/sc-hairbow-printed-mini-6.webp"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "scrunchie-satin-printed",
+    "slug": "scrunchie-satin-printed",
+    "name": "Satin Printed Scrunchie",
+    "category": "scrunchie",
+    "type": "satin-printed",
+    "price": 0,
+    "description": "Beautiful Satin Printed Scrunchies.",
+    "variants": [
+      {
+        "id": "satin-printed-scrunchie-standard",
+        "slug": "satin-printed-scrunchie-standard",
+        "color": "Standard",
+        "images": [
+          "/assets/products/scrunchie/satin-printed/sc-scrunchie-satin-printed-1.webp",
+          "/assets/products/scrunchie/satin-printed/sc-scrunchie-satin-printed-2.webp",
+          "/assets/products/scrunchie/satin-printed/sc-scrunchie-satin-printed-3.webp",
+          "/assets/products/scrunchie/satin-printed/sc-scrunchie-satin-printed-4.webp",
+          "/assets/products/scrunchie/satin-printed/sc-scrunchie-satin-printed-5.webp",
+          "/assets/products/scrunchie/satin-printed/sc-scrunchie-satin-printed-6.webp",
+          "/assets/products/scrunchie/satin-printed/sc-scrunchie-satin-printed-7.webp",
+          "/assets/products/scrunchie/satin-printed/sc-scrunchie-satin-printed-8.webp",
+          "/assets/products/scrunchie/satin-printed/sc-scrunchie-satin-printed-9.webp",
+          "/assets/products/scrunchie/satin-printed/sc-scrunchie-satin-printed-10.webp",
+          "/assets/products/scrunchie/satin-printed/sc-scrunchie-satin-printed-11.webp",
+          "/assets/products/scrunchie/satin-printed/sc-scrunchie-satin-printed-12.webp",
+          "/assets/products/scrunchie/satin-printed/sc-scrunchie-satin-printed-13.webp",
+          "/assets/products/scrunchie/satin-printed/sc-scrunchie-satin-printed-14.webp",
+          "/assets/products/scrunchie/satin-printed/sc-scrunchie-satin-printed-15.webp",
+          "/assets/products/scrunchie/satin-printed/sc-scrunchie-satin-printed-16.webp",
+          "/assets/products/scrunchie/satin-printed/sc-scrunchie-satin-printed-17.webp",
+          "/assets/products/scrunchie/satin-printed/sc-scrunchie-satin-printed-18.webp",
+          "/assets/products/scrunchie/satin-printed/sc-scrunchie-satin-printed-19.webp",
+          "/assets/products/scrunchie/satin-printed/sc-scrunchie-satin-printed-20.webp",
+          "/assets/products/scrunchie/satin-printed/sc-scrunchie-satin-printed-21.webp",
+          "/assets/products/scrunchie/satin-printed/sc-scrunchie-satin-printed-22.webp"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "hairclip-rose",
+    "slug": "hairclip-rose",
+    "name": "Rose Hairclip",
+    "category": "hairclip",
+    "type": "rose",
+    "price": 0,
+    "description": "Elegant Rose Hairclips.",
+    "variants": [
+      {
+        "id": "hairclip-rose-red",
+        "slug": "hairclip-rose-red",
+        "color": "red",
+        "images": [
+          "/assets/products/hairclip/rose/red/sc-hairclip-rose-red-1.webp",
+          "/assets/products/hairclip/rose/red/sc-hairclip-rose-red-2.webp"
+        ]
+      },
+      {
+        "id": "hairclip-rose-white",
+        "slug": "hairclip-rose-white",
+        "color": "white",
+        "images": [
+          "/assets/products/hairclip/rose/white/sc-hairclip-rose-white-1.webp",
+          "/assets/products/hairclip/rose/white/sc-hairclip-rose-white-2.webp"
+        ]
+      },
+      {
+        "id": "hairclip-rose-magenta",
+        "slug": "hairclip-rose-magenta",
+        "color": "magenta",
+        "images": [
+          "/assets/products/hairclip/rose/magenta/sc-hairclip-rose-magenta-1.webp",
+          "/assets/products/hairclip/rose/magenta/sc-hairclip-rose-magenta-2.webp"
+        ]
+      },
+      {
+        "id": "hairclip-rose-mauve",
+        "slug": "hairclip-rose-mauve",
+        "color": "mauve",
+        "images": [
+          "/assets/products/hairclip/rose/mauve/sc-hairclip-rose-mauve-1.webp",
+          "/assets/products/hairclip/rose/mauve/sc-hairclip-rose-mauve-2.webp"
+        ]
+      },
+      {
+        "id": "hairclip-rose-combo",
+        "slug": "hairclip-rose-combo",
+        "color": "combo",
+        "images": [
+          "/assets/products/hairclip/rose/combo/sc-hairclip-rose-combo-1.webp",
+          "/assets/products/hairclip/rose/combo/sc-hairclip-rose-combo-2.webp"
         ]
       }
     ]
