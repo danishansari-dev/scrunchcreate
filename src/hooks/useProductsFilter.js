@@ -179,7 +179,6 @@ export function useProductsFilter(allProducts = [], initialFilters = {}) {
         if (type === 'search') setSearch('')
     }, [toggleColor, toggleType])
 
-
     return {
         products: sortedProducts,
         totalCount: sortedProducts.length,
