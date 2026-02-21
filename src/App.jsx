@@ -12,6 +12,7 @@ import Checkout from './pages/checkout/Checkout'
 import OrderSuccess from './pages/checkout/OrderSuccess'
 
 export default function App() {
+
   return (
     <Routes>
       <Route element={<Layout />}>
