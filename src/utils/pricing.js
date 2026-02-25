@@ -7,17 +7,42 @@
  * - offerPrice: The selling price
  * - originalPrice: MRP (calculated with markup)
  * - discountPercent: Auto-calculated discount percentage
+ * 
+ * Updated: 2026-02-24
+ * ---
+ * Regular Scrunchie (single): ₹40
+ * Combo of 2 scrunchies: ₹65
+ * Combo of 3 scrunchies: ₹99
+ * Combo of 6 scrunchies: ₹199
+ * Combo of 12 scrunchies: ₹399
+ * 
+ * Tulip Scrunchie (single): ₹69
+ * Tulip combo of 3: ₹199
+ * Tulip combo of 6: ₹399
+ * Tulip combo of 12: ₹799
+ * Tulip combo of 24: ₹1599
+ * 
+ * Printed Scrunchie (single): ₹40
+ * Combo of 5 printed scrunchies: ₹197
+ * 
+ * Printed Mini Bow (single): ₹59
+ * 
+ * Gift Hamper: ₹199
+ * Satin Hamper Gift Hamper: ₹699
+ * 
+ * Delivery charge: ₹65
  */
 
 // Offer price table (selling prices)
 const OFFER_PRICE_TABLE = {
     scrunchie: {
-        default: 35,
+        default: 40,
         types: {
-            classic: 35,
+            classic: 40,
             tulip: 69,
             'tulip-sheer': 79,
             'satin-mini': 30,
+            'satin-printed': 40,
             combo: 99
         }
     },
@@ -32,13 +57,14 @@ const OFFER_PRICE_TABLE = {
             'satin-princes': 79,
             'satin-tulip': 89,
             'satin-mini': 49,
+            'printed-mini': 59,
             combo: 399
         }
     },
     gifthamper: {
-        default: 699,
+        default: 199,
         types: {
-            'satin-hamper': 199,
+            'satin-hamper': 699,
             'glimmer-grace': 189
         }
     },
@@ -106,9 +132,14 @@ function calculateOfferPrice(product) {
     if (category === 'scrunchie') {
         if (type === 'combo' || name.includes('combo') || name.includes('pack')) {
             if (name.includes('tulip') && name.includes('sheer')) return 599;
-            if (name.includes('tulip')) return 349;
+            if (name.includes('tulip')) return 199;
             if (type === 'satin-mini' || name.includes('mini')) return 399;
+            if (type === 'satin-printed' || name.includes('printed')) return 197;
             return 99;
+        }
+
+        if (type === 'satin-printed') {
+            return 40;
         }
 
         if (type === 'satin-mini' || type === 'satin_mini') {
@@ -125,6 +156,9 @@ function calculateOfferPrice(product) {
 
     // --- HAIRBOW ---
     if (category === 'hairbow') {
+        if (type === 'printed-mini' || type === 'printed_mini') {
+            return 59;
+        }
         if (OFFER_PRICE_TABLE.hairbow.types[type]) {
             return OFFER_PRICE_TABLE.hairbow.types[type];
         }
@@ -134,9 +168,9 @@ function calculateOfferPrice(product) {
 
     // --- GIFT HAMPER ---
     if (category === 'gifthamper') {
-        if (type === 'satin-hamper') return 199;
+        if (type === 'satin-hamper') return 699;
         if (name.includes('glimmer') || name.includes('grace')) return 189;
-        return 699;
+        return 199;
     }
 
     // --- OTHERS ---

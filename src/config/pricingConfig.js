@@ -4,6 +4,30 @@
  * 
  * Rules are evaluated in order - first match wins
  * More specific rules should come before general ones
+ * 
+ * Updated: 2026-02-24
+ * ---
+ * Regular Scrunchie (single): ₹40
+ * Combo of 2 scrunchies: ₹65
+ * Combo of 3 scrunchies: ₹99
+ * Combo of 6 scrunchies: ₹199
+ * Combo of 12 scrunchies: ₹399
+ * 
+ * Tulip Scrunchie (single): ₹69
+ * Tulip combo of 3: ₹199
+ * Tulip combo of 6: ₹399
+ * Tulip combo of 12: ₹799
+ * Tulip combo of 24: ₹1599
+ * 
+ * Printed Scrunchie (single): ₹40
+ * Combo of 5 printed scrunchies: ₹197
+ * 
+ * Printed Mini Bow (single): ₹59
+ * 
+ * Gift Hamper: ₹199
+ * Satin Hamper Gift Hamper: ₹699
+ * 
+ * Delivery charge: ₹65
  */
 
 // Pricing rules - evaluated in order, first match wins
@@ -12,16 +36,22 @@ export const PRICING_RULES = [
     // SPECIFIC OVERRIDES (most specific first)
     // ============================================
 
-    // Gift Hampers
-    { match: { category: 'GiftHamper', type: 'Satin hamper' }, price: 199, description: 'Magenta Pink Gift Hamper' },
-    { match: { category: 'GiftHamper' }, price: 699, description: 'Royal Valentine Gift Hamper' },
+    // Gift Hampers (UPDATED: swapped prices - satin hamper is premium at 699)
+    { match: { category: 'GiftHamper', type: 'Satin hamper' }, price: 699, description: 'Satin Hamper Gift Hamper' },
+    { match: { category: 'GiftHamper' }, price: 199, description: 'Gift Hamper' },
 
     // Hair Bow - Mini bow pack
     { match: { category: 'HairBow', type: 'Satin', color: 'mini' }, price: 359, description: 'Satin mini bow pack of 6' },
 
+    // Hair Bow - Printed Mini Bow
+    { match: { category: 'HairBow', type: 'Printed_mini' }, price: 59, description: 'Printed mini bow single' },
+
     // Scrunchie Combo packs (specific colors first)
-    { match: { category: 'Scrunchie', type: 'Combo', color: 'Tulip' }, price: 349, description: 'Satin tulip pack of 6' },
-    { match: { category: 'Scrunchie', type: 'Combo', color: 'tulip-sheer' }, price: 599, description: 'Premium tulip pack of 12' },
+    { match: { category: 'Scrunchie', type: 'Combo', color: 'Tulip' }, price: 199, description: 'Tulip scrunchie combo of 3' },
+    { match: { category: 'Scrunchie', type: 'Combo', color: 'tulip-sheer' }, price: 599, description: 'Premium tulip sheer combo' },
+
+    // Scrunchie - Satin Printed
+    { match: { category: 'Scrunchie', type: 'Satin_printed' }, price: 40, description: 'Printed scrunchie single' },
 
     // ============================================
     // TYPE-LEVEL RULES
@@ -46,8 +76,8 @@ export const PRICING_RULES = [
     // CATEGORY-LEVEL DEFAULTS
     // ============================================
 
-    // Single scrunchies (Classic, Tulip, Tulip-Sheer with color)
-    { match: { category: 'Scrunchie' }, price: 35, description: 'Single satin scrunchie' },
+    // Single scrunchies (Classic, Tulip, Tulip-Sheer with color) - UPDATED: 40 (was 35)
+    { match: { category: 'Scrunchie' }, price: 40, description: 'Single satin scrunchie' },
 
     // Hair bows default
     { match: { category: 'HairBow' }, price: 79, description: 'Hair bow' },
@@ -60,6 +90,9 @@ export const PRICING_RULES = [
 
     // Paraandi
     { match: { category: 'Paraandi' }, price: 199, description: 'Paraandi' },
+
+    // Hairclips
+    { match: { category: 'Hairclip' }, price: 99, description: 'Hairclip' },
 ];
 
 // Default price when no rule matches (null = flag for review)

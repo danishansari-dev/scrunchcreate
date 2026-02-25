@@ -1,8 +1,70 @@
 import { useMemo, useState, useCallback, useEffect } from 'react'
-import { normalizeColor } from '../utils/colorNormalization'
+import { normalizeColor, CANONICAL_COLORS } from '../utils/colorNormalization'
+
+// Set of canonical colors for fast lookup — only these should appear in the color filter
+const VALID_COLORS = new Set(CANONICAL_COLORS)
+
+/**
+ * Check if a normalized color value is a real color (not a product type/style name).
+ * Filters out values like "standard", "mixed", "3-layered", "jimmi-choo", "pigtail", etc.
+ */
+function isRealColor(normalizedColor) {
+    if (!normalizedColor) return false
+    return VALID_COLORS.has(normalizedColor)
+}
+
+/**
+ * Get all real (canonical) colors from a product, checking variants, availableColors, and base color.
+ */
+function getProductRealColors(product) {
+    const colors = new Set()
+
+    // From availableColors
+    if (product.availableColors && Array.isArray(product.availableColors)) {
+        product.availableColors.forEach(c => {
+            if (isRealColor(c)) colors.add(c)
+        })
+    }
+
+    // From base product normalizedColor
+    const baseColor = product._normalizedColor || product.normalizedColor || normalizeColor(product.color)
+    if (baseColor && isRealColor(baseColor)) colors.add(baseColor)
+
+    // From all variants
+    if (product.variants && Array.isArray(product.variants)) {
+        product.variants.forEach(v => {
+            const vColor = v.normalizedColor || normalizeColor(v.color)
+            if (vColor && isRealColor(vColor)) colors.add(vColor)
+        })
+    }
+
+    return colors
+}
+
+/**
+ * Find the variant that matches one of the selected colors.
+ * Returns the first matching variant, or null if none match.
+ */
+function findMatchingVariant(product, selectedColors) {
+    if (!product.variants || !Array.isArray(product.variants) || selectedColors.length === 0) {
+        return null
+    }
+
+    for (const variant of product.variants) {
+        const vColor = variant.normalizedColor || normalizeColor(variant.color)
+        if (vColor && selectedColors.includes(vColor)) {
+            return variant
+        }
+    }
+    return null
+}
+
 
 /**
  * Custom hook to filter, sort, and search products efficiently.
+ * 
+ * When a color filter is active, the product's displayed image is swapped
+ * to show the matching variant's image instead of the default.
  * 
  * @param {Array} allProducts - Full list of products.
  * @param {Object} initialFilters - Initial state { category, type, color, price, search, sort }
@@ -32,7 +94,7 @@ export function useProductsFilter(allProducts = [], initialFilters = {}) {
     const normalizedProducts = useMemo(() => {
         return allProducts.map(p => ({
             ...p,
-            // Create a unified searchable string
+            // Create a unified searchable string (include all variant colors)
             _searchable: `${p.name} ${p.category} ${p.type} ${p.tags?.join(' ') || ''} ${p.color} ${p.variants?.map(v => v.color).join(' ') || ''}`.toLowerCase(),
             // Ensure normalized color exists
             _normalizedColor: p.normalizedColor || normalizeColor(p.color),
@@ -43,53 +105,56 @@ export function useProductsFilter(allProducts = [], initialFilters = {}) {
 
 
     // --- 2. Filtering Logic ---
+    // Filter products AND swap images when a color filter is active
     const filteredProducts = useMemo(() => {
-        return normalizedProducts.filter(p => {
-            // 1. Category
-            if (selectedCategory && p.category?.toLowerCase() !== selectedCategory.toLowerCase()) {
-                return false
-            }
-
-            // 2. Search (Debounce should be handled at UI input level, but we filter here)
-            if (search) {
-                const searchTerm = search.toLowerCase().trim()
-                if (!p._searchable.includes(searchTerm)) return false
-            }
-
-            // 3. Type
-            if (selectedTypes.length > 0) {
-                if (!selectedTypes.includes(p.type)) return false
-            }
-
-            // 4. Color
-            if (selectedColors.length > 0) {
-                // Check main product color OR any variant color
-                const productColors = []
-                if (p.availableColors && Array.isArray(p.availableColors)) {
-                    productColors.push(...p.availableColors)
-                } else if (p._normalizedColor) {
-                    productColors.push(p._normalizedColor)
+        return normalizedProducts
+            .filter(p => {
+                // 1. Category
+                if (selectedCategory && p.category?.toLowerCase() !== selectedCategory.toLowerCase()) {
+                    return false
                 }
 
-                // If product has variants, check them too (though availableColors should cover this)
-                if (p.variants) {
-                    p.variants.forEach(v => {
-                        const vColor = v.normalizedColor || normalizeColor(v.color)
-                        if (vColor) productColors.push(vColor)
-                    })
+                // 2. Search
+                if (search) {
+                    const searchTerm = search.toLowerCase().trim()
+                    if (!p._searchable.includes(searchTerm)) return false
                 }
 
-                const hasMatch = productColors.some(c => selectedColors.includes(c))
-                if (!hasMatch) return false
-            }
+                // 3. Type
+                if (selectedTypes.length > 0) {
+                    if (!selectedTypes.includes(p.type)) return false
+                }
 
-            // 5. Price
-            if (p._price < priceRange.min || p._price > priceRange.max) {
-                return false
-            }
+                // 4. Color — check ALL variants / availableColors for match
+                if (selectedColors.length > 0) {
+                    const productColors = getProductRealColors(p)
+                    const hasMatch = [...productColors].some(c => selectedColors.includes(c))
+                    if (!hasMatch) return false
+                }
 
-            return true
-        })
+                // 5. Price
+                if (p._price < priceRange.min || p._price > priceRange.max) {
+                    return false
+                }
+
+                return true
+            })
+            .map(p => {
+                // If a color filter is active, swap the displayed image to the matching variant
+                if (selectedColors.length > 0 && p.variants && p.variants.length > 0) {
+                    const matchingVariant = findMatchingVariant(p, selectedColors)
+                    if (matchingVariant && matchingVariant.images && matchingVariant.images.length > 0) {
+                        return {
+                            ...p,
+                            primaryImage: matchingVariant.images[0],
+                            images: matchingVariant.images,
+                            // Keep everything else the same so ProductCard renders correctly
+                            _matchedColor: matchingVariant.normalizedColor || normalizeColor(matchingVariant.color)
+                        }
+                    }
+                }
+                return p
+            })
     }, [normalizedProducts, selectedCategory, search, selectedTypes, selectedColors, priceRange])
 
 
@@ -101,9 +166,7 @@ export function useProductsFilter(allProducts = [], initialFilters = {}) {
         } else if (sortOption === 'price_desc') {
             sorted.sort((a, b) => b._price - a._price)
         } else if (sortOption === 'newest') {
-            // Assuming there isn't a date field yet, but if there was:
-            // sorted.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-            // For now, rely on array order (often newest first/last) or simple reverse if needed
+            // Assuming there isn't a date field yet
         }
         return sorted
     }, [filteredProducts, sortOption])
@@ -117,7 +180,6 @@ export function useProductsFilter(allProducts = [], initialFilters = {}) {
     const availableFilters = useMemo(() => {
         // Base set of products for facet calculation:
         // Filtered by Category + Search, but NOT by Type/Color/Price yet.
-        // This allows seeing what types/colors are available within the current search result.
         const baseProducts = normalizedProducts.filter(p => {
             if (selectedCategory && p.category?.toLowerCase() !== selectedCategory.toLowerCase()) return false
             if (search && !p._searchable.includes(search.toLowerCase().trim())) return false
@@ -135,10 +197,8 @@ export function useProductsFilter(allProducts = [], initialFilters = {}) {
                 types[p.type] = (types[p.type] || 0) + 1
             }
 
-            // Colors
-            const pColors = new Set()
-            if (p.availableColors) p.availableColors.forEach(c => pColors.add(c))
-            if (p._normalizedColor) pColors.add(p._normalizedColor)
+            // Colors — collect ALL real colors from product + ALL variants
+            const pColors = getProductRealColors(p)
 
             pColors.forEach(c => {
                 colors[c] = (colors[c] || 0) + 1

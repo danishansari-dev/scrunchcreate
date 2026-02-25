@@ -50,8 +50,7 @@ export const CANONICAL_COLORS = [
     'pistachio',
     'chocolate',
     'silver',
-    'multi',
-    'combo'
+    'multi'
 ];
 
 // Map of raw color values to their canonical form

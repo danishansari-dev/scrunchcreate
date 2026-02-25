@@ -17,7 +17,8 @@ const categorySlugMap = {
   'earings': 'Earring',
   'hamper': 'GiftHamper',
   'paraandi': 'Paraandi',
-  'flower-jewellery': 'FlowerJewellery'
+  'flower-jewellery': 'FlowerJewellery',
+  'hairclips': 'Hairclip'
 }
 
 // Friendly display names for categories
@@ -28,11 +29,16 @@ const categoryDisplayNames = {
   'Earring': 'Earrings',
   'GiftHamper': 'Gift Hampers',
   'Paraandi': 'Paraandi',
-  'FlowerJewellery': 'Flower Jewellery'
+  'FlowerJewellery': 'Flower Jewellery',
+  'Hairclip': 'Hair Clips',
+  'hairbow': 'Hair Bows',
+  'scrunchie': 'Scrunchies',
+  'gifthamper': 'Gift Hampers',
+  'flowerjewellery': 'Flower Jewellery',
+  'hairclip': 'Hair Clips'
 }
 
-// Categories that should show filters
-const categoriesWithFilters = ['HairBow', 'Scrunchie']
+// Show filters for all categories
 
 export default function Products() {
   const { category: categorySlug } = useParams()
@@ -69,7 +75,8 @@ export default function Products() {
 
 
   // Determine if filters should be shown
-  const showFilters = !selectedCategory || categoriesWithFilters.includes(selectedCategory)
+  // Always show filters — all categories support filtering
+  const showFilters = true
 
   // Group products by category for display
   const productsByCategory = useMemo(() => {
