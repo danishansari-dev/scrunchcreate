@@ -13,6 +13,7 @@ function isRealColor(normalizedColor) {
     return VALID_COLORS.has(normalizedColor)
 }
 
+
 /**
  * Get all real (canonical) colors from a product, checking variants, availableColors, and base color.
  */
