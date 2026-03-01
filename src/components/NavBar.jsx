@@ -123,140 +123,185 @@ const NavBar = () => {
   };
 
   return (
-    <header className={styles.header}>
-      <div className={styles.headerContainer}>
-        <button
-          className={styles.menuButton}
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          aria-label="Toggle menu"
-        >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-            <path d="M3 12h18M3 6h18M3 18h18"></path>
-          </svg>
-        </button>
-        <Link to="/" className={styles.brand}>
-          <span className={styles.brandText}>Scrunch &amp; Create</span>
-        </Link>
-
-        <nav className={styles.nav}>
-          <ul className={styles.navLinks}>
-            <li><Link to="/products">Shop</Link></li>
-
-            {navCategories.map(category => {
-              const slug = categoryToSlug[category];
-              const displayName = categoryDisplayNames[category];
-              const data = categoryData[category];
-              const hasSubcategories = data && data.types.length > 0;
-
-              return (
-                <li
-                  key={category}
-                  className={styles.navItem}
-                  onMouseEnter={() => handleMouseEnter(category)}
-                  onMouseLeave={handleMouseLeave}
-                >
-                  <Link
-                    to={`/products/${slug}`}
-                    className={styles.navLink}
-                    onKeyDown={(e) => handleKeyDown(e, category)}
-                    aria-haspopup={hasSubcategories ? 'true' : undefined}
-                    aria-expanded={activeDropdown === category ? 'true' : undefined}
-                  >
-                    {displayName}
-                    {hasSubcategories && (
-                      <svg className={styles.dropdownIcon} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <polyline points="6 9 12 15 18 9"></polyline>
-                      </svg>
-                    )}
-                  </Link>
-
-                  {/* Mega Menu Dropdown */}
-                  {hasSubcategories && activeDropdown === category && (
-                    <div className={styles.dropdown}>
-                      <div className={styles.megaMenuContent}>
-                        {data.types.map(typeGroup => (
-                          <div key={typeGroup.name} className={styles.megaMenuColumn}>
-                            <Link
-                              to={`/products/${slug}?type=${encodeURIComponent(typeGroup.name)}`}
-                              className={styles.megaMenuHeading}
-                              onClick={() => setActiveDropdown(null)}
-                            >
-                              {typeGroup.name}
-                            </Link>
-                            <ul className={styles.megaMenuList}>
-                              {typeGroup.colors.slice(0, 5).map(color => (
-                                <li key={color}>
-                                  <Link
-                                    to={`/products/${slug}?type=${encodeURIComponent(typeGroup.name)}&color=${encodeURIComponent(color)}`}
-                                    className={styles.megaMenuLink}
-                                    onClick={() => setActiveDropdown(null)}
-                                  >
-                                    {color.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
-                                  </Link>
-                                </li>
-                              ))}
-                              {typeGroup.colors.length > 5 && (
-                                <li>
-                                  <Link
-                                    to={`/products/${slug}?type=${encodeURIComponent(typeGroup.name)}`}
-                                    className={styles.megaMenuViewAll}
-                                    onClick={() => setActiveDropdown(null)}
-                                  >
-                                    View all {typeGroup.colors.length} colors →
-                                  </Link>
-                                </li>
-                              )}
-                            </ul>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </li>
-              );
-            })}
-          </ul>
-        </nav>
-
-        <div className={styles.utilityLinks}>
-          <div className={`${styles.searchWrapper} ${searchOpen ? styles.searchOpen : ''}`}>
-            <input
-              type="text"
-              className={styles.searchInput}
-              placeholder="Search products..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyDown={handleSearchKeyDown}
-              aria-label="Search products"
-            />
-            <button
-              aria-label={searchOpen ? 'Submit search' : 'Open search'}
-              className={styles.iconButton}
-              onClick={handleSearchToggle}
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <circle cx="11" cy="11" r="8"></circle>
-                <path d="m21 21-4.35-4.35"></path>
+    <>
+      <header className={styles.header}>
+        <div className={styles.headerContainer}>
+          {/* Hamburger / close toggle for mobile drawer */}
+          <button
+            className={styles.menuButton}
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            {isMenuOpen ? (
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <path d="M18 6L6 18M6 6l12 12"></path>
               </svg>
+            ) : (
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <path d="M3 12h18M3 6h18M3 18h18"></path>
+              </svg>
+            )}
+          </button>
+          <Link to="/" className={styles.brand}>
+            <span className={styles.brandText}>Scrunch &amp; Create</span>
+          </Link>
+
+          <nav className={styles.nav}>
+            <ul className={styles.navLinks}>
+              <li><Link to="/products">Shop</Link></li>
+
+              {navCategories.map(category => {
+                const slug = categoryToSlug[category];
+                const displayName = categoryDisplayNames[category];
+                const data = categoryData[category];
+                const hasSubcategories = data && data.types.length > 0;
+
+                return (
+                  <li
+                    key={category}
+                    className={styles.navItem}
+                    onMouseEnter={() => handleMouseEnter(category)}
+                    onMouseLeave={handleMouseLeave}
+                  >
+                    <Link
+                      to={`/products/${slug}`}
+                      className={styles.navLink}
+                      onKeyDown={(e) => handleKeyDown(e, category)}
+                      aria-haspopup={hasSubcategories ? 'true' : undefined}
+                      aria-expanded={activeDropdown === category ? 'true' : undefined}
+                    >
+                      {displayName}
+                      {hasSubcategories && (
+                        <svg className={styles.dropdownIcon} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                      )}
+                    </Link>
+
+                    {/* Mega Menu Dropdown */}
+                    {hasSubcategories && activeDropdown === category && (
+                      <div className={styles.dropdown}>
+                        <div className={styles.megaMenuContent}>
+                          {data.types.map(typeGroup => (
+                            <div key={typeGroup.name} className={styles.megaMenuColumn}>
+                              <Link
+                                to={`/products/${slug}?type=${encodeURIComponent(typeGroup.name)}`}
+                                className={styles.megaMenuHeading}
+                                onClick={() => setActiveDropdown(null)}
+                              >
+                                {typeGroup.name}
+                              </Link>
+                              <ul className={styles.megaMenuList}>
+                                {typeGroup.colors.slice(0, 5).map(color => (
+                                  <li key={color}>
+                                    <Link
+                                      to={`/products/${slug}?type=${encodeURIComponent(typeGroup.name)}&color=${encodeURIComponent(color)}`}
+                                      className={styles.megaMenuLink}
+                                      onClick={() => setActiveDropdown(null)}
+                                    >
+                                      {color.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                                    </Link>
+                                  </li>
+                                ))}
+                                {typeGroup.colors.length > 5 && (
+                                  <li>
+                                    <Link
+                                      to={`/products/${slug}?type=${encodeURIComponent(typeGroup.name)}`}
+                                      className={styles.megaMenuViewAll}
+                                      onClick={() => setActiveDropdown(null)}
+                                    >
+                                      View all {typeGroup.colors.length} colors →
+                                    </Link>
+                                  </li>
+                                )}
+                              </ul>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
+
+          <div className={styles.utilityLinks}>
+            <div className={`${styles.searchWrapper} ${searchOpen ? styles.searchOpen : ''}`}>
+              <input
+                type="text"
+                className={styles.searchInput}
+                placeholder="Search products..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={handleSearchKeyDown}
+                aria-label="Search products"
+              />
+              <button
+                aria-label={searchOpen ? 'Submit search' : 'Open search'}
+                className={styles.iconButton}
+                onClick={handleSearchToggle}
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <path d="m21 21-4.35-4.35"></path>
+                </svg>
+              </button>
+            </div>
+            <Link to="/wishlist" aria-label="Wishlist" className={styles.cartBadge}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+              </svg>
+              {wishlist.length > 0 && <span className={styles.cartCount}>{wishlist.length}</span>}
+            </Link>
+            <button onClick={toggleCart} className={styles.cartBadge} aria-label="Shopping cart">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <circle cx="9" cy="21" r="1"></circle>
+                <circle cx="20" cy="21" r="1"></circle>
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+              </svg>
+              <span className={styles.cartCount}>{totalItems}</span>
             </button>
           </div>
-          <Link to="/wishlist" aria-label="Wishlist" className={styles.cartBadge}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-            </svg>
-            {wishlist.length > 0 && <span className={styles.cartCount}>{wishlist.length}</span>}
-          </Link>
-          <button onClick={toggleCart} className={styles.cartBadge} aria-label="Shopping cart">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-              <circle cx="9" cy="21" r="1"></circle>
-              <circle cx="20" cy="21" r="1"></circle>
-              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-            </svg>
-            <span className={styles.cartCount}>{totalItems}</span>
-          </button>
         </div>
-      </div>
-    </header>
+      </header>
+
+      {/* Mobile slide-out drawer — visible only on small screens */}
+      <div
+        className={`${styles.mobileOverlay} ${isMenuOpen ? styles.mobileOverlayVisible : ''}`}
+        onClick={() => setIsMenuOpen(false)}
+        aria-hidden="true"
+      />
+      <nav
+        className={`${styles.mobileDrawer} ${isMenuOpen ? styles.mobileDrawerOpen : ''}`}
+        aria-label="Mobile navigation"
+      >
+        <ul className={styles.mobileNavList}>
+          <li>
+            <Link to="/products" className={styles.mobileNavLink} onClick={() => setIsMenuOpen(false)}>
+              Shop All
+            </Link>
+          </li>
+          {navCategories.map(category => (
+            <li key={category}>
+              <Link
+                to={`/products/${categoryToSlug[category]}`}
+                className={styles.mobileNavLink}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                {categoryDisplayNames[category]}
+              </Link>
+            </li>
+          ))}
+          <li className={styles.mobileNavDivider} />
+          <li>
+            <Link to="/wishlist" className={styles.mobileNavLink} onClick={() => setIsMenuOpen(false)}>
+              ♡ Wishlist
+            </Link>
+          </li>
+        </ul>
+      </nav>
+    </>
   );
 };
 
