@@ -11,25 +11,6 @@
     padding: 0 1rem;
 }
 
-.header {
-    text-align: center;
-    margin-bottom: 2.5rem;
-}
-
-.sectionTitle {
-    font-size: 2.25rem;
-    font-weight: 600;
-    color: var(--color-text-main);
-    margin: 0 0 0.75rem 0;
-    font-family: var(--font-heading);
-}
-
-.sectionSubtitle {
-    font-size: 1rem;
-    color: var(--color-text-muted);
-    margin: 0;
-}
-
 .productsGrid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -45,17 +26,17 @@
     }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 767px) {
     .bestSellersSection {
-        padding: 3rem 1rem;
+        padding: 40px var(--space-4);
     }
 
-    .sectionTitle {
-        font-size: 1.75rem;
+    .container {
+        padding: 0;
     }
 
     .productsGrid {
-        grid-template-columns: 1fr;
-        gap: 1.25rem;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
     }
 }
