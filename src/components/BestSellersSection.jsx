@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react'
 import { AnimatePresence } from 'framer-motion'
-import styles from './BestSellersSection.module.css'
 import ProductCard from './ProductCard'
+import SectionHeader from './SectionHeader'
 import { getProducts } from '../utils/getProducts'
+import styles from './BestSellersSection.module.css'
 
 export default function BestSellersSection() {
     const [products, setProducts] = useState([])
@@ -53,12 +54,11 @@ export default function BestSellersSection() {
     return (
         <section className={styles.bestSellersSection}>
             <div className={styles.container}>
-                <div className={styles.header}>
-                    <h2 className={styles.sectionTitle}>Best Sellers</h2>
-                    <p className={styles.sectionSubtitle}>
-                        Handpicked favorites loved by our community
-                    </p>
-                </div>
+                <SectionHeader
+                    title="Customer Favourites"
+                    linkText="See all"
+                    linkHref="/products"
+                />
                 <ul className={styles.productsGrid}>
                     <AnimatePresence initial={false}>
                         {bestSellers.map((product, idx) => (
