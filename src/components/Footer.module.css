@@ -241,11 +241,21 @@
   }
 
   .grid {
-    gap: 28px;
+    gap: 32px;
   }
 
   .brand {
     font-size: 20px;
+  }
+
+  /* More breathing room between brand/contact info */
+  .brandSection {
+    gap: 20px;
+  }
+
+  /* Add spacing between each footer section */
+  .section {
+    padding-bottom: 8px;
   }
 
   .newsletterForm {
