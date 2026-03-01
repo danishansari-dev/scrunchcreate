@@ -57,17 +57,31 @@ const featuresData = [
 export default function FeaturesSection() {
     return (
         <section className={styles.featuresSection}>
-            {featuresData.map((feature, index) => (
-                <div key={index} className={styles.featureItem}>
-                    <div className={styles.iconWrapper}>
-                        <feature.icon />
+            {/* Desktop 4-card grid (Hidden on mobile via CSS) */}
+            <div className={styles.desktopGrid}>
+                {featuresData.map((feature, index) => (
+                    <div key={index} className={styles.featureItem}>
+                        <div className={styles.iconWrapper}>
+                            <feature.icon />
+                        </div>
+                        <div className={styles.textWrapper}>
+                            <span className={styles.title}>{feature.title}</span>
+                            <span className={styles.subtitle}>{feature.subtitle}</span>
+                        </div>
                     </div>
-                    <div className={styles.textWrapper}>
-                        <span className={styles.title}>{feature.title}</span>
-                        <span className={styles.subtitle}>{feature.subtitle}</span>
+                ))}
+            </div>
+
+            {/* Mobile Ticker (Shown only on mobile via CSS) */}
+            <div className={styles.mobileTicker}>
+                <div className={styles.tickerContent}>
+                    <div className={styles.marqueeInner}>
+                        <span>🎀 HANDCRAFTED &nbsp;&nbsp;✦&nbsp;&nbsp; 🚚 FREE SHIPPING ABOVE ₹999 &nbsp;&nbsp;✦&nbsp;&nbsp; 💝 1200+ HAPPY CUSTOMERS &nbsp;&nbsp;✦&nbsp;&nbsp; 🌿 ECO PACKAGING &nbsp;&nbsp;✦&nbsp;&nbsp; ⭐ MADE IN INDIA &nbsp;&nbsp;✦&nbsp;&nbsp; 🎁 GIFT WRAPPING AVAILABLE &nbsp;&nbsp;✦&nbsp;&nbsp;</span>
+                        {/* Duplicate for seamless loop */}
+                        <span>&nbsp;&nbsp;🎀 HANDCRAFTED &nbsp;&nbsp;✦&nbsp;&nbsp; 🚚 FREE SHIPPING ABOVE ₹999 &nbsp;&nbsp;✦&nbsp;&nbsp; 💝 1200+ HAPPY CUSTOMERS &nbsp;&nbsp;✦&nbsp;&nbsp; 🌿 ECO PACKAGING &nbsp;&nbsp;✦&nbsp;&nbsp; ⭐ MADE IN INDIA &nbsp;&nbsp;✦&nbsp;&nbsp; 🎁 GIFT WRAPPING AVAILABLE &nbsp;&nbsp;✦&nbsp;&nbsp;</span>
                     </div>
                 </div>
-            ))}
+            </div>
         </section>
     )
 }
