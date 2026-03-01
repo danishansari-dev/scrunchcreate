@@ -1,4 +1,11 @@
+@import '../theme/theme.css';
+
 .featuresSection {
+  padding: 0;
+}
+
+/* ─── DESKTOP ─── */
+.desktopGrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 1rem;
@@ -48,16 +55,61 @@
   color: var(--color-text-muted);
 }
 
+/* ─── MOBILE MARQUEE ─── */
+/* FIX #3: Compact single-line ticker, replaces the tall 4-card grid on mobile */
+.mobileTicker {
+  display: none;
+  background-color: var(--color-secondary);
+  height: 36px;
+  overflow: hidden;
+  position: relative;
+}
+
+.tickerContent {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.marqueeInner {
+  display: flex;
+  width: fit-content;
+  white-space: nowrap;
+  animation: marquee 20s linear infinite;
+}
+
+.marqueeInner span {
+  display: inline-block;
+  color: white;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-weight: 500;
+}
+
 @media (max-width: 1024px) {
-  .featuresSection {
+  .desktopGrid {
     grid-template-columns: repeat(2, 1fr);
     padding: 1.5rem 1.5rem;
   }
 }
 
-@media (max-width: 600px) {
-  .featuresSection {
-    grid-template-columns: 1fr;
-    padding: 1rem;
+@media (max-width: 767px) {
+  .desktopGrid {
+    display: none;
+  }
+
+  .mobileTicker {
+    display: block;
   }
 }
