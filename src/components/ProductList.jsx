@@ -1,7 +1,8 @@
 import React from 'react'
-import styles from './ProductList.module.css'
 import { AnimatePresence } from 'framer-motion'
 import ProductCard from './ProductCard'
+import SectionHeader from './SectionHeader'
+import styles from './ProductList.module.css'
 
 export default function ProductList({ title, products = [], showViewAllLink = false, viewAllHref = '/products' }) {
   // Filter out products without images or invalid data
@@ -13,12 +14,11 @@ export default function ProductList({ title, products = [], showViewAllLink = fa
 
   return (
     <section className={styles.section}>
-      <div className={styles.sectionHeader}>
-        {title ? <h3 className={styles.sectionTitle}>{title}</h3> : null}
-        {showViewAllLink ? (
-          <a className={styles.viewAll} href={viewAllHref}>View all</a>
-        ) : null}
-      </div>
+      <SectionHeader
+        title={title}
+        linkText={showViewAllLink ? "View all" : null}
+        linkHref={viewAllHref}
+      />
       <ul className={styles.grid}>
         <AnimatePresence initial={false}>
           {validProducts.map((p, idx) => (
