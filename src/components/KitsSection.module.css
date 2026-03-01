@@ -1,0 +1,135 @@
+@import '../theme/theme.css';
+
+.kitsSection {
+    padding: 48px 24px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.kitsGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.kitCard {
+    text-decoration: none;
+    color: inherit;
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--color-border-soft);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.kitCard:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.kitImage {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background: var(--color-surface-soft);
+}
+
+.kitImage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.kitCard:hover .kitImage img {
+    transform: scale(1.04);
+}
+
+.kitBody {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.kitName {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--color-text-main);
+    margin: 0;
+}
+
+.kitDesc {
+    font-size: 13px;
+    color: var(--color-text-muted);
+    margin: 0;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.kitPricing {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.kitPrice {
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--color-text-main);
+}
+
+.kitOriginal {
+    font-size: 13px;
+    color: var(--color-text-muted);
+    text-decoration: line-through;
+}
+
+/* ─── MOBILE ─── */
+@media (max-width: 767px) {
+    .kitsSection {
+        padding: 32px 16px;
+    }
+
+    /* Horizontal scroll on mobile for kits */
+    .kitsGrid {
+        grid-template-columns: none;
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        gap: 12px;
+        padding-bottom: 8px;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .kitsGrid::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Smaller cards so the next one peeks into view */
+    .kitCard {
+        min-width: 230px;
+        max-width: 250px;
+        scroll-snap-align: start;
+        flex-shrink: 0;
+    }
+
+    .kitName {
+        font-size: 15px;
+    }
+
+    .kitDesc {
+        font-size: 12px;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+    }
+
+    .kitBody {
+        padding: 10px;
+    }
+}
