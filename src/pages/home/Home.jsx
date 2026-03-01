@@ -3,11 +3,16 @@ import Banner from '../../components/Banner'
 import FeaturesSection from '../../components/FeaturesSection'
 import CollectionsSection from '../../components/CollectionsSection'
 import BestSellersSection from '../../components/BestSellersSection'
-import WhyChooseSection from '../../components/WhyChooseSection'
 import ProductList from '../../components/ProductList'
 import InstagramSection from '../../components/InstagramSection'
+import KitsSection from '../../components/KitsSection'
 import { getProducts } from '../../utils/getProducts'
+import styles from './Home.module.css'
 
+/**
+ * Homepage — mobile-first redesign
+ * Removed WhyChooseSection per FIX #8
+ */
 export default function Home() {
   const [products, setProducts] = useState([])
 
@@ -16,58 +21,35 @@ export default function Home() {
     setProducts(data)
   }, [])
 
-
-  // Filter products by category (case-insensitive matching) - limit to 8 for preview
-  const hairbowsProducts = useMemo(() =>
-    products.filter(p =>
-      p.category && (p.category.toLowerCase() === 'hairbows' || p.category.toLowerCase() === 'hairbow')
-    ).reverse().slice(0, 8), [products]
-  )
-
-
+  // Filter products by category for the "New Arrivals" section
   const scrunchiesProducts = useMemo(() =>
     products.filter(p =>
       p.category && (p.category.toLowerCase() === 'scrunchies' || p.category.toLowerCase() === 'scrunchie')
-    ).reverse().slice(0, 8), [products]
-  )
-
-  const hairclipProducts = useMemo(() =>
-    products.filter(p =>
-      p.category && (p.category.toLowerCase() === 'hairclips' || p.category.toLowerCase() === 'hairclip')
-    ).reverse().slice(0, 8), [products]
+    ).reverse().slice(0, 4), [products]
   )
 
   return (
-    <>
+    <div className={styles.homeContainer}>
       <Banner />
       <FeaturesSection />
-      <CollectionsSection />
-      <BestSellersSection />
 
-      <div className="home-shell">
-        <div className="home-shell-inner">
-          <ProductList
-            title="Hair Bows Collection"
-            products={hairbowsProducts}
-            showViewAllLink
-            viewAllHref="/products?category=Hairbows"
-          />
-          <ProductList
-            title="Scrunchies Collection"
-            products={scrunchiesProducts}
-            showViewAllLink
-            viewAllHref="/products?category=Scrunchies"
-          />
-          <ProductList
-            title="Hairclips Collection"
-            products={hairclipProducts}
-            showViewAllLink
-            viewAllHref="/products?category=Hairclips"
-          />
-        </div>
+      <div className={styles.contentWrapper}>
+        <CollectionsSection />
+        <BestSellersSection />
+
+        <ProductList
+          title="New Arrivals"
+          products={scrunchiesProducts}
+          showViewAllLink
+          viewAllHref="/products?category=Scrunchies"
+        />
+
+        {/* FIX #6: Hardcoded kits section with 3 curated kits */}
+        <KitsSection />
+
+        {/* FIX #7: Static UGC-style Instagram grid (no iframes) */}
+        <InstagramSection />
       </div>
-      <InstagramSection />
-      <WhyChooseSection />
-    </>
+    </div>
   )
 }
