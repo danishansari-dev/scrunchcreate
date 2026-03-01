@@ -1,6 +1,10 @@
 :root {
   --color-primary: #e78592;
   --color-primary-strong: #f67280;
+  --color-secondary: #4a1c40;     /* deep plum */
+  --color-accent-teal: #2a9d8f;   /* teal for links/labels */
+  --color-accent-saffron: #d4943a; /* saffron gold for CTAs */
+  --color-cream: #fdf6ef;          /* cream background */
   --color-surface: #ffffff;
   --color-surface-soft: #fff3f2;
   --color-surface-accent: #fee9ea;
@@ -16,9 +20,13 @@
   --shadow-soft: 0 0 5px rgba(0,0,0,0.08);
   --font-heading: 'Figtree', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-body: 'Figtree', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-display: 'Cormorant Garamond', Georgia, serif;
   --radius-sm: 4px;
   --radius-md: 6px;
   --radius-lg: 10px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-10: 40px;
   --transition-fast: all 0.25s ease;
 
 
