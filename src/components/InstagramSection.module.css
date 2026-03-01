@@ -204,9 +204,13 @@
 
 @media (max-width: 480px) {
     .grid {
-        grid-template-columns: 1fr;
-        max-width: 300px;
-        margin-left: auto;
-        margin-right: auto;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    /* Larger tap target for the Instagram follow button */
+    .followButton {
+        padding: 14px 36px;
+        font-size: 15px;
     }
 }
