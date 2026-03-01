@@ -107,10 +107,12 @@ export default function Products() {
     <main className={styles.page}>
 
       <div className={styles.header}>
-        <h1 className={styles.title}>{pageTitle}</h1>
-        <p className={styles.subtitle}>
-          {filteredProducts.length} products found
-        </p>
+        <div className={styles.titleContainer}>
+          <h1 className={styles.title}>{pageTitle === 'Products' ? 'All Products' : pageTitle}</h1>
+          <p className={styles.subtitle}>
+            {filteredProducts.length} products
+          </p>
+        </div>
 
         {/* Search + Filter row */}
         <div className={styles.searchFilterRow}>

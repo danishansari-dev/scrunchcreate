@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import styles from './ProductCard.module.css'
@@ -10,13 +10,13 @@ import { createSlug } from '../utils/productUtils'
 
 // Heart Icon SVG components
 const HeartOutline = () => (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
         <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
     </svg>
 )
 
 const HeartFilled = () => (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2.2">
         <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
     </svg>
 )
@@ -29,12 +29,21 @@ export default function ProductCard({ product, index = 0 }) {
     const [isHovered, setIsHovered] = useState(false)
     const [imageError, setImageError] = useState(false)
 
-    // Use the top-level image or the first variant image as primary
-    // PRIORITIZE: pre-calculated primaryImage > images array > legacy image field > variants
-    const primaryImageRaw = product.primaryImage || (product.images && product.images.length > 0 ? product.images[0] : null) || product.image || (product.variants?.[0]?.images?.[0]) || null;
+    // Local variant strictly for Image Swapping within the card
+    const [activeVariantId, setActiveVariantId] = useState(null)
 
-    // For secondary image (hover effect), check images array index 1
-    const secondaryImageRaw = (product.images && product.images.length > 1 ? product.images[1] : null) || (product.variants?.[0]?.images?.length > 1 ? product.variants[0].images[1] : null);
+    // Reset local state if product changes entirely
+    useEffect(() => {
+        setActiveVariantId(null)
+    }, [product.id])
+
+    const activeVariant = activeVariantId
+        ? product.variants?.find(v => v.id === activeVariantId)
+        : null;
+
+    // Use activeVariant's image if explicitly selected, else fallback to the hook's returned primaryImage
+    const primaryImageRaw = activeVariant?.images?.[0] || product.primaryImage || (product.images && product.images.length > 0 ? product.images[0] : null) || product.image || (product.variants?.[0]?.images?.[0]) || null;
+    const secondaryImageRaw = activeVariant?.images?.[1] || (product.images && product.images.length > 1 ? product.images[1] : null) || (product.variants?.[0]?.images?.length > 1 ? product.variants[0].images[1] : null);
 
     const primaryImage = primaryImageRaw ? resolveImagePath(primaryImageRaw) : null;
     const secondaryImage = secondaryImageRaw ? resolveImagePath(secondaryImageRaw) : null;
@@ -42,7 +51,6 @@ export default function ProductCard({ product, index = 0 }) {
 
     const inWishlist = isInWishlist(product.id);
 
-    // Don't render the card at all if there's no primary image or it failed to load
     if (!primaryImage || imageError) return null;
 
     const handleWishlistClick = (e) => {
@@ -58,18 +66,17 @@ export default function ProductCard({ product, index = 0 }) {
 
     const handleAddToCart = (e) => {
         e.stopPropagation()
+        e.preventDefault()
 
-        // ALWAYS Add to Cart, even for multi-variant (use first variant by default)
-        const variant = product.variants && product.variants.length > 0 ? product.variants[0] : null
+        // ALWAYS Add to Cart, use strictly explicitly selected variant or default first variant
+        const variantTarget = activeVariant || (product.variants && product.variants.length > 0 ? product.variants[0] : null)
 
-        const cartItem = variant ? {
-            ...product, // Base properties
-            id: variant.id,
-            variantId: variant.id,
-            color: variant.color,
-            image: resolveImagePath(variant.images[0] || product.image),
-            // If variant has specific price, use it? Usually variants share price in this app context unless specified.
-            // If logic required using variant price, we'd do: price: variant.price || product.price
+        const cartItem = variantTarget ? {
+            ...product,
+            id: variantTarget.id,
+            variantId: variantTarget.id,
+            color: variantTarget.color,
+            image: resolveImagePath(variantTarget.images[0] || product.image),
             slug: product.slug
         } : product
 
@@ -90,42 +97,35 @@ export default function ProductCard({ product, index = 0 }) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 8, scale: 0.98 }}
             transition={{ delay: index * 0.05, type: 'spring', stiffness: 400, damping: 30 }}
-            layout // Add layout prop for smooth list reordering
+            layout
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
         >
-            <div className={styles.imageContainer}>
-                <button
-                    className={styles.thumb}
-                    onMouseEnter={() => setIsHovered(true)}
-                    onMouseLeave={() => setIsHovered(false)}
-                    onFocus={() => setIsHovered(true)}
-                    onBlur={() => setIsHovered(false)}
-                    aria-label={`View ${product.name}`}
-                    onClick={handleProductClick}
-                >
-                    {/* Primary Image */}
+            <div className={styles.imageContainer} onClick={handleProductClick}>
+                {/* Primary Image */}
+                <img
+                    src={primaryImage}
+                    alt={product.name}
+                    className={`${styles.thumbImage} ${!isHovered || !hasMultipleImages ? styles.thumbImageVisible : ''}`}
+                    loading="lazy"
+                    onError={() => setImageError(true)}
+                />
+                {/* Secondary Image (only rendered if exists) */}
+                {hasMultipleImages && (
                     <img
-                        src={primaryImage}
-                        alt={product.name}
-                        className={`${styles.thumbImage} ${!isHovered || !hasMultipleImages ? styles.thumbImageVisible : ''}`}
+                        src={secondaryImage}
+                        alt={`${product.name} alternate view`}
+                        className={`${styles.thumbImage} ${styles.secondaryImage} ${isHovered ? styles.thumbImageVisible : ''}`}
                         loading="lazy"
-                        onError={() => setImageError(true)}
                     />
-                    {/* Secondary Image (only rendered if exists) */}
-                    {hasMultipleImages && (
-                        <img
-                            src={secondaryImage}
-                            alt={`${product.name} alternate view`}
-                            className={`${styles.thumbImage} ${isHovered ? styles.thumbImageVisible : ''}`}
-                            loading="lazy"
-                        />
-                    )}
-                    {/* Variant Count Badge (Optional but helpful) */}
-                    {isMultiVariant && (
-                        <span className={styles.variantBadge}>
-                            {product.variants.length} Colors
-                        </span>
-                    )}
-                </button>
+                )}
+
+                {/* Status Badge (Top-Left) */}
+                {(product.isNew || product.badge || index % 3 === 0) && (
+                    <span className={styles.statusBadge}>
+                        {product.badge || (index % 3 === 0 ? 'NEW' : 'BEST SELLER')}
+                    </span>
+                )}
 
                 {/* Wishlist Button */}
                 <button
@@ -136,6 +136,17 @@ export default function ProductCard({ product, index = 0 }) {
                 >
                     {inWishlist ? <HeartFilled /> : <HeartOutline />}
                 </button>
+
+                {/* Quick Add To Cart Form */}
+                <div className={styles.quickAddContainer}>
+                    <button
+                        type="button"
+                        className={styles.quickAddBtn}
+                        onClick={handleAddToCart}
+                    >
+                        Quick Add
+                    </button>
+                </div>
             </div>
 
             <div className={styles.cardBody}>
@@ -148,27 +159,41 @@ export default function ProductCard({ product, index = 0 }) {
                     </button>
                 </div>
 
-                <div className={styles.meta}>
-                    <div className={styles.priceContainer}>
-                        <span className={styles.offerPrice}>₹{product.offerPrice?.toLocaleString('en-IN') || product.price?.toLocaleString('en-IN') || '0'}</span>
-                        {product.discountPercent > 0 && product.originalPrice && (
-                            <span className={styles.originalPrice}>₹{product.originalPrice.toLocaleString('en-IN')}</span>
-                        )}
-                        {product.discountPercent > 0 && (
-                            <span className={styles.discountBadge}>
-                                {product.discountPercent}% OFF
-                            </span>
+                {isMultiVariant && (
+                    <div className={styles.variantsRow}>
+                        {product.variants.slice(0, 4).map((v, i) => {
+                            const isSelected = activeVariantId === v.id || (!activeVariantId && i === 0);
+                            return (
+                                <button
+                                    key={v.id || i}
+                                    className={`${styles.variantSwatch} ${isSelected ? styles.variantActive : ''}`}
+                                    style={{ backgroundColor: v.colorHex || v.color || '#ccc' }}
+                                    aria-label={`Select ${v.color} variant`}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        e.preventDefault();
+                                        setActiveVariantId(v.id);
+                                    }}
+                                />
+                            )
+                        })}
+                        {product.variants.length > 4 && (
+                            <span className={styles.variantMore}>+{product.variants.length - 4}</span>
                         )}
                     </div>
-                </div>
+                )}
 
-                <button
-                    type="button"
-                    className={styles.addToCart}
-                    onClick={handleAddToCart}
-                >
-                    Add to Cart
-                </button>
+                <div className={styles.priceContainer}>
+                    <span className={styles.offerPrice}>₹{product.offerPrice?.toLocaleString('en-IN') || product.price?.toLocaleString('en-IN') || '0'}</span>
+                    {product.discountPercent > 0 && product.originalPrice && (
+                        <span className={styles.originalPrice}>₹{product.originalPrice.toLocaleString('en-IN')}</span>
+                    )}
+                    {product.discountPercent > 0 && (
+                        <span className={styles.discountBadge}>
+                            {product.discountPercent}% OFF
+                        </span>
+                    )}
+                </div>
             </div>
         </motion.li>
     )

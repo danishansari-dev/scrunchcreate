@@ -187,22 +187,22 @@ export function useProductsFilter(allProducts = [], initialFilters = {}) {
             return true
         })
 
-        const types = {}
-        const colors = {}
+        const typesMap = {}
+        const colorsMap = {}
         let minPrice = Infinity
         let maxPrice = -Infinity
 
         baseProducts.forEach(p => {
             // Types
             if (p.type) {
-                types[p.type] = (types[p.type] || 0) + 1
+                typesMap[p.type] = (typesMap[p.type] || 0) + 1
             }
 
             // Colors — collect ALL real colors from product + ALL variants
             const pColors = getProductRealColors(p)
 
             pColors.forEach(c => {
-                colors[c] = (colors[c] || 0) + 1
+                colorsMap[c] = (colorsMap[c] || 0) + 1
             })
 
             // Price
@@ -211,8 +211,8 @@ export function useProductsFilter(allProducts = [], initialFilters = {}) {
         })
 
         return {
-            types: Object.entries(types).map(([name, count]) => ({ name, count })).sort((a, b) => a.name.localeCompare(b.name)),
-            colors: Object.entries(colors).map(([name, count]) => ({ name, count })).sort((a, b) => a.name.localeCompare(b.name)),
+            types: Object.entries(typesMap).map(([name, count]) => ({ name, count })).sort((a, b) => a.name.localeCompare(b.name)),
+            colors: Object.entries(colorsMap).map(([name, count]) => ({ name, count })).sort((a, b) => a.name.localeCompare(b.name)),
             price: { min: minPrice === Infinity ? 0 : minPrice, max: maxPrice === -Infinity ? 100 : maxPrice }
         }
     }, [normalizedProducts, selectedCategory, search])

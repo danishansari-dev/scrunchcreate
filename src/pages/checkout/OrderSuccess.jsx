@@ -1,4 +1,4 @@
-export default function OrderSuccess() {
+    export default function OrderSuccess() {
     return (
         <main className={styles.page}>
             <div className={styles.container}>

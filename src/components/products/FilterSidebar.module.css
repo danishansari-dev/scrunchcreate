@@ -1,7 +1,24 @@
 @import '../../theme/theme.css';
 
-/* ───────────────── Overlay (Mobile-only) ───────────────── */
-.overlay {
+/* ───────────────── Desktop Sidebar ───────────────── */
+.desktopSidebar {
+    background: var(--color-surface);
+    display: flex;
+    flex-direction: column;
+    height: fit-content;
+    position: sticky;
+    top: 90px;
+    z-index: 10;
+}
+
+@media (max-width: 900px) {
+    .desktopSidebar {
+        display: none;
+    }
+}
+
+/* ───────────────── Mobile: Bottom Sheet ───────────────── */
+.bottomSheet {
     display: none;
 }
 
@@ -11,54 +28,30 @@
         position: fixed;
         inset: 0;
         z-index: 900;
-        background: rgba(0, 0, 0, 0);
-        backdrop-filter: blur(0);
-        pointer-events: none;
-        transition: background 0.3s ease, backdrop-filter 0.3s ease;
+        background: rgba(0, 0, 0, 0.5);
     }
 
-    .overlay.open {
-        background: rgba(0, 0, 0, 0.4);
-        backdrop-filter: blur(2px);
-        pointer-events: auto;
-    }
-}
-
-/* ───────────────── Desktop: Inline Sidebar ───────────────── */
-.drawer {
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    height: fit-content;
-    max-height: calc(100vh - 110px);
-    position: sticky;
-    top: 90px;
-}
-
-/* ───────────────── Mobile: Left-Slide Drawer ───────────────── */
-@media (max-width: 900px) {
-    .drawer {
+    .bottomSheet {
+        display: flex;
+        flex-direction: column;
         position: fixed;
-        top: 0;
+        bottom: 0;
         left: 0;
-        width: 300px;
-        max-width: 82vw;
-        height: 100vh;
-        height: 100dvh;
+        width: 100%;
+        max-height: 85vh;
         z-index: 910;
-        border: none;
-        border-radius: 0;
-        box-shadow: 4px 0 24px rgba(0, 0, 0, 0.12);
-        transform: translateX(-100%);
-        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        max-height: none;
+        background: var(--color-surface);
+        border-radius: 20px 20px 0 0;
+        box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.15);
+        overflow: hidden;
     }
 
-    .drawer.open {
-        transform: translateX(0);
+    .dragHandle {
+        width: 40px;
+        height: 4px;
+        background: var(--color-border);
+        border-radius: 2px;
+        margin: 12px auto 0;
     }
 }
 
@@ -67,20 +60,22 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 14px 16px;
-    border-bottom: 1px solid var(--color-border);
+    padding: 14px 0 16px;
+    border-bottom: 1px solid var(--color-border-soft);
+    margin-bottom: 16px;
     flex-shrink: 0;
 }
 
 @media (max-width: 900px) {
     .drawerHeader {
-        padding: 16px 18px 14px;
+        padding: 16px 20px 14px;
+        margin-bottom: 0;
     }
 }
 
 .drawerTitle {
     font-family: var(--font-heading);
-    font-size: 13px;
+    font-size: 15px;
     font-weight: 700;
     letter-spacing: 1px;
     text-transform: uppercase;
@@ -88,30 +83,27 @@
     margin: 0;
     display: flex;
     align-items: center;
-    gap: 7px;
-}
-
-.drawerTitle svg {
-    opacity: 0.5;
+    gap: 8px;
 }
 
 .clearLink {
     background: none;
     border: none;
-    color: var(--color-primary);
-    font-size: 11px;
+    color: var(--color-text-muted);
+    font-size: 12px;
     font-weight: 500;
     cursor: pointer;
     padding: 0;
-    margin-left: 10px;
+    margin-left: 12px;
     text-decoration: underline;
-    text-underline-offset: 2px;
+    text-underline-offset: 3px;
     letter-spacing: 0;
     text-transform: none;
+    transition: color 0.2s;
 }
 
 .clearLink:hover {
-    color: var(--color-primary-strong);
+    color: var(--color-text-main);
 }
 
 .closeBtn {
@@ -120,12 +112,12 @@
     display: none;
     align-items: center;
     justify-content: center;
-    background: none;
+    background: var(--color-surface-soft);
     border: none;
     cursor: pointer;
     border-radius: 50%;
-    color: var(--color-text-muted);
-    transition: background 0.2s, color 0.2s;
+    color: var(--color-text-main);
+    transition: background 0.2s;
 }
 
 @media (max-width: 900px) {
@@ -135,8 +127,7 @@
 }
 
 .closeBtn:hover {
-    background: var(--color-surface-soft);
-    color: var(--color-text-main);
+    background: var(--color-border-soft);
 }
 
 /* ───────────────── Scrollable Content ───────────────── */
@@ -144,8 +135,14 @@
     flex: 1;
     overflow-y: auto;
     overscroll-behavior: contain;
-    padding: 4px 0;
+    padding: 0 4px 24px 0;
     -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 900px) {
+    .drawerContent {
+        padding: 16px 20px 24px;
+    }
 }
 
 .drawerContent::-webkit-scrollbar {
@@ -161,199 +158,115 @@
     border-radius: 3px;
 }
 
+
 /* ───────────────── Collapsible Section ───────────────── */
 .section {
-    border-bottom: 1px solid var(--color-border);
+    margin-bottom: 32px;
 }
 
-.section:last-child {
-    border-bottom: none;
-}
-
-.sectionHeader {
+.sectionTitleRow {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    width: 100%;
-    padding: 12px 16px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-    transition: background 0.15s;
-}
-
-.sectionHeader:hover {
-    background: var(--color-surface-soft);
+    align-items: center;
+    margin-bottom: 16px;
 }
 
 .sectionTitle {
     font-family: var(--font-heading);
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 700;
-    letter-spacing: 1.4px;
+    letter-spacing: 1.5px;
     text-transform: uppercase;
     color: var(--color-text-muted);
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    margin: 0 0 16px 0;
 }
 
-.sectionBadge {
+.sectionTitleRow .sectionTitle {
+    margin-bottom: 0;
+}
+
+.clearColorBtn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: none;
+    border: none;
+    color: var(--color-text-muted);
+    font-size: 11px;
+    cursor: pointer;
+    padding: 0;
+}
+
+.clearColorBtn:hover {
+    color: var(--color-text-main);
+}
+
+/* ─────────── Color Swatches (Grid) ─────────── */
+.colorGrid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.colorSwatchBtn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 18px;
-    height: 18px;
-    padding: 0 5px;
-    border-radius: 9px;
-    background: var(--color-primary);
-    color: var(--color-on-primary);
-    font-size: 10px;
-    font-weight: 700;
-    line-height: 1;
-    letter-spacing: 0;
-}
-
-.chevron {
-    color: var(--color-text-muted);
-    transition: transform 0.25s ease;
-    flex-shrink: 0;
-}
-
-.chevronOpen {
-    transform: rotate(180deg);
-}
-
-/* Collapse animation */
-.sectionBody {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease;
-}
-
-.sectionBodyOpen {
-    max-height: 600px;
-}
-
-.sectionInner {
-    padding: 2px 16px 14px;
-}
-
-/* ─────────── Color Pills (Compact Inline) ─────────── */
-.colorList {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-}
-
-.colorPill {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    width: 100%;
-    padding: 6px 8px;
     background: none;
     border: none;
-    border-radius: var(--radius-md);
+    padding: 0;
     cursor: pointer;
-    transition: background 0.15s;
+    border-radius: 50%;
     -webkit-tap-highlight-color: transparent;
 }
 
-.colorPill:hover {
-    background: var(--color-surface-soft);
-}
-
-.colorPill.active {
-    background: var(--color-surface-accent);
-}
-
 .colorDot {
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
     border: 1.5px solid var(--color-border-soft);
     flex-shrink: 0;
-    transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @media (max-width: 900px) {
     .colorDot {
-        width: 24px;
-        height: 24px;
-    }
-
-    .colorPill {
-        padding: 8px 10px;
+        width: 28px;
+        height: 28px;
     }
 }
 
 /* White/cream needs visible border */
 .colorDot[data-color="white"],
 .colorDot[data-color="cream"] {
-    border-color: #ccc;
+    border-color: #e0e0e0;
 }
 
-.colorPill.active .colorDot {
-    border-color: var(--color-primary-strong);
-    box-shadow: 0 0 0 2px var(--color-primary);
-    transform: scale(1.1);
+.colorSwatchBtn.active .colorDot {
+    border-color: #4a1c40;
+    box-shadow: 0 0 0 2px #4a1c40;
+    transform: scale(1.15);
 }
 
-/* Checkmark on active */
-.colorPill.active .colorDot::after {
-    content: '✓';
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    color: white;
-    font-size: 10px;
-    font-weight: 700;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-}
-
-.colorName {
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--color-text-main);
-    flex: 1;
-    text-align: left;
-}
-
-.colorPill.active .colorName {
-    font-weight: 600;
-    color: var(--color-primary-strong);
-}
-
-.colorCount {
-    font-size: 11px;
-    color: var(--color-text-muted);
-    font-weight: 400;
-    min-width: 16px;
-    text-align: right;
-}
 
 /* ─────────── Category Pills ─────────── */
 .categoryList {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px;
+    gap: 8px;
 }
 
 .categoryPill {
     display: inline-flex;
     align-items: center;
     gap: 4px;
-    height: 32px;
-    padding: 0 12px;
-    border-radius: 16px;
-    border: 1.5px solid var(--color-border-soft);
+    height: 36px;
+    padding: 0 16px;
+    border-radius: 18px;
+    border: 1px solid var(--color-border);
     background: var(--color-surface);
     color: var(--color-text-main);
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -363,31 +276,25 @@
 
 @media (max-width: 900px) {
     .categoryPill {
-        height: 38px;
-        padding: 0 16px;
-        font-size: 13px;
+        height: 40px;
+        padding: 0 18px;
+        font-size: 14px;
     }
 }
 
 .categoryPill:hover {
-    border-color: var(--color-primary);
-    background: var(--color-surface-soft);
+    border-color: var(--color-text-muted);
 }
 
 .categoryPill.active {
-    background: var(--color-primary);
-    border-color: var(--color-primary);
+    background: #4a1c40;
+    border-color: #4a1c40;
     color: var(--color-on-primary);
 }
 
 .categoryPill.active:hover {
-    background: var(--color-primary-strong);
-    border-color: var(--color-primary-strong);
-}
-
-.pillCount {
-    font-size: 10px;
-    opacity: 0.65;
+    background: #3a1532;
+    border-color: #3a1532;
 }
 
 /* ───────────────── Drawer Footer (Mobile-only) ───────────────── */
@@ -398,44 +305,21 @@
 @media (max-width: 900px) {
     .drawerFooter {
         display: flex;
-        padding: 12px 18px;
-        border-top: 1px solid var(--color-border);
-        gap: 10px;
-        flex-shrink: 0;
+        padding: 16px 20px 24px;
+        border-top: 1px solid var(--color-border-soft);
         background: var(--color-surface);
+        box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.03);
     }
 }
 
-.clearAllBtn {
-    flex: 1;
-    height: 42px;
-    border: 1.5px solid var(--color-border-soft);
-    border-radius: var(--radius-md);
-    background: var(--color-surface);
-    color: var(--color-text-main);
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.clearAllBtn:hover {
-    border-color: var(--color-text-muted);
-}
-
-.clearAllBtn:disabled {
-    opacity: 0.35;
-    cursor: default;
-}
-
 .applyBtn {
-    flex: 2;
-    height: 42px;
+    flex: 1;
+    height: 48px;
     border: none;
     border-radius: var(--radius-md);
     background: var(--color-primary);
     color: var(--color-on-primary);
-    font-size: 13px;
+    font-size: 15px;
     font-weight: 600;
     cursor: pointer;
     transition: background 0.2s;
