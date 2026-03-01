@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import styles from './CollectionsSection.module.css'
 import { getProductsByCategory } from '../utils/getProducts'
+import SectionHeader from './SectionHeader'
 
 const collectionDefs = [
     {
@@ -9,7 +10,8 @@ const collectionDefs = [
         name: 'Scrunchies',
         description: 'Luxurious fabric scrunchies that care for your hair',
         category: 'Scrunchie',
-        href: '/products/scrunchies',
+        href: '/products/scrunchie',
+        count: '24 styles',
         image: '/assets/products/scrunchie/classic/white/sc-scrunchie-classic-white-1.webp'
     },
     {
@@ -17,7 +19,8 @@ const collectionDefs = [
         name: 'Hair Bows',
         description: 'Elegant bows for a sophisticated touch',
         category: 'HairBow',
-        href: '/products/hair-bows',
+        href: '/products/hairbow',
+        count: '18 styles',
         image: '/assets/products/hairbow/jimmychoo/peach-pink/sc-hairbow-jimmychoo-peach-pink-1.webp'
     },
     {
@@ -25,25 +28,19 @@ const collectionDefs = [
         name: 'Hairclips',
         description: 'Elegant clips for a stylish look',
         category: 'Hairclip',
-        href: '/products/hairclips',
+        href: '/products/hairclip',
+        count: '12 styles',
         image: '/assets/products/hairclip/rose/red/sc-hairclip-rose-red-1.webp'
-    },
-    {
-        id: 'flowerjewellery',
-        name: 'Flower Jewellery',
-        description: 'Beautiful floral accessories for special occasions',
-        category: 'FlowerJewellery',
-        href: '/products/flower-jewellery',
     },
     {
         id: 'gifthamper',
         name: 'Gift Hampers',
         description: 'Curated gift sets for your loved ones',
         category: 'GiftHamper',
-        href: '/products/hamper',
+        href: '/products/gifthamper',
+        count: '12 styles',
     },
 ]
-
 
 export default function CollectionsSection() {
     const [failedImages, setFailedImages] = useState(new Set())
@@ -76,7 +73,10 @@ export default function CollectionsSection() {
 
     return (
         <section className={styles.collectionsSection}>
-            <h2 className={styles.sectionTitle}>Discover Our Collections</h2>
+            <SectionHeader
+                title="Discover Our Collections"
+                subtitle="Handmade for every occasion"
+            />
             <div className={styles.collectionsGrid}>
                 {visibleCollections.map((collection) => (
                     <Link
@@ -92,9 +92,13 @@ export default function CollectionsSection() {
                                 loading="lazy"
                                 onError={() => handleImageError(collection.id)}
                             />
+                            <div className={styles.overlay}>
+                                <h3 className={styles.collectionName}>{collection.name}</h3>
+                                <span className={styles.countPill}>{collection.count}</span>
+                            </div>
                         </div>
+                        {/* Desktop only description (Hidden on mobile via CSS) */}
                         <div className={styles.cardContent}>
-                            <h3 className={styles.collectionName}>{collection.name}</h3>
                             <p className={styles.collectionDescription}>
                                 {collection.description}
                             </p>
