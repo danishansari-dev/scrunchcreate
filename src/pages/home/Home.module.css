@@ -1,12 +1,25 @@
 @import '../../theme/theme.css';
 
-.home-shell {
-  padding: 24px 16px 48px;
+.homeContainer {
+  display: flex;
+  flex-direction: column;
 }
 
-.home-shell-inner {
-  max-width: 1280px;
-  margin: 0 auto;
-  display: grid;
-  gap: 32px;
+.contentWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  /* Gaps handled by individual sections */
+}
+
+@media (max-width: 767px) {
+  .contentWrapper {
+    gap: 0;
+    /* Sections have 40px internal gap padding top/bottom */
+  }
+}
+
+/* Global mobile section normalization */
+:global(.home-shell) {
+  padding: 0;
 }
