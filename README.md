@@ -1,21 +1,24 @@
 # 🎀 Scrunch & Create - E-commerce Platform
-A modern, fully responsive e-commerce application for **Scrunch & Create**, a boutique brand specializing in handmade scrunchies and decorative hair bows. Built with React, Vite, and styled with modern CSS modules.
+
+A modern, fully responsive e-commerce application for **Scrunch & Create**, a boutique brand specializing in handmade scrunchies and decorative hair bows. Built with React, Vite, and styled with modern CSS Modules.
+
+## 🌐 Live Website
+
+**[https://scrunchcreate.com/](https://scrunchcreate.com/)**
+
+---
 
 ## ✨ Features
 
 - **🛍️ Product Catalog**: Browse an extensive collection of handmade scrunchies and hair bows
   - Scrunchies (various styles including Tulip Scrunchies)
   - Hair Bows (Satin, Velvet, Sheer Satin, Jimmi Choo, and more)
-  
-- **🎨 User Authentication**: 
-  - Sign Up & Sign In pages
-  - User Profile management
-  
-- **🛒 Smart Shopping Cart**: 
+
+- **🛒 Smart Shopping Cart**:
   - Add/remove items with ease
   - Cart persistence using context
   - Real-time quantity management
-  
+
 - **📱 Fully Responsive Design**: Optimized for mobile, tablet, and desktop devices
 
 - **🔍 Advanced Filtering**: Filter products by category and type
@@ -24,13 +27,7 @@ A modern, fully responsive e-commerce application for **Scrunch & Create**, a bo
 
 - **🚀 Fast Performance**: Built with Vite for lightning-fast load times
 
-## 📸 Screenshots
-
-Here's a preview of the Scrunch & Create website:
-
-![Scrunch & Create Preview](./ss.png)
-
-## 🛠️ Tech Stack
+## ️ Tech Stack
 
 - **Frontend Framework**: React 19
 - **Build Tool**: Vite 7
@@ -39,6 +36,7 @@ Here's a preview of the Scrunch & Create website:
 - **Animation**: Framer Motion 12
 - **State Management**: React Context API
 - **Package Manager**: npm
+- **Hosting**: Hostinger
 
 ## 📦 Installation & Setup
 
@@ -47,7 +45,7 @@ Here's a preview of the Scrunch & Create website:
    git clone https://github.com/danishansari-dev/scrunchcreate.git
    cd scrunchcreate
    ```
-   
+
 2. **Install dependencies**
    ```bash
    npm install
@@ -92,10 +90,7 @@ scrunchcreate/
 │   │   ├── home/                  # Home page
 │   │   ├── products/              # Products listing page
 │   │   ├── cart/                  # Shopping cart page
-│   │   ├── auth/                  # Authentication pages
-│   │   │   ├── SignIn.jsx
-│   │   │   └── SignUp.jsx
-│   │   └── profile/               # User profile page
+│   │   └── checkout/              # Checkout & order success
 │   │
 │   ├── data/
 │   │   └── products.json          # Product catalog data
@@ -111,7 +106,7 @@ scrunchcreate/
 │   │       ├── Hairbows/
 │   │       └── Scrunchies/
 │   ├── logotitle.png              # Logo variations
-│   └── _redirects                 # Netlify redirects
+│   └── _redirects                 # SPA redirect rules
 │
 ├── package.json                   # Project dependencies
 ├── vite.config.js                 # Vite configuration
@@ -134,8 +129,6 @@ scrunchcreate/
 
 ### User Features
 - **Cart**: Shopping cart functionality with context API
-- **Authentication**: Sign In and Sign Up pages
-- **Profile**: User profile management
 - **Toast Notifications**: Real-time feedback system
 
 ## 🎨 Styling
@@ -159,15 +152,16 @@ npm run lint      # Run ESLint
 ### Hair Bows
 - **Jimmi Choo Hair Bow** - Premium luxury bow
 - **Satin Hair Bow** - Classic elegance
-- **Satin Scarf Hairbow** - Stylish scarf bow
-- **Sheer Satin Hair Bow** - Delicate and sophisticated
+- **Scarf Hairbow** - Stylish scarf bow
+- **Satin Tulip Hairbow** - Delicate and sophisticated
+- **Sheer Satin Hair Bow** - Light and airy
 - **Velvet Hair Bow** - Soft velvet texture
 
 ### Scrunchies
 - **Standard Scrunchies** - Variety of colors and styles
 - **Tulip Scrunchie** - Unique petal-shaped design
 
-## � Pages Overview
+## 📄 Pages Overview
 
 ### Home Page (`/`)
 - Hero banner with product showcase
@@ -186,62 +180,10 @@ npm run lint      # Run ESLint
 - Calculate totals
 - Proceed to checkout
 
-### Authentication
-- **Sign In** (`/signin`) - Login for existing users
-- **Sign Up** (`/signup`) - Register new accounts
-
-### User Profile (`/profile`)
-- User account management
-- Order history
-- Account settings
-
-## 🔧 Getting Started
-
-### Prerequisites
-- Node.js (v14 or higher)
-- npm or yarn
-
-### Development Workflow
-```bash
-# Start development with hot module replacement
-npm run dev
-
-# Build optimized production bundle
-npm run build
-
-# Check code quality
-npm run lint
-
-# Preview production build locally
-npm run preview
-```
-
-## 📝 Environment Setup
-
-1. Ensure you have Node.js installed
-2. Install dependencies with `npm install`
-3. Create necessary environment variables if needed
-4. Start the development server with `npm run dev`
-
-## 🤝 Contributing
-
-Feel free to submit issues and enhancement requests!
-
-## 📄 License
-
-This project is private and for Scrunch & Create brand use only.
-
-## 👥 Author
-
-**Scrunch & Create Team**
-
-For inquiries about custom orders or collaborations, please reach out through the contact form on the website.
-
 ### Contact (`/contact`)
 - Contact form with validation
 - Contact information
 - Social media links
-- FAQ section
 
 ## 🛍️ Product Data Structure
 
@@ -265,9 +207,8 @@ The product data is stored in `src/data/products.json` and follows this structur
 }
 ```
 
-## 🔧 Customization
+## 🔧 Adding Products
 
-### Adding Products
 Edit `src/data/products.json` to add new products. Ensure you add valid JSON objects.
 
 ```json
@@ -287,52 +228,17 @@ Edit `src/data/products.json` to add new products. Ensure you add valid JSON obj
 }
 ```
 
-### Styling
-- Modify `tailwind.config.js` for color changes
-- Update `src/index.css` for custom component styles
-- Use Tailwind utility classes for layout changes
-
-### Images
-Replace placeholder images with your actual product photos:
-- Update image URLs in `products.js`
-- Use consistent aspect ratios (1:1 recommended)
-- Optimize images for web (compress, resize)
-
 ## 🚀 Deployment
+
+This project is deployed on **[Hostinger](https://scrunchcreate.com/)**.
 
 ### Build for Production
 ```bash
 npm run build
 ```
+Upload the contents of the `dist/` folder to Hostinger via File Manager or FTP.
 
-### Deploy Options
-- **Vercel**: Connect GitHub repository for automatic deployment
-- **Netlify**: Drag and drop `dist` folder
-- **GitHub Pages**: Use GitHub Actions for deployment
-- **Firebase Hosting**: Use Firebase CLI
-
-## 🔌 Backend Integration
-
-This is a frontend-only implementation. To integrate with a backend:
-
-1. **Replace dummy data** with API calls
-2. **Add authentication** for user accounts
-3. **Integrate payment gateway** (Stripe, Razorpay)
-4. **Add order management** system
-5. **Implement inventory tracking**
-
-## 📄 License
-
-This project is created for Scrunch & Create brand. Customize and use as needed.
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
-
+> **Note:** If updated images don't appear after redeployment, clear your browser cache (`Ctrl + Shift + R`) or purge the Hostinger cache from the control panel.
 
 ## 🔄 CI/CD Pipeline (Academic Project)
 
@@ -377,47 +283,9 @@ docker-compose -f devops/docker/docker-compose.yml up -d --build
 #### Access Application
 - **URL**: http://localhost:4173
 
-### Jenkins Configuration
+## 📄 License
 
-1. **Create Jenkins Job:**
-   - New Item → Pipeline
-   - Select "Pipeline script from SCM"
-   - Repository URL: `https://github.com/danishansari-dev/scrunchcreate.git`
-   - Script Path: `devops/Jenkinsfile`
-
-2. **Required Plugins:**
-   - GitHub Integration Plugin
-   - Docker Plugin
-   - Docker Compose Plugin
-
-3. **GitHub Webhook Setup:**
-   - Repository Settings → Webhooks
-   - URL: `http://jenkins-server/github-webhook/`
-   - Events: Push events
-
-### Local Development with Docker
-
-```bash
-# Build and start
-docker-compose -f devops/docker/docker-compose.yml up -d --build
-
-# View logs
-docker-compose -f devops/docker/docker-compose.yml logs -f
-
-# Stop
-docker-compose -f devops/docker/docker-compose.yml down
-```
-
-### Troubleshooting
-
-**Container won't start**
-```bash
-# Check logs
-docker-compose -f devops/docker/docker-compose.yml logs
-
-# Rebuild
-docker-compose -f devops/docker/docker-compose.yml build --no-cache
-```
+This project is private and for Scrunch & Create brand use only.
 
 ## ✉️ Contact
 
@@ -425,4 +293,3 @@ For any questions, feedback, or collaboration opportunities, please feel free to
 📧 **[danishansari.dev@gmail.com](mailto:danishansari.dev@gmail.com)**
 
 **Made with ❤️ for Scrunch & Create**
-
