@@ -8,6 +8,7 @@ A modern, fully responsive e-commerce application for **Scrunch & Create**, a bo
 
 ---
 
+
 ## ✨ Features
 
 - **🛍️ Product Catalog**: Browse an extensive collection of handmade scrunchies and hair bows
