@@ -1,0 +1,215 @@
+@import '../theme/theme.css';
+
+.banner {
+  width: 100%;
+  overflow: hidden;
+}
+
+.track {
+  display: flex;
+  transition: transform 0.5s ease;
+}
+
+.slide {
+  min-width: 100%;
+}
+
+.image {
+  width: 100%;
+  height: 580px;
+  object-fit: cover;
+}
+
+.prev,
+.next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--color-surface);
+  border-radius: 999px;
+  border: 1px solid var(--color-border-soft);
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.prev {
+  left: 16px;
+}
+
+.next {
+  right: 16px;
+}
+
+/* Mobile hero overlay — hidden on desktop */
+.mobileHeroOverlay {
+  display: none;
+}
+
+@keyframes kenBurns {
+  0% {
+    transform: scale(1);
+  }
+
+  100% {
+    transform: scale(1.15);
+  }
+}
+
+/* ─── MOBILE ─── */
+@media (max-width: 767px) {
+  .banner {
+    position: relative;
+    /* No fixed height — content will size it */
+    min-height: 0;
+    height: auto;
+  }
+
+  /* Hide desktop carousel on mobile */
+  .track,
+  .prev,
+  .next {
+    display: none !important;
+  }
+
+  .mobileHeroOverlay {
+    display: block;
+    position: relative;
+    /* FIX #1 — relative so it flows below sticky navbar */
+    width: 100%;
+    height: 70vh;
+    /* Reduced from 80vh to prevent content overflow on shorter phones */
+    min-height: 420px;
+    overflow: hidden;
+  }
+
+  .kenBurnsBg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+
+  .heroImg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    animation: kenBurns 20s ease-out infinite alternate;
+  }
+
+  /* Dark gradient scrim over image — heavier to mask image text */
+  .mobileHeroOverlay::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom,
+        rgba(0, 0, 0, 0.3) 0%,
+        rgba(0, 0, 0, 0.65) 100%);
+    z-index: 2;
+  }
+
+  /* FIX #2 — generous padding so text is never clipped */
+  .heroContent {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+    padding: 32px 24px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-sizing: border-box;
+  }
+
+  .brandBadge {
+    display: inline-block;
+    background: var(--color-cream);
+    color: var(--color-secondary);
+    font-size: 10px;
+    padding: 6px 12px;
+    border-radius: 99px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    align-self: flex-start;
+  }
+
+  .headline {
+    color: white;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    text-align: left;
+  }
+
+  .line1 {
+    font-size: 26px;
+    font-weight: 300;
+  }
+
+  .line2 {
+    font-size: 34px;
+    font-weight: 700;
+    font-family: var(--font-display);
+  }
+
+  .metaInfo {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .teaserLabel {
+    color: var(--color-accent-teal);
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+
+  .heroSubtitle {
+    color: white;
+    font-size: 13px;
+    margin: 0;
+    font-weight: 400;
+  }
+
+  .ctaGroup {
+    display: flex;
+    gap: 16px;
+  }
+
+  .primaryBtn {
+    flex: 1;
+    background: var(--color-accent-saffron);
+    color: var(--color-secondary);
+    border: none;
+    height: 48px;
+    border-radius: 99px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  .secondaryBtn {
+    flex: 1;
+    background: transparent;
+    color: white;
+    border: 1.5px solid rgba(255, 255, 255, 0.8);
+    height: 48px;
+    border-radius: 99px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+  }
+}

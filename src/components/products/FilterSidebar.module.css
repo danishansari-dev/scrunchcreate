@@ -1,0 +1,330 @@
+@import '../../theme/theme.css';
+
+/* ───────────────── Desktop Sidebar ───────────────── */
+.desktopSidebar {
+    background: var(--color-surface);
+    display: flex;
+    flex-direction: column;
+    height: fit-content;
+    position: sticky;
+    top: 90px;
+    z-index: 10;
+}
+
+@media (max-width: 900px) {
+    .desktopSidebar {
+        display: none;
+    }
+}
+
+/* ───────────────── Mobile: Bottom Sheet ───────────────── */
+.bottomSheet {
+    display: none;
+}
+
+@media (max-width: 900px) {
+    .overlay {
+        display: block;
+        position: fixed;
+        inset: 0;
+        z-index: 900;
+        background: rgba(0, 0, 0, 0.5);
+    }
+
+    .bottomSheet {
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        max-height: 85vh;
+        z-index: 910;
+        background: var(--color-surface);
+        border-radius: 20px 20px 0 0;
+        box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.15);
+        overflow: hidden;
+    }
+
+    .dragHandle {
+        width: 40px;
+        height: 4px;
+        background: var(--color-border);
+        border-radius: 2px;
+        margin: 12px auto 0;
+    }
+}
+
+/* ───────────────── Header ───────────────── */
+.drawerHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 0 16px;
+    border-bottom: 1px solid var(--color-border-soft);
+    margin-bottom: 16px;
+    flex-shrink: 0;
+}
+
+@media (max-width: 900px) {
+    .drawerHeader {
+        padding: 16px 20px 14px;
+        margin-bottom: 0;
+    }
+}
+
+.drawerTitle {
+    font-family: var(--font-heading);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--color-text-main);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.clearLink {
+    background: none;
+    border: none;
+    color: var(--color-text-muted);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 0;
+    margin-left: 12px;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    letter-spacing: 0;
+    text-transform: none;
+    transition: color 0.2s;
+}
+
+.clearLink:hover {
+    color: var(--color-text-main);
+}
+
+.closeBtn {
+    width: 32px;
+    height: 32px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-surface-soft);
+    border: none;
+    cursor: pointer;
+    border-radius: 50%;
+    color: var(--color-text-main);
+    transition: background 0.2s;
+}
+
+@media (max-width: 900px) {
+    .closeBtn {
+        display: flex;
+    }
+}
+
+.closeBtn:hover {
+    background: var(--color-border-soft);
+}
+
+/* ───────────────── Scrollable Content ───────────────── */
+.drawerContent {
+    flex: 1;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 0 4px 24px 0;
+    -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 900px) {
+    .drawerContent {
+        padding: 16px 20px 24px;
+    }
+}
+
+.drawerContent::-webkit-scrollbar {
+    width: 3px;
+}
+
+.drawerContent::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.drawerContent::-webkit-scrollbar-thumb {
+    background: var(--color-border-soft);
+    border-radius: 3px;
+}
+
+
+/* ───────────────── Collapsible Section ───────────────── */
+.section {
+    margin-bottom: 32px;
+}
+
+.sectionTitleRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.sectionTitle {
+    font-family: var(--font-heading);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin: 0 0 16px 0;
+}
+
+.sectionTitleRow .sectionTitle {
+    margin-bottom: 0;
+}
+
+.clearColorBtn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: none;
+    border: none;
+    color: var(--color-text-muted);
+    font-size: 11px;
+    cursor: pointer;
+    padding: 0;
+}
+
+.clearColorBtn:hover {
+    color: var(--color-text-main);
+}
+
+/* ─────────── Color Swatches (Grid) ─────────── */
+.colorGrid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.colorSwatchBtn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    border-radius: 50%;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.colorDot {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 1.5px solid var(--color-border-soft);
+    flex-shrink: 0;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (max-width: 900px) {
+    .colorDot {
+        width: 28px;
+        height: 28px;
+    }
+}
+
+/* White/cream needs visible border */
+.colorDot[data-color="white"],
+.colorDot[data-color="cream"] {
+    border-color: #e0e0e0;
+}
+
+.colorSwatchBtn.active .colorDot {
+    border-color: #4a1c40;
+    box-shadow: 0 0 0 2px #4a1c40;
+    transform: scale(1.15);
+}
+
+
+/* ─────────── Category Pills ─────────── */
+.categoryList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.categoryPill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    height: 36px;
+    padding: 0 16px;
+    border-radius: 18px;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    color: var(--color-text-main);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    -webkit-tap-highlight-color: transparent;
+}
+
+@media (max-width: 900px) {
+    .categoryPill {
+        height: 40px;
+        padding: 0 18px;
+        font-size: 14px;
+    }
+}
+
+.categoryPill:hover {
+    border-color: var(--color-text-muted);
+}
+
+.categoryPill.active {
+    background: #4a1c40;
+    border-color: #4a1c40;
+    color: var(--color-on-primary);
+}
+
+.categoryPill.active:hover {
+    background: #3a1532;
+    border-color: #3a1532;
+}
+
+/* ───────────────── Drawer Footer (Mobile-only) ───────────────── */
+.drawerFooter {
+    display: none;
+}
+
+@media (max-width: 900px) {
+    .drawerFooter {
+        display: flex;
+        padding: 16px 20px 24px;
+        border-top: 1px solid var(--color-border-soft);
+        background: var(--color-surface);
+        box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.03);
+    }
+}
+
+.applyBtn {
+    flex: 1;
+    height: 48px;
+    border: none;
+    border-radius: var(--radius-md);
+    background: var(--color-primary);
+    color: var(--color-on-primary);
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.applyBtn:hover {
+    background: var(--color-primary-strong);
+}

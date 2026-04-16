@@ -1,0 +1,169 @@
+/**
+ * Login & Register module styling.
+ * Premium, centered, and highly legible form design.
+ */
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 80px); /* Adjust for header/footer */
+  padding: var(--space-6);
+  background-color: #fcfcfc; /* Very light neutral background */
+}
+
+.formCard {
+  background: #ffffff;
+  padding: var(--space-10);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  max-width: 440px;
+  border: 1px solid #eeeeee;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.formCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.08);
+}
+
+.title {
+  text-align: center;
+  margin-bottom: var(--space-8);
+  font-family: var(--font-display);
+  color: var(--color-text-main);
+  font-size: 2.4rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.inputGroup label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text-main);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: var(--font-body);
+}
+
+.inputGroup input {
+  padding: 14px 16px;
+  border: 1px solid #dddddd; /* Clearly visible border */
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  background-color: #ffffff;
+  transition: all 0.2s ease;
+  color: #333333;
+  width: 100%;
+}
+
+.inputGroup input::placeholder {
+  color: #aaaaaa;
+  font-size: 0.95rem;
+}
+
+.inputGroup input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 4px rgba(232, 116, 128, 0.15); /* Soft primary glow */
+  background-color: #ffffff;
+}
+
+.submitBtn {
+  background: var(--color-primary);
+  color: #ffffff;
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 16px;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  font-size: 1rem;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: var(--space-4);
+  box-shadow: 0 4px 12px rgba(232, 116, 128, 0.25);
+}
+
+.submitBtn:hover:not(:disabled) {
+  background: var(--color-primary-strong);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(232, 116, 128, 0.35);
+}
+
+.submitBtn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.submitBtn:disabled {
+  background: #cccccc;
+  cursor: not-allowed;
+  box-shadow: none;
+  color: #777777;
+}
+
+.error {
+  background: #fff5f5;
+  color: #e53e3e;
+  padding: 14px 18px;
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-6);
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-align: left;
+  border-left: 4px solid #e53e3e;
+  line-height: 1.4;
+}
+
+.switchPrompt {
+  text-align: center;
+  margin-top: var(--space-8);
+  font-size: 1rem;
+  color: var(--color-text-muted);
+}
+
+.switchPrompt a {
+  color: var(--color-primary);
+  font-weight: 700;
+  text-decoration: none;
+  margin-left: 6px;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.switchPrompt a:hover {
+  border-bottom-color: var(--color-primary);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 480px) {
+  .formCard {
+    padding: var(--space-6);
+    box-shadow: none;
+    border: none;
+  }
+  
+  .container {
+    background-color: #ffffff;
+    align-items: flex-start;
+    padding-top: var(--space-12);
+  }
+  
+  .title {
+    font-size: 2rem;
+  }
+}

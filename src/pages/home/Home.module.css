@@ -1,0 +1,25 @@
+@import '../../theme/theme.css';
+
+.homeContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.contentWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  /* Gaps handled by individual sections */
+}
+
+@media (max-width: 767px) {
+  .contentWrapper {
+    gap: 0;
+    /* Sections have 40px internal gap padding top/bottom */
+  }
+}
+
+/* Global mobile section normalization */
+:global(.home-shell) {
+  padding: 0;
+}

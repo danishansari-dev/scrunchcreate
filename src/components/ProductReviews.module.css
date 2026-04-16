@@ -1,0 +1,118 @@
+@import '../theme/theme.css';
+
+.reviewsSection {
+    margin-top: 48px;
+    padding-top: 32px;
+    border-top: 1px solid var(--color-border-soft);
+}
+
+.reviewsTitle {
+    margin: 0 0 24px;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--color-text-main);
+}
+
+.reviewsList {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.reviewCard {
+    background: var(--color-surface-soft);
+    border: 1px solid var(--color-border-soft);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+}
+
+.reviewHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.reviewerInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.reviewerName {
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--color-text-main);
+}
+
+.reviewDate {
+    font-size: 13px;
+    color: var(--color-text-muted);
+}
+
+.starRating {
+    display: flex;
+    gap: 2px;
+}
+
+.star {
+    width: 18px;
+    height: 18px;
+    color: #ffc107;
+}
+
+.starEmpty {
+    color: var(--color-border-soft);
+}
+
+.reviewText {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--color-text-main);
+    margin: 0;
+}
+
+.noReviews {
+    color: var(--color-text-muted);
+    font-size: 14px;
+    text-align: center;
+    padding: 24px;
+}
+
+.ratingsSummary {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    padding: 16px;
+    background: var(--color-surface-soft);
+    border-radius: var(--radius-lg);
+}
+
+.averageRating {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-right: 16px;
+    border-right: 1px solid var(--color-border-soft);
+}
+
+.averageNumber {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--color-text-main);
+    line-height: 1;
+}
+
+.averageLabel {
+    font-size: 13px;
+    color: var(--color-text-muted);
+    margin-top: 4px;
+}
+
+.totalReviews {
+    font-size: 14px;
+    color: var(--color-text-muted);
+}

@@ -1,0 +1,319 @@
+@import '../theme/theme.css';
+
+.card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-soft);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    list-style: none;
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+    border-color: var(--color-border);
+}
+
+.imageContainer {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    background: var(--color-surface-soft);
+    border-bottom: 1px solid var(--color-border-soft);
+    cursor: pointer;
+}
+
+.thumbImage {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    opacity: 0;
+    transition: opacity 0.4s ease, transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.card:hover .thumbImage {
+    transform: scale(1.04);
+}
+
+.thumbImageVisible {
+    opacity: 1;
+}
+
+/* Wishlist Button */
+.wishlistBtn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 10;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: var(--color-text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.card:hover .wishlistBtn,
+.wishlistBtn:focus {
+    opacity: 1;
+}
+
+.wishlistBtn:hover {
+    background: rgba(255, 255, 255, 0.9);
+    color: var(--color-primary);
+    transform: scale(1.05);
+}
+
+.wishlistBtnActive {
+    opacity: 1;
+    color: var(--color-primary);
+    background: rgba(255, 255, 255, 0.9);
+    border-color: var(--color-primary-soft);
+}
+
+/* Status Badge */
+.statusBadge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 10;
+    background: var(--color-primary);
+    color: var(--color-on-primary);
+    font-size: 10px;
+    font-weight: 700;
+    padding: 5px 10px;
+    border-radius: var(--radius-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Quick Add */
+.quickAddContainer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 12px;
+    z-index: 10;
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.05), transparent);
+}
+
+.quickAddBtn {
+    width: 100%;
+    height: 44px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: var(--radius-md);
+    color: var(--color-text-main);
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+}
+
+.quickAddBtn:hover {
+    background: var(--color-primary);
+    color: var(--color-on-primary);
+    border-color: var(--color-primary);
+}
+
+@media (hover: hover) {
+    .card:hover .quickAddContainer {
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 900px) {
+    .wishlistBtn {
+        opacity: 1;
+        background: rgba(255, 255, 255, 0.8);
+    }
+}
+
+/* ─── MOBILE PRODUCT CARD ─── */
+@media (max-width: 767px) {
+    .quickAddContainer {
+        display: none !important;
+    }
+
+    .statusBadge {
+        font-size: 9px;
+        padding: 4px 8px;
+        top: 6px;
+        left: 6px;
+        backdrop-filter: blur(4px);
+    }
+
+    .wishlistBtn {
+        top: 6px;
+        right: 6px;
+        width: 28px;
+        height: 28px;
+    }
+
+    /* FIX #5: Tighter card body + truncation on mobile */
+    .cardBody {
+        padding: 10px;
+        gap: 4px;
+    }
+
+    .cardTitle {
+        font-size: 12px;
+        line-height: 1.3;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .priceContainer {
+        gap: 4px;
+        flex-wrap: nowrap;
+    }
+
+    .offerPrice {
+        font-size: 13px;
+    }
+
+    .originalPrice {
+        font-size: 10px;
+    }
+
+    .discountBadge {
+        font-size: 10px;
+    }
+
+    .variantsRow {
+        display: none;
+        /* Hide swatches on mobile 2-col for space */
+    }
+}
+
+/* ─── Card Body (desktop defaults) ─── */
+.cardBody {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+    background: var(--color-surface);
+}
+
+.titleRow {
+    display: flex;
+    align-items: flex-start;
+}
+
+.titleButton {
+    background: none;
+    border: none;
+    padding: 0;
+    text-align: left;
+    width: 100%;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.cardTitle {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--color-text-main);
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.variantsRow {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 2px;
+}
+
+.variantSwatch {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 1.5px solid var(--color-border-soft);
+    cursor: pointer;
+    padding: 0;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.variantSwatch[style*="background-color: rgb(255, 255, 255)"],
+.variantSwatch[style*="background-color: #fff"],
+.variantSwatch[style*="background-color: white"] {
+    border-color: #ddd;
+}
+
+.variantSwatch:hover {
+    transform: scale(1.1);
+}
+
+.variantActive {
+    border-color: #4a1c40;
+    box-shadow: 0 0 0 1px #4a1c40;
+    transform: scale(1.1);
+}
+
+.variantMore {
+    font-size: 11px;
+    color: var(--color-text-muted);
+    font-weight: 500;
+    margin-left: 4px;
+}
+
+/* Pricing */
+.priceContainer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: auto;
+    padding-top: 4px;
+}
+
+.offerPrice {
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--color-text-main);
+}
+
+.originalPrice {
+    font-size: 13px;
+    color: var(--color-text-muted);
+    text-decoration: line-through;
+}
+
+.discountBadge {
+    font-size: 12px;
+    font-weight: 700;
+    color: #27ae60;
+}

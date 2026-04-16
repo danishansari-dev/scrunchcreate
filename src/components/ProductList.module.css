@@ -1,0 +1,30 @@
+@import '../theme/theme.css';
+
+.section {
+  display: grid;
+  gap: 32px;
+  padding: 48px 24px;
+  margin: 0;
+  background: var(--color-surface);
+}
+
+.grid {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 24px;
+  margin: 0;
+}
+
+@media (max-width: 767px) {
+  .section {
+    padding: 40px var(--space-4);
+    gap: 0;
+  }
+
+  .grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+}

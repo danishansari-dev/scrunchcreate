@@ -1,0 +1,77 @@
+pipeline {
+    agent any
+
+    environment {
+        PROJECT_NAME = "scrunchcreate"
+        IMAGE_NAME   = "danish491/scrunchcreate"
+        DOCKER_TAG   = "${env.BUILD_NUMBER}"
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+
+        
+        stage('Install Dependencies') {
+            steps {
+                bat 'npm install'
+            }
+        }
+
+        stage('Build App') {
+            steps {
+                bat 'npm run build'
+            }
+        }
+
+        stage('Docker Build') {
+            steps {
+                bat "docker build -f devops/docker/Dockerfile -t %IMAGE_NAME%:%DOCKER_TAG% ."
+            }
+        }
+
+        stage('Docker Push') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    bat """
+                        echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin
+                        docker tag %IMAGE_NAME%:%DOCKER_TAG% %IMAGE_NAME%:latest
+                        docker push %IMAGE_NAME%:%DOCKER_TAG%
+                        docker push %IMAGE_NAME%:latest
+                        docker logout
+                    """
+                }
+            }
+        }
+
+        stage('Deploy to Localhost') {
+            steps {
+                bat """
+                    docker compose -f devops/docker/docker-compose.yml down
+                    docker compose -f devops/docker/docker-compose.yml pull
+                    docker compose -f devops/docker/docker-compose.yml up -d
+                """
+            }
+        }
+
+    }
+
+    post {
+        always {
+            script {
+                try {
+                    archiveArtifacts artifacts: 'dist/**/*', allowEmptyArchive: true
+                } catch (err) {
+                    echo "Archive skipped: ${err.message}"
+                }
+            }
+        }
+        success {
+            echo "Deployed build #${env.BUILD_NUMBER} of ${env.PROJECT_NAME} from commit ${env.GIT_COMMIT}"
+        }
+    }
+}
