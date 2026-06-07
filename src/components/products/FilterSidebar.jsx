@@ -1,48 +1,63 @@
-import React, { useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion' // eslint-disable-line no-unused-vars
+import React, { useEffect, useMemo, useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion' // eslint-disable-line no-unused-vars
 import styles from './FilterSidebar.module.css'
+import { formatTypeName } from '../../utils/catalogDisplay'
 import { getColorDisplayName, getColorHex } from '../../utils/colorNormalization'
 
-// Human-readable type display names
-const TYPE_DISPLAY_NAMES = {
-    'jimmychoo': 'Jimmy Choo',
-    'satin': 'Satin',
-    'sheer-satin': 'Sheer Satin',
-    'velvet': 'Velvet',
-    'scarf': 'Scarf',
-    'combo': 'Combo',
-    'printed-mini': 'Printed Mini',
-    'printed_mini': 'Printed Mini',
-    'satin-mini': 'Satin Mini',
-    'satin_mini': 'Satin Mini',
-    'satin-printed': 'Satin Printed',
-    'satin_printed': 'Satin Printed',
-    'satin-tulip': 'Satin Tulip',
-    'satin-princes': 'Satin Princess',
-    'classic': 'Classic',
-    'tulip': 'Tulip',
-    'tulip-sheer': 'Tulip Sheer',
-    'rose': 'Rose',
-    'satin-hamper': 'Satin Hamper',
-    'Satin Tulip Bows': 'Satin Tulip Bows',
-    'Satin princes Bow': 'Satin Princess Bow',
-    'Printed_mini': 'Printed Mini',
-    'Satin_printed': 'Satin Printed',
-    'Satin_mini': 'Satin Mini',
-    'Classic': 'Classic',
-    'Combo': 'Combo',
+const DEFAULT_PRICE_RANGE = { min: 0, max: 10000 }
+
+/**
+ * Checks whether two price ranges represent the same preset.
+ * @danishansari-dev a - First price range
+ * @danishansari-dev b - Second price range
+ * @returns True when both ranges use the same min and max values
+ */
+function isSameRange(a, b) {
+    return a?.min === b.min && a?.max === b.max
 }
 
-function formatTypeName(rawType) {
-    if (!rawType) return ''
-    if (TYPE_DISPLAY_NAMES[rawType]) return TYPE_DISPLAY_NAMES[rawType]
-    // Fallback: capitalize and replace separators
-    return rawType
-        .replace(/[-_]/g, ' ')
-        .replace(/\b\w/g, c => c.toUpperCase())
+/**
+ * Renders an accordion section used by both desktop and mobile filter surfaces.
+ * @danishansari-dev id - Section identifier used for aria relationships
+ * @danishansari-dev title - Visible section title
+ * @danishansari-dev isOpen - Whether the section content is visible
+ * @danishansari-dev onToggle - Callback for expanding/collapsing
+ * @danishansari-dev children - Section controls
+ * @returns Filter accordion section
+ */
+function FilterSection({ id, title, isOpen, onToggle, children }) {
+    return (
+        <section className={styles.section}>
+            <button
+                type="button"
+                className={styles.sectionToggle}
+                onClick={onToggle}
+                aria-expanded={isOpen}
+                aria-controls={`${id}-panel`}
+            >
+                <span>{title}</span>
+                <svg className={isOpen ? styles.chevronOpen : ''} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+                    <path d="m6 9 6 6 6-6" />
+                </svg>
+            </button>
+            {isOpen && (
+                <div id={`${id}-panel`} className={styles.sectionPanel}>
+                    {children}
+                </div>
+            )}
+        </section>
+    )
 }
 
-
+/**
+ * Provides faceted product filtering in a sticky sidebar and mobile bottom sheet.
+ * @danishansari-dev availableFilters - Filter facets derived from current catalogue context
+ * @danishansari-dev activeFilters - Current selected filter values
+ * @danishansari-dev handlers - Filter mutation callbacks from useProductsFilter
+ * @danishansari-dev isOpen - Whether the mobile filter sheet is visible
+ * @danishansari-dev onClose - Callback to close the mobile filter sheet
+ * @returns Responsive filter sidebar
+ */
 export default function FilterSidebar({
     availableFilters,
     activeFilters,
@@ -51,114 +66,141 @@ export default function FilterSidebar({
     onClose
 }) {
     const { types = [], colors = [] } = availableFilters
-    const { types: selectedTypes, colors: selectedColors } = activeFilters
-    const { toggleType, toggleColor, clearAllFilters, removeFilter } = handlers
+    const { types: selectedTypes, colors: selectedColors, priceRange } = activeFilters
+    const { toggleType, toggleColor, clearAllFilters, removeFilter, setPricePreset } = handlers
+    const [typeSearch, setTypeSearch] = useState('')
+    const [colorSearch, setColorSearch] = useState('')
+    const [showAllTypes, setShowAllTypes] = useState(false)
+    const [showAllColors, setShowAllColors] = useState(false)
+    const [openSections, setOpenSections] = useState({
+        category: true,
+        color: true,
+        price: true
+    })
 
-    // Lock background scroll when drawer is open (mobile)
+    // Prevent page scroll behind the mobile sheet so filter changes feel intentional.
     useEffect(() => {
-        if (isOpen) {
-            document.body.style.overflow = 'hidden'
-        } else {
-            document.body.style.overflow = ''
-        }
+        document.body.style.overflow = isOpen ? 'hidden' : ''
         return () => {
             document.body.style.overflow = ''
         }
     }, [isOpen])
 
-    const hasActiveFilters = selectedTypes.length > 0 || selectedColors.length > 0
+    const filteredTypes = useMemo(() => {
+        const query = typeSearch.trim().toLowerCase()
+        return types.filter(({ name }) => formatTypeName(name).toLowerCase().includes(query))
+    }, [types, typeSearch])
 
-    // Animations for Mobile Bottom Sheet
-    const overlayVariants = {
-        hidden: { opacity: 0 },
-        visible: { opacity: 1 }
-    };
+    const filteredColors = useMemo(() => {
+        const query = colorSearch.trim().toLowerCase()
+        return colors.filter(({ name }) => getColorDisplayName(name).toLowerCase().includes(query))
+    }, [colors, colorSearch])
 
-    const sheetVariants = {
-        hidden: { y: '100%' },
-        visible: {
-            y: 0,
-            transition: { type: 'spring', damping: 25, stiffness: 200 }
-        }
-    };
+    const visibleTypes = showAllTypes ? filteredTypes : filteredTypes.slice(0, 8)
+    const visibleColors = showAllColors ? filteredColors : filteredColors.slice(0, 10)
+    const isPriceActive = !isSameRange(priceRange, DEFAULT_PRICE_RANGE)
+    const hasActiveFilters = selectedTypes.length > 0 || selectedColors.length > 0 || isPriceActive
 
-    // The inner content is exactly the same for Desktop and Mobile Sheet
+    const priceOptions = [
+        { id: 'under-100', label: 'Under', amount: 100, range: { min: 0, max: 100 } },
+        { id: 'under-500', label: 'Under', amount: 500, range: { min: 0, max: 500 } },
+        { id: 'premium', label: 'Premium', amount: 500, range: { min: 500, max: 10000 } }
+    ]
+
+    const toggleSection = (section) => {
+        setOpenSections((current) => ({
+            ...current,
+            [section]: !current[section]
+        }))
+    }
+
     const FilterContent = (
         <>
-            {/* Header */}
             <div className={styles.drawerHeader}>
-                <h2 className={styles.drawerTitle}>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <line x1="4" y1="6" x2="20" y2="6" />
-                        <line x1="8" y1="12" x2="20" y2="12" />
-                        <line x1="12" y1="18" x2="20" y2="18" />
-                    </svg>
-                    Filters
+                <div>
+                    <p className={styles.eyebrow}>Refine</p>
+                    <h2 className={styles.drawerTitle}>Filters</h2>
+                </div>
+                <div className={styles.headerActions}>
                     {hasActiveFilters && (
-                        <button className={styles.clearLink} onClick={clearAllFilters}>
+                        <button type="button" className={styles.clearLink} onClick={clearAllFilters}>
                             Clear all
                         </button>
                     )}
-                </h2>
-                <button
-                    className={styles.closeBtn}
-                    onClick={onClose}
-                    aria-label="Close filters"
-                >
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <line x1="18" y1="6" x2="6" y2="18" />
-                        <line x1="6" y1="6" x2="18" y2="18" />
-                    </svg>
-                </button>
+                    <button
+                        type="button"
+                        className={styles.closeBtn}
+                        onClick={onClose}
+                        aria-label="Close filters"
+                    >
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" aria-hidden="true">
+                            <path d="M18 6 6 18" />
+                            <path d="m6 6 12 12" />
+                        </svg>
+                    </button>
+                </div>
             </div>
 
-            {/* Scrollable content */}
             <div className={styles.drawerContent}>
-                {/* ── Subcategory / Type Filter ── */}
                 {types.length > 0 && (
-                    <div className={styles.section}>
-                        <h3 className={styles.sectionTitle}>CATEGORY</h3>
+                    <FilterSection
+                        id="category-filter"
+                        title="Categories"
+                        isOpen={openSections.category}
+                        onToggle={() => toggleSection('category')}
+                    >
+                        <label className={styles.inputLabel} htmlFor="type-filter-search">Search category</label>
+                        <input
+                            id="type-filter-search"
+                            className={styles.filterSearch}
+                            value={typeSearch}
+                            onChange={(event) => setTypeSearch(event.target.value)}
+                            placeholder="Search categories"
+                            type="search"
+                        />
                         <div className={styles.categoryList}>
-                            {types.map(({ name }) => {
+                            {visibleTypes.map(({ name, count }) => {
                                 const isActive = selectedTypes.includes(name)
                                 return (
                                     <button
                                         key={name}
+                                        type="button"
                                         className={`${styles.categoryPill} ${isActive ? styles.active : ''}`}
                                         onClick={() => toggleType(name)}
                                         aria-pressed={isActive}
                                     >
-                                        {formatTypeName(name)}
+                                        <span>{formatTypeName(name)}</span>
+                                        <span className={styles.count}>{count}</span>
                                     </button>
                                 )
                             })}
                         </div>
-                    </div>
+                        {filteredTypes.length > 8 && (
+                            <button type="button" className={styles.showMore} onClick={() => setShowAllTypes((value) => !value)}>
+                                {showAllTypes ? 'Show fewer' : `Show ${filteredTypes.length - 8} more`}
+                            </button>
+                        )}
+                    </FilterSection>
                 )}
 
-                {/* ── Color Swatches ── */}
                 {colors.length > 0 && (
-                    <div className={styles.section}>
-                        <div className={styles.sectionTitleRow}>
-                            <h3 className={styles.sectionTitle}>COLOR</h3>
-                            {selectedColors.length > 0 && (
-                                <button
-                                    className={styles.clearColorBtn}
-                                    onClick={() => {
-                                        // Clear all selected colors individually
-                                        selectedColors.forEach(c => removeFilter('color', c));
-                                    }}
-                                >
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                        <line x1="18" y1="6" x2="6" y2="18" />
-                                        <line x1="6" y1="6" x2="18" y2="18" />
-                                    </svg>
-                                    Clear Color
-                                </button>
-                            )}
-                        </div>
-                        <div className={styles.colorGrid}>
-                            {colors.map(({ name, count }) => {
+                    <FilterSection
+                        id="color-filter"
+                        title="Colors"
+                        isOpen={openSections.color}
+                        onToggle={() => toggleSection('color')}
+                    >
+                        <label className={styles.inputLabel} htmlFor="color-filter-search">Search color</label>
+                        <input
+                            id="color-filter-search"
+                            className={styles.filterSearch}
+                            value={colorSearch}
+                            onChange={(event) => setColorSearch(event.target.value)}
+                            placeholder="Search colors"
+                            type="search"
+                        />
+                        <div className={styles.colorList}>
+                            {visibleColors.map(({ name, count }) => {
                                 const isActive = selectedColors.includes(name)
                                 const bgValue = getColorHex(name)
                                 const isGradient = bgValue.startsWith('linear-gradient')
@@ -166,9 +208,9 @@ export default function FilterSidebar({
                                 return (
                                     <button
                                         key={name}
-                                        className={`${styles.colorSwatchBtn} ${isActive ? styles.active : ''}`}
+                                        type="button"
+                                        className={`${styles.colorOption} ${isActive ? styles.active : ''}`}
                                         onClick={() => toggleColor(name)}
-                                        aria-label={`${getColorDisplayName(name)} (${count})`}
                                         aria-pressed={isActive}
                                     >
                                         <span
@@ -179,54 +221,93 @@ export default function FilterSidebar({
                                                 backgroundColor: !isGradient ? bgValue : undefined
                                             }}
                                         />
+                                        <span className={styles.colorName}>{getColorDisplayName(name)}</span>
+                                        <span className={styles.count}>{count}</span>
                                     </button>
                                 )
                             })}
                         </div>
-                    </div>
+                        {selectedColors.length > 0 && (
+                            <button
+                                type="button"
+                                className={styles.clearSubset}
+                                onClick={() => selectedColors.forEach((color) => removeFilter('color', color))}
+                            >
+                                Clear colors
+                            </button>
+                        )}
+                        {filteredColors.length > 10 && (
+                            <button type="button" className={styles.showMore} onClick={() => setShowAllColors((value) => !value)}>
+                                {showAllColors ? 'Show fewer' : `Show ${filteredColors.length - 10} more shades`}
+                            </button>
+                        )}
+                    </FilterSection>
                 )}
+
+                <FilterSection
+                    id="price-filter"
+                    title="Price"
+                    isOpen={openSections.price}
+                    onToggle={() => toggleSection('price')}
+                >
+                    <div className={styles.priceGrid}>
+                        {priceOptions.map((option) => {
+                            const active = isSameRange(priceRange, option.range)
+                            return (
+                                <button
+                                    key={option.id}
+                                    type="button"
+                                    className={`${styles.priceChip} ${active ? styles.active : ''}`}
+                                    onClick={() => setPricePreset(active ? DEFAULT_PRICE_RANGE : option.range)}
+                                    aria-pressed={active}
+                                >
+                                    {option.label} <span>&#8377;{option.amount}</span>
+                                </button>
+                            )
+                        })}
+                    </div>
+                    {isPriceActive && (
+                        <button type="button" className={styles.clearSubset} onClick={() => removeFilter('price')}>
+                            Clear price
+                        </button>
+                    )}
+                </FilterSection>
             </div>
 
-            {/* Footer (mobile) */}
             <div className={styles.drawerFooter}>
-                <button
-                    className={styles.applyBtn}
-                    onClick={onClose}
-                >
-                    Show Results
+                <button type="button" className={styles.applyBtn} onClick={onClose}>
+                    Show results
                 </button>
             </div>
         </>
-    );
+    )
 
     return (
         <>
-            {/* Desktop Sidebar (Always rendered, hidden via CSS on mobile wrapper) */}
-            <aside className={styles.desktopSidebar}>
+            <aside className={styles.desktopSidebar} aria-label="Product filters">
                 {FilterContent}
             </aside>
 
-            {/* Mobile Bottom Sheet (Framer Motion) */}
             <AnimatePresence>
                 {isOpen && (
                     <>
                         <motion.div
                             className={styles.overlay}
-                            variants={overlayVariants}
-                            initial="hidden"
-                            animate="visible"
-                            exit="hidden"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
                             onClick={onClose}
                             aria-hidden="true"
                         />
                         <motion.aside
                             className={styles.bottomSheet}
-                            variants={sheetVariants}
-                            initial="hidden"
-                            animate="visible"
-                            exit="hidden"
+                            initial={{ y: '100%' }}
+                            animate={{ y: 0 }}
+                            exit={{ y: '100%' }}
+                            transition={{ type: 'spring', damping: 26, stiffness: 220 }}
                             role="dialog"
-                            aria-label="Product Filters"
+                            aria-modal="true"
+                            aria-label="Product filters"
                         >
                             <div className={styles.dragHandle} />
                             {FilterContent}
