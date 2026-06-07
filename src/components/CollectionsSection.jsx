@@ -7,7 +7,7 @@ import SectionHeader from './SectionHeader'
 /**
  * Category definitions for the "Discover Collections" grid.
  * Images are resolved dynamically from the product catalog
- * so we always get valid Cloudinary URLs, not stale local paths.
+ * using the local path references.
  */
 const collectionDefs = [
     {
@@ -53,7 +53,7 @@ export default function CollectionsSection() {
             try {
                 const allProducts = await getProducts();
 
-                // Resolve a Cloudinary image for every category from the live catalog
+                // Resolve a local image for every category from the live catalog
                 const updatedCollections = collectionDefs.map(def => {
                     const products = allProducts.filter(
                         p => p.category && p.category.toLowerCase() === def.category.toLowerCase()

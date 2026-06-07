@@ -45,19 +45,15 @@ export default function Products() {
   const [searchParams] = useSearchParams()
   const [allProducts, setAllProducts] = useState([])
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false)
-  const [loading, setLoading] = useState(true)
 
   // Fetch products from API (falls back to local JSON if backend is down)
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        setLoading(true)
         const data = await getProducts()
         setAllProducts(data)
       } catch (err) {
         console.error('Failed to load products', err)
-      } finally {
-        setLoading(false)
       }
     }
     fetchProducts()

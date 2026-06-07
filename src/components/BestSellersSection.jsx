@@ -7,7 +7,6 @@ import styles from './BestSellersSection.module.css'
 
 export default function BestSellersSection() {
     const [products, setProducts] = useState([])
-    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -16,8 +15,6 @@ export default function BestSellersSection() {
                 setProducts(data)
             } catch (err) {
                 console.error('BestSellers err', err)
-            } finally {
-                setLoading(false)
             }
         }
         fetchProducts()

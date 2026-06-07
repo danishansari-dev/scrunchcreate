@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import React, { useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion' // eslint-disable-line no-unused-vars
 import styles from './FilterSidebar.module.css'
 import { getColorDisplayName, getColorHex } from '../../utils/colorNormalization'
 
@@ -119,7 +119,7 @@ export default function FilterSidebar({
                     <div className={styles.section}>
                         <h3 className={styles.sectionTitle}>CATEGORY</h3>
                         <div className={styles.categoryList}>
-                            {types.map(({ name, count }) => {
+                            {types.map(({ name }) => {
                                 const isActive = selectedTypes.includes(name)
                                 return (
                                     <button

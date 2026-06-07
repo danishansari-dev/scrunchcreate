@@ -130,8 +130,6 @@ const COLOR_ALIASES = {
     'dark-blue': 'navy',
     'light-pink': 'baby-pink',
     'dark-pink': 'hot-pink',
-    'light-pink': 'baby-pink',
-    'dark-pink': 'hot-pink',
     'light-purple': 'lilac',
     'dark-purple': 'purple',
 

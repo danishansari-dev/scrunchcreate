@@ -1,76 +1,127 @@
 /**
- * API service layer.
- * Centralized HTTP client for backend communication.
- *
- * Falls back to local product JSON when the backend is unreachable,
- * so the frontend never breaks during local development without a running server.
+ * Why this file exists:
+ * The project has been decoupled from the backend node/express REST API.
+ * This service layer is completely mocked client-side using browser localStorage
+ * to allow standalone, offline-ready operation without breaking existing components.
  */
-import axios from 'axios';
 
-const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
-});
+import { getProducts as loadLocalProducts } from '../utils/getProducts';
 
-// Auto-attach JWT from localStorage on every outgoing request
-api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
-
-// ─── Product Cache ──────────────────────────────────────────────────
-// Avoids refetching the full catalog on every component mount
+// Product cache so we do not have to map and format local JSON products on every call.
 let productCache = null;
 
-const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+/**
+ * Creates a structured error object mimicking Axios' error shape
+ * @danishansari-dev message - The descriptive error message
+ * @danishansari-dev status - The HTTP status code representation
+ * @returns An error object with a mock axios response object attached
+ */
+function createAxiosError(message, status = 400) {
+  const error = new Error(message);
+  // Tricky logic: Existing pages inspect error.response.data.message.
+  // We mimic this Axios structure so that frontend error blocks and toasts process errors correctly.
+  error.response = {
+    status,
+    data: {
+      success: false,
+      message,
+    },
+  };
+  return error;
+}
+
+// ─── Local Database Helpers ──────────────────────────────────────────
 
 /**
- * Fetch all products.
- * Tries the backend API. If it fails due to a cold start or network error,
- * it retries instead of falling back to local data, allowing the loading spinner
- * to persist on the frontend until the server wakes up.
- * @returns {Promise<Array>} Enriched product array
+ * Retrieves list of registered mock users from localStorage
+ * @returns Array of user objects
  */
-export const getProducts = async (retries = 15) => {
-  if (productCache) return productCache;
-
-  let attempt = 0;
-  while (attempt < retries) {
-    try {
-      const { data } = await api.get('/products');
-      if (data.data && Array.isArray(data.data) && data.data.length > 0) {
-        productCache = data.data;
-        return productCache;
-      }
-      throw new Error('Empty product catalog from API');
-    } catch (err) {
-      attempt++;
-      console.warn(`⚠️ [api] Backend unreachable or sleeping (Attempt ${attempt}/${retries}). Waking up server, retrying in 3 seconds...`);
-      if (attempt >= retries) {
-        throw new Error('Backend is taking too long to wake up. Please check your network or try again later.');
-      }
-      await delay(3000);
-    }
+const getStoredUsers = () => {
+  try {
+    return JSON.parse(localStorage.getItem('mock_users') || '[]');
+  } catch {
+    return [];
   }
 };
 
 /**
- * Force-clear the product cache (call after admin creates/updates/deletes a product)
+ * Saves mock users list to localStorage
+ * @danishansari-dev users - Array of user objects
+ */
+const saveStoredUsers = (users) => {
+  localStorage.setItem('mock_users', JSON.stringify(users));
+};
+
+/**
+ * Retrieves user's local cart items from localStorage
+ * @danishansari-dev email - User's email identifier
+ * @returns Array of cart items { productId, quantity }
+ */
+const getStoredCart = (email) => {
+  try {
+    return JSON.parse(localStorage.getItem(`mock_cart_${email}`) || '[]');
+  } catch {
+    return [];
+  }
+};
+
+/**
+ * Saves user's cart items to localStorage
+ * @danishansari-dev email - User's email identifier
+ * @danishansari-dev cart - Array of cart items
+ */
+const saveStoredCart = (email, cart) => {
+  localStorage.setItem(`mock_cart_${email}`, JSON.stringify(cart));
+};
+
+/**
+ * Retrieves user's order history from localStorage
+ * @danishansari-dev email - User's email identifier
+ * @returns Array of order objects
+ */
+const getStoredOrders = (email) => {
+  try {
+    return JSON.parse(localStorage.getItem(`mock_orders_${email}`) || '[]');
+  } catch {
+    return [];
+  }
+};
+
+/**
+ * Saves user's order history to localStorage
+ * @danishansari-dev email - User's email identifier
+ * @danishansari-dev orders - Array of order objects
+ */
+const saveStoredOrders = (email, orders) => {
+  localStorage.setItem(`mock_orders_${email}`, JSON.stringify(orders));
+};
+
+// ─── Named Exports ───────────────────────────────────────────────────
+
+/**
+ * Fetches all products from the local JSON store
+ * @returns Promise resolving to an array of products
+ */
+export const getProducts = async () => {
+  if (productCache) {
+    return productCache;
+  }
+  // Load local product list using the formatting helper.
+  productCache = loadLocalProducts();
+  return productCache;
+};
+
+/**
+ * Resets the local product cache
  */
 export const invalidateProductCache = () => {
   productCache = null;
 };
 
 /**
- * Find a single product by its URL slug.
- * Works client-side from the cached catalog — no extra endpoint needed.
- * @param {string} slug - URL-friendly product identifier
- * @returns {Promise<Object|null>}
+ * Finds a single product using its slug
+ * @danishansari-dev slug - The slug identifier of the product
+ * @returns Promise resolving to the matching product or null
  */
 export const getProductBySlug = async (slug) => {
   const products = await getProducts();
@@ -78,9 +129,9 @@ export const getProductBySlug = async (slug) => {
 };
 
 /**
- * Get all products in a given category.
- * @param {string} category - Category key (case-insensitive match)
- * @returns {Promise<Array>}
+ * Filters products by their category
+ * @danishansari-dev category - The category name
+ * @returns Promise resolving to matching products
  */
 export const getProductsByCategory = async (category) => {
   const products = await getProducts();
@@ -90,9 +141,9 @@ export const getProductsByCategory = async (category) => {
 };
 
 /**
- * Get color variants of a product (same category + type, different colors).
- * @param {Object} product - The product to find variants for
- * @returns {Promise<Array>}
+ * Filters other variants of the same product type
+ * @danishansari-dev product - Current product reference
+ * @returns Promise resolving to matching sibling variant products
  */
 export const getProductVariants = async (product) => {
   if (!product) return [];
@@ -107,93 +158,269 @@ export const getProductVariants = async (product) => {
 };
 
 /**
- * Fetch a single product by MongoDB _id.
- * @param {string} id - Mongo ObjectId string
- * @returns {Promise<Object>}
+ * Fetches a product by its ID
+ * @danishansari-dev id - The product ID
+ * @returns Promise resolving to the product
  */
 export const getProduct = async (id) => {
-  const { data } = await api.get(`/products/${id}`);
-  return data.data;
+  const products = await getProducts();
+  const found = products.find((p) => p.id === id || p._id === id);
+  if (!found) {
+    throw createAxiosError('Product not found.', 404);
+  }
+  return found;
 };
 
-// ─── Auth ────────────────────────────────────────────────────────────
-
 /**
- * Register a new user
- * @returns {{ success, token, data: user }}
+ * Registers a new user locally
+ * @danishansari-dev name - New user's name
+ * @danishansari-dev email - User's email address
+ * @danishansari-dev password - User's password
+ * @returns Promise resolving to the register response
  */
 export const register = async (name, email, password) => {
-  const { data } = await api.post('/auth/register', { name, email, password });
-  return data;
+  const users = getStoredUsers();
+  if (users.some((u) => u.email.toLowerCase() === email.toLowerCase())) {
+    throw createAxiosError('User already exists with this email.');
+  }
+
+  const newUser = {
+    _id: `user_${Date.now()}`,
+    name,
+    email: email.toLowerCase(),
+    password,
+  };
+
+  users.push(newUser);
+  saveStoredUsers(users);
+
+  const token = `mock-jwt-${newUser._id}`;
+  localStorage.setItem('token', token);
+  localStorage.setItem('mock_current_user', JSON.stringify(newUser));
+
+  return {
+    success: true,
+    token,
+    data: newUser,
+  };
 };
 
 /**
- * Login
- * @returns {{ success, token, data: user }}
+ * Logs in a user locally
+ * @danishansari-dev email - Registered user's email
+ * @danishansari-dev password - Plaintext password
+ * @returns Promise resolving to the login response
  */
 export const login = async (email, password) => {
-  const { data } = await api.post('/auth/login', { email, password });
-  return data;
+  const users = getStoredUsers();
+  const foundUser = users.find(
+    (u) => u.email.toLowerCase() === email.toLowerCase()
+  );
+
+  if (!foundUser || foundUser.password !== password) {
+    throw createAxiosError('Invalid email or password.');
+  }
+
+  const token = `mock-jwt-${foundUser._id}`;
+  localStorage.setItem('token', token);
+  localStorage.setItem('mock_current_user', JSON.stringify(foundUser));
+
+  return {
+    success: true,
+    token,
+    data: foundUser,
+  };
 };
 
-// ─── Orders ──────────────────────────────────────────────────────────
-
 /**
- * Place a new order
+ * Places a new order and prepares WhatsApp payload reference
+ * @danishansari-dev orderData - Object containing items list and shipping address
+ * @returns Promise resolving to the order confirmation
  */
 export const placeOrder = async (orderData) => {
-  const { data } = await api.post('/orders', orderData);
-  return data;
+  const userStr = localStorage.getItem('mock_current_user');
+  const user = userStr ? JSON.parse(userStr) : null;
+  const email = user ? user.email : 'guest';
+
+  const products = await getProducts();
+  const orderItems = orderData.items
+    .map((item) => {
+      const product = products.find(
+        (p) => p.id === item.productId || p._id === item.productId
+      );
+      return {
+        product,
+        quantity: item.quantity,
+      };
+    })
+    .filter((item) => item.product);
+
+  const newOrder = {
+    _id: `order_${Date.now()}`,
+    user: user ? user._id : 'guest',
+    items: orderItems,
+    shippingAddress: orderData.shippingAddress,
+    status: 'Pending',
+    createdAt: new Date().toISOString(),
+  };
+
+  const orders = getStoredOrders(email);
+  orders.push(newOrder);
+  saveStoredOrders(email, orders);
+
+  // Tricky logic: Save the last order payload in localStorage
+  // so the post-checkout /order-success page can access it and generate the WhatsApp deep link.
+  localStorage.setItem('last_order', JSON.stringify(newOrder));
+
+  return {
+    success: true,
+    data: newOrder,
+  };
 };
 
 /**
- * Get current user's orders
+ * Fetches current user's order history
+ * @returns Promise resolving to orders array
  */
 export const getMyOrders = async () => {
-  const { data } = await api.get('/orders/my');
-  return data.data;
+  const userStr = localStorage.getItem('mock_current_user');
+  const user = userStr ? JSON.parse(userStr) : null;
+  const email = user ? user.email : 'guest';
+  return getStoredOrders(email);
 };
 
-// ─── Cart ──────────────────────────────────────────────────────────
-
 /**
- * Get current user's cart
+ * Fetches user's cart
+ * @returns Promise resolving to cart items array
  */
 export const getCart = async () => {
-  const { data } = await api.get('/cart');
-  return data.data;
+  const userStr = localStorage.getItem('mock_current_user');
+  const user = userStr ? JSON.parse(userStr) : null;
+  const email = user ? user.email : 'guest';
+  const cartItems = getStoredCart(email);
+
+  const products = await getProducts();
+  return cartItems
+    .map((item) => {
+      const product = products.find(
+        (p) => p.id === item.productId || p._id === item.productId
+      );
+      return {
+        product,
+        quantity: item.quantity,
+      };
+    })
+    .filter((item) => item.product);
 };
 
 /**
- * Add item to cart
+ * Adds an item to the cart
+ * @danishansari-dev productId - The product ID
+ * @danishansari-dev quantity - Quantity to add
+ * @returns Promise resolving to the updated cart
  */
 export const addToCartAPI = async (productId, quantity = 1) => {
-  const { data } = await api.post('/cart', { productId, quantity });
-  return data.data;
+  const userStr = localStorage.getItem('mock_current_user');
+  const user = userStr ? JSON.parse(userStr) : null;
+  const email = user ? user.email : 'guest';
+  const cartItems = getStoredCart(email);
+
+  const existingItem = cartItems.find((item) => item.productId === productId);
+  if (existingItem) {
+    existingItem.quantity += quantity;
+  } else {
+    cartItems.push({ productId, quantity });
+  }
+
+  saveStoredCart(email, cartItems);
+  return getCart();
 };
 
 /**
- * Update cart item quantity
+ * Updates cart item quantity
+ * @danishansari-dev productId - The product ID
+ * @danishansari-dev quantity - The target quantity
+ * @returns Promise resolving to the updated cart
  */
 export const updateCartItemAPI = async (productId, quantity) => {
-  const { data } = await api.put(`/cart/${productId}`, { quantity });
-  return data.data;
+  const userStr = localStorage.getItem('mock_current_user');
+  const user = userStr ? JSON.parse(userStr) : null;
+  const email = user ? user.email : 'guest';
+  const cartItems = getStoredCart(email);
+
+  const item = cartItems.find((i) => i.productId === productId);
+  if (item) {
+    item.quantity = quantity;
+  }
+
+  saveStoredCart(email, cartItems);
+  return getCart();
 };
 
 /**
- * Remove item from cart
+ * Removes an item from the cart
+ * @danishansari-dev productId - The product ID
+ * @returns Promise resolving to the updated cart
  */
 export const removeFromCartAPI = async (productId) => {
-  const { data } = await api.delete(`/cart/${productId}`);
-  return data.data;
+  const userStr = localStorage.getItem('mock_current_user');
+  const user = userStr ? JSON.parse(userStr) : null;
+  const email = user ? user.email : 'guest';
+  let cartItems = getStoredCart(email);
+
+  cartItems = cartItems.filter((item) => item.productId !== productId);
+
+  saveStoredCart(email, cartItems);
+  return getCart();
 };
 
 /**
- * Clear the entire cart
+ * Clears the user's cart
+ * @returns Promise resolving to empty array
  */
 export const clearCartAPI = async () => {
-  const { data } = await api.delete('/cart');
-  return data.data;
+  const userStr = localStorage.getItem('mock_current_user');
+  const user = userStr ? JSON.parse(userStr) : null;
+  const email = user ? user.email : 'guest';
+  saveStoredCart(email, []);
+  return [];
 };
 
-export default api;
+// ─── Default Export (Axios mock instance) ───────────────────────────
+
+const mockApi = {
+  get: async (url) => {
+    if (url === '/auth/me') {
+      const userStr = localStorage.getItem('mock_current_user');
+      if (!userStr) {
+        throw createAxiosError('Not authenticated', 401);
+      }
+      return {
+        data: {
+          success: true,
+          data: JSON.parse(userStr),
+        },
+      };
+    }
+    throw createAxiosError(`Endpoint GET ${url} is not mocked.`, 404);
+  },
+  post: async (url) => {
+    throw createAxiosError(`Endpoint POST ${url} is not mocked.`, 404);
+  },
+  put: async (url) => {
+    throw createAxiosError(`Endpoint PUT ${url} is not mocked.`, 404);
+  },
+  delete: async (url) => {
+    throw createAxiosError(`Endpoint DELETE ${url} is not mocked.`, 404);
+  },
+  interceptors: {
+    request: {
+      use: () => {},
+    },
+    response: {
+      use: () => {},
+    },
+  },
+};
+
+export default mockApi;

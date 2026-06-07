@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import styles from './NavBar.module.css';
 import { useCart } from '../components/CartContext';
 import { getProducts } from '../services/api';
 import { useWishlist } from '../context/WishlistContext';
-import { useAuth } from '../context/AuthContext';
 
 // Map category names to URL slugs
 const categoryToSlug = {
@@ -36,33 +35,11 @@ const navCategories = ['HairBow', 'Scrunchie', 'GiftHamper', 'FlowerJewellery', 
 const NavBar = () => {
   const { totalItems, toggleCart } = useCart();
   const { wishlist } = useWishlist();
-  const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
-  const userMenuRef = useRef(null);
-
-  // Close dropdown on outside click
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
-        setUserDropdownOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-
-  // Close dropdown on route change
-  useEffect(() => {
-    setUserDropdownOpen(false);
-  }, [location.pathname]);
 
   // Category data built from async product fetch
   const [categoryData, setCategoryData] = useState({});
@@ -282,59 +259,7 @@ const NavBar = () => {
               </button>
             </div>
             
-            <div className={styles.userMenuWrapper} ref={userMenuRef}>
-              {user ? (
-                <>
-                  <button 
-                    className={styles.cartBadge} 
-                    onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-                    aria-label="User menu"
-                  >
-                    {user.avatar ? (
-                      <img 
-                        src={user.avatar} 
-                        alt={user.name || "User avatar"} 
-                        style={{ width: 22, height: 22, borderRadius: '50%', objectFit: 'cover' }} 
-                      />
-                    ) : (
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="12" cy="7" r="4"></circle>
-                      </svg>
-                    )}
-                    <span className={styles.indicatorDot}></span>
-                  </button>
-                  {userDropdownOpen && (
-                    <div className={styles.userDropdown}>
-                      <div className={styles.userDropdownHeader}>
-                        <span className={styles.userDropdownName}>{user.name || 'My Account'}</span>
-                        <span className={styles.userDropdownEmail}>{user.email}</span>
-                      </div>
-                      <Link to="/orders" className={styles.userDropdownItem} onClick={() => setUserDropdownOpen(false)}>
-                        My Orders
-                      </Link>
-                      <button 
-                        className={`${styles.userDropdownItem} ${styles.logoutItem}`}
-                        onClick={() => {
-                          setUserDropdownOpen(false);
-                          logout();
-                          navigate('/');
-                        }}
-                      >
-                        Logout
-                      </button>
-                    </div>
-                  )}
-                </>
-              ) : (
-                <Link to="/login" aria-label="Login" className={styles.cartBadge}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="12" cy="7" r="4"></circle>
-                  </svg>
-                </Link>
-              )}
-            </div>
+            
 
             <Link to="/wishlist" aria-label="Wishlist" className={styles.cartBadge}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">

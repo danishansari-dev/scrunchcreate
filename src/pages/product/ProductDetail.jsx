@@ -1,7 +1,7 @@
 import React, { useMemo, useState, useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import styles from './ProductDetail.module.css'
-import { getProductBySlug, getProductsByCategory, getProductVariants } from '../../services/api'
+import { getProductBySlug, getProductsByCategory } from '../../services/api'
 
 import { useCart } from '../../components/CartContext'
 import { useToast } from '../../components/ToastContext'
@@ -164,10 +164,7 @@ export default function ProductDetail() {
       slug: product.slug // Keep parent slug
     } : product
 
-    const ok = await addToCart(cartItem, quantity)
-    if (!ok) {
-      navigate('/signin')
-    }
+    await addToCart(cartItem, quantity)
   }
 
   const handleWishlistToggle = () => {

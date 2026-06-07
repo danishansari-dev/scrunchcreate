@@ -1,6 +1,6 @@
 import React from 'react'
 import { useLocation, Outlet } from 'react-router-dom'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion' // eslint-disable-line no-unused-vars
 import NavBar from './NavBar'
 import Footer from './Footer'
 import CartDrawer from './CartDrawer'

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { motion } from 'framer-motion'
+import { motion } from 'framer-motion' // eslint-disable-line no-unused-vars
 import styles from './ProductCard.module.css'
 import { useCart } from '../components/CartContext'
 import { useToast } from '../components/ToastContext'
@@ -71,10 +71,7 @@ export default function ProductCard({ product, index = 0 }) {
             slug: product.slug
         } : product
 
-        const ok = await addToCart(cartItem, 1)
-        if (!ok) {
-            navigate('/signin')
-        }
+        await addToCart(cartItem, 1)
     }
 
     const isMultiVariant = product.variants && product.variants.length > 1

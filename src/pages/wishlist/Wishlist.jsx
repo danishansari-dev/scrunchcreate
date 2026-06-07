@@ -9,19 +9,15 @@ import ProductCard from '../../components/ProductCard'
 export default function Wishlist() {
     const { wishlist } = useWishlist()
     const [wishlistProducts, setWishlistProducts] = useState([])
-    const [loading, setLoading] = useState(true)
 
     // Fetch products from API, then filter to only wishlisted items
     useEffect(() => {
         const fetchWishlist = async () => {
             try {
-                setLoading(true)
                 const allProducts = await getProducts()
                 setWishlistProducts(allProducts.filter(p => wishlist.includes(p.id || p._id)))
             } catch (err) {
                 console.error('Failed to load wishlist products', err)
-            } finally {
-                setLoading(false)
             }
         }
         fetchWishlist()
