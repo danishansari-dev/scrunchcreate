@@ -1,319 +1,603 @@
 @import '../theme/theme.css';
 
 .card {
-    background: var(--color-surface);
-    border: 1px solid var(--color-border-soft);
-    border-radius: var(--radius-lg);
-    overflow: hidden;
+    position: relative;
     display: flex;
+    min-width: 0;
     flex-direction: column;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    overflow: hidden;
+    border: 1px solid rgba(54, 45, 39, 0.08);
+    border-radius: 16px;
+    background: #ffffff;
+    box-shadow: 0 14px 38px rgba(42, 34, 29, 0.07);
     list-style: none;
-    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+    transition: border-color 200ms ease, box-shadow 200ms ease, transform 200ms ease;
 }
 
 .card:hover {
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
-    border-color: var(--color-border);
+    border-color: rgba(199, 111, 126, 0.28);
+    box-shadow: 0 22px 54px rgba(42, 34, 29, 0.13);
+    transform: translateY(-4px);
 }
 
 .imageContainer {
     position: relative;
     width: 100%;
-    aspect-ratio: 3 / 4;
+    aspect-ratio: 4 / 5;
     overflow: hidden;
-    background: var(--color-surface-soft);
-    border-bottom: 1px solid var(--color-border-soft);
+    background: #f4ebe7;
     cursor: pointer;
+    isolation: isolate;
+}
+
+.skeleton {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(100deg, #f3e7e2 20%, #fff7f4 38%, #f3e7e2 58%);
+    background-size: 220% 100%;
+    animation: shimmer 1.2s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+    from {
+        background-position: 120% 0;
+    }
+
+    to {
+        background-position: -120% 0;
+    }
 }
 
 .thumbImage {
     position: absolute;
-    top: 0;
-    left: 0;
+    inset: 0;
+    z-index: 2;
     width: 100%;
     height: 100%;
     object-fit: cover;
     object-position: center;
     opacity: 0;
-    transition: opacity 0.4s ease, transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+    transform: scale(1);
+    transition: opacity 220ms ease, transform 520ms cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
 .card:hover .thumbImage {
-    transform: scale(1.04);
+    transform: scale(1.055);
 }
 
 .thumbImageVisible {
     opacity: 1;
 }
 
-/* Wishlist Button */
+.imageFallback {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    background: linear-gradient(135deg, #fff8f4, #f6dfe4);
+    color: #6f5151;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 800;
+}
+
 .wishlistBtn {
     position: absolute;
     top: 12px;
     right: 12px;
-    z-index: 10;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    background: rgba(255, 255, 255, 0.6);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    color: var(--color-text-muted);
-    cursor: pointer;
-    display: flex;
+    z-index: 5;
+    width: 38px;
+    height: 38px;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
+    border: 1px solid rgba(255, 255, 255, 0.72);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.82);
+    color: #6c625d;
+    cursor: pointer;
     opacity: 0;
-    transition: all 0.25s ease;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 10px 24px rgba(35, 28, 24, 0.14);
+    backdrop-filter: blur(12px);
+    transition: opacity 200ms ease, transform 200ms ease, color 200ms ease, background 200ms ease;
 }
 
 .card:hover .wishlistBtn,
-.wishlistBtn:focus {
+.wishlistBtn:focus-visible,
+.wishlistBtnActive {
     opacity: 1;
 }
 
 .wishlistBtn:hover {
-    background: rgba(255, 255, 255, 0.9);
-    color: var(--color-primary);
-    transform: scale(1.05);
+    background: #ffffff;
+    color: #c76f7e;
+    transform: translateY(-1px) scale(1.04);
 }
 
 .wishlistBtnActive {
-    opacity: 1;
-    color: var(--color-primary);
-    background: rgba(255, 255, 255, 0.9);
-    border-color: var(--color-primary-soft);
+    color: #c76f7e;
 }
 
-/* Status Badge */
 .statusBadge {
     position: absolute;
     top: 12px;
     left: 12px;
-    z-index: 10;
-    background: var(--color-primary);
-    color: var(--color-on-primary);
+    z-index: 5;
+    max-width: calc(100% - 64px);
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: rgba(36, 32, 30, 0.88);
+    color: #ffffff;
     font-size: 10px;
-    font-weight: 700;
-    padding: 5px 10px;
-    border-radius: var(--radius-sm);
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    line-height: 1;
     text-transform: uppercase;
-    letter-spacing: 0.8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
 }
 
-/* Quick Add */
-.quickAddContainer {
+.imageActions {
     position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    padding: 12px;
-    z-index: 10;
-    transform: translateY(100%);
-    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.05), transparent);
+    right: 12px;
+    bottom: 12px;
+    left: 12px;
+    z-index: 5;
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 8px;
+    transform: translateY(14px);
+    opacity: 0;
+    transition: opacity 200ms ease, transform 200ms ease;
+}
+
+.card:hover .imageActions,
+.imageActions:focus-within {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.quickViewBtn,
+.quickAddBtn {
+    min-width: 0;
+    height: 42px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 800;
+    transition: background 200ms ease, color 200ms ease, border-color 200ms ease, transform 200ms ease;
+}
+
+.quickViewBtn {
+    border: 1px solid rgba(255, 255, 255, 0.72);
+    background: rgba(255, 255, 255, 0.88);
+    color: #24201e;
+    backdrop-filter: blur(10px);
 }
 
 .quickAddBtn {
-    width: 100%;
-    height: 44px;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(4px);
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    border-radius: var(--radius-md);
-    color: var(--color-text-main);
-    font-weight: 600;
-    font-size: 14px;
-    cursor: pointer;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-    transition: all 0.2s ease;
+    border: 1px solid #24201e;
+    background: #24201e;
+    color: #ffffff;
+}
+
+.quickViewBtn:hover,
+.quickAddBtn:hover {
+    transform: translateY(-1px);
 }
 
 .quickAddBtn:hover {
-    background: var(--color-primary);
-    color: var(--color-on-primary);
-    border-color: var(--color-primary);
+    border-color: #c76f7e;
+    background: #c76f7e;
 }
 
-@media (hover: hover) {
-    .card:hover .quickAddContainer {
-        transform: translateY(0);
-    }
-}
-
-@media (max-width: 900px) {
-    .wishlistBtn {
-        opacity: 1;
-        background: rgba(255, 255, 255, 0.8);
-    }
-}
-
-/* ─── MOBILE PRODUCT CARD ─── */
-@media (max-width: 767px) {
-    .quickAddContainer {
-        display: none !important;
-    }
-
-    .statusBadge {
-        font-size: 9px;
-        padding: 4px 8px;
-        top: 6px;
-        left: 6px;
-        backdrop-filter: blur(4px);
-    }
-
-    .wishlistBtn {
-        top: 6px;
-        right: 6px;
-        width: 28px;
-        height: 28px;
-    }
-
-    /* FIX #5: Tighter card body + truncation on mobile */
-    .cardBody {
-        padding: 10px;
-        gap: 4px;
-    }
-
-    .cardTitle {
-        font-size: 12px;
-        line-height: 1.3;
-        -webkit-line-clamp: 2;
-        line-clamp: 2;
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-    }
-
-    .priceContainer {
-        gap: 4px;
-        flex-wrap: nowrap;
-    }
-
-    .offerPrice {
-        font-size: 13px;
-    }
-
-    .originalPrice {
-        font-size: 10px;
-    }
-
-    .discountBadge {
-        font-size: 10px;
-    }
-
-    .variantsRow {
-        display: none;
-        /* Hide swatches on mobile 2-col for space */
-    }
-}
-
-/* ─── Card Body (desktop defaults) ─── */
 .cardBody {
-    padding: 16px;
     display: flex;
+    flex: 1;
     flex-direction: column;
     gap: 10px;
-    flex: 1;
-    background: var(--color-surface);
+    padding: 16px;
 }
 
-.titleRow {
+.metaRow {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    color: #7d7069;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+}
+
+.rating {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 4px;
+    color: #8a6a1d;
+    font-size: 12px;
+}
+
+.rating span,
+.modalRating span {
+    color: #d9a21b;
+    letter-spacing: 0;
 }
 
 .titleButton {
-    background: none;
-    border: none;
+    width: 100%;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    font: inherit;
     padding: 0;
     text-align: left;
-    width: 100%;
-    cursor: pointer;
-    font-family: inherit;
 }
 
 .cardTitle {
-    margin: 0;
-    font-size: 15px;
-    font-weight: 500;
-    color: var(--color-text-main);
-    line-height: 1.4;
     display: -webkit-box;
+    margin: 0;
+    overflow: hidden;
+    color: #24201e;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0;
+    line-height: 1.35;
+    -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
     line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+}
+
+.titleButton:hover .cardTitle {
+    color: #9a4f5b;
 }
 
 .variantsRow {
     display: flex;
+    min-height: 22px;
     align-items: center;
-    gap: 6px;
-    margin-top: 2px;
+    gap: 7px;
 }
 
 .variantSwatch {
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    border: 1.5px solid var(--color-border-soft);
-    cursor: pointer;
+    width: 17px;
+    height: 17px;
     padding: 0;
-    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid rgba(36, 32, 30, 0.18);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: border-color 200ms ease, box-shadow 200ms ease, transform 200ms ease;
 }
 
-.variantSwatch[style*="background-color: rgb(255, 255, 255)"],
-.variantSwatch[style*="background-color: #fff"],
-.variantSwatch[style*="background-color: white"] {
-    border-color: #ddd;
-}
-
-.variantSwatch:hover {
-    transform: scale(1.1);
-}
-
+.variantSwatch:hover,
 .variantActive {
-    border-color: #4a1c40;
-    box-shadow: 0 0 0 1px #4a1c40;
-    transform: scale(1.1);
+    border-color: #24201e;
+    box-shadow: 0 0 0 2px #ffffff, 0 0 0 3px #24201e;
+    transform: scale(1.08);
 }
 
 .variantMore {
-    font-size: 11px;
-    color: var(--color-text-muted);
-    font-weight: 500;
-    margin-left: 4px;
+    color: #7d7069;
+    font-size: 12px;
+    font-weight: 800;
 }
 
-/* Pricing */
 .priceContainer {
     display: flex;
-    align-items: center;
-    gap: 8px;
+    align-items: baseline;
     flex-wrap: wrap;
+    gap: 8px;
     margin-top: auto;
-    padding-top: 4px;
 }
 
 .offerPrice {
-    font-weight: 700;
-    font-size: 16px;
-    color: var(--color-text-main);
+    color: #087f5b;
+    font-size: 18px;
+    font-weight: 900;
+    letter-spacing: 0;
 }
 
 .originalPrice {
+    color: #9a8d86;
     font-size: 13px;
-    color: var(--color-text-muted);
+    font-weight: 700;
     text-decoration: line-through;
 }
 
 .discountBadge {
+    padding: 3px 7px;
+    border-radius: 999px;
+    background: #e8f7f0;
+    color: #087f5b;
+    font-size: 11px;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.trustRow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.trustRow span {
+    padding: 5px 8px;
+    border-radius: 999px;
+    background: #f8f0eb;
+    color: #695c55;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.stockStatus {
+    margin: 0;
+    color: #087f5b;
     font-size: 12px;
-    font-weight: 700;
-    color: #27ae60;
+    font-weight: 800;
+}
+
+.modalOverlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: rgba(29, 24, 21, 0.54);
+    backdrop-filter: blur(5px);
+}
+
+.quickViewModal {
+    position: relative;
+    width: min(920px, 100%);
+    max-height: min(720px, 92vh);
+    display: grid;
+    grid-template-columns: minmax(280px, 0.95fr) minmax(300px, 1fr);
+    overflow: hidden;
+    border-radius: 20px;
+    background: #fffdfb;
+    box-shadow: 0 34px 80px rgba(20, 16, 13, 0.32);
+}
+
+.modalClose {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    z-index: 2;
+    width: 38px;
+    height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(36, 32, 30, 0.1);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.9);
+    color: #24201e;
+    cursor: pointer;
+}
+
+.modalImageWrap {
+    min-height: 100%;
+    background: #f4ebe7;
+}
+
+.modalImage {
+    width: 100%;
+    height: 100%;
+    min-height: 520px;
+    object-fit: cover;
+}
+
+.modalContent {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 42px;
+    overflow-y: auto;
+}
+
+.modalCategory {
+    margin: 0;
+    color: #9b6670;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+.modalTitle {
+    margin: 0;
+    color: #24201e;
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: 0;
+    line-height: 1.15;
+}
+
+.modalRating {
+    margin: 0;
+    color: #6d625b;
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.modalCopy {
+    margin: 0;
+    color: #5e534e;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.modalTrust {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+.modalTrust span {
+    min-height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    border: 1px solid #eadfda;
+    border-radius: 12px;
+    color: #4f4641;
+    font-size: 12px;
+    font-weight: 800;
+    text-align: center;
+}
+
+.modalActions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.modalAdd,
+.modalDetails {
+    height: 48px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 900;
+    transition: background 200ms ease, border-color 200ms ease, color 200ms ease, transform 200ms ease;
+}
+
+.modalAdd {
+    border: 1px solid #24201e;
+    background: #24201e;
+    color: #ffffff;
+}
+
+.modalDetails {
+    border: 1px solid #ead0d5;
+    background: #fff7f8;
+    color: #8e4c58;
+}
+
+.modalAdd:hover,
+.modalDetails:hover {
+    transform: translateY(-1px);
+}
+
+.modalAdd:hover {
+    border-color: #c76f7e;
+    background: #c76f7e;
+}
+
+@media (max-width: 900px) {
+    .wishlistBtn,
+    .imageActions {
+        opacity: 1;
+        transform: none;
+    }
+
+    .quickViewModal {
+        grid-template-columns: 1fr;
+        max-height: 92vh;
+        overflow-y: auto;
+    }
+
+    .modalImage {
+        min-height: 320px;
+        aspect-ratio: 4 / 3;
+    }
+
+    .modalContent {
+        padding: 28px;
+    }
+}
+
+@media (max-width: 640px) {
+    .card {
+        border-radius: 14px;
+    }
+
+    .cardBody {
+        gap: 8px;
+        padding: 11px;
+    }
+
+    .statusBadge {
+        top: 8px;
+        left: 8px;
+        padding: 5px 8px;
+        font-size: 9px;
+    }
+
+    .wishlistBtn {
+        top: 8px;
+        right: 8px;
+        width: 32px;
+        height: 32px;
+    }
+
+    .imageActions {
+        right: 8px;
+        bottom: 8px;
+        left: 8px;
+        grid-template-columns: 1fr;
+    }
+
+    .quickViewBtn {
+        display: none;
+    }
+
+    .quickAddBtn {
+        height: 38px;
+        font-size: 12px;
+    }
+
+    .metaRow {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 3px;
+        font-size: 11px;
+    }
+
+    .cardTitle {
+        font-size: 14px;
+    }
+
+    .variantsRow {
+        display: none;
+    }
+
+    .offerPrice {
+        font-size: 15px;
+    }
+
+    .originalPrice,
+    .discountBadge,
+    .stockStatus {
+        font-size: 10px;
+    }
+
+    .trustRow {
+        display: none;
+    }
+
+    .modalOverlay {
+        padding: 12px;
+    }
+
+    .quickViewModal {
+        border-radius: 16px;
+    }
+
+    .modalTitle {
+        font-size: 24px;
+    }
+
+    .modalTrust,
+    .modalActions {
+        grid-template-columns: 1fr;
+    }
 }
