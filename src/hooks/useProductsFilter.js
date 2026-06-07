@@ -77,7 +77,7 @@ export function useProductsFilter(allProducts = [], initialFilters = {}) {
     const [selectedCategory, setSelectedCategory] = useState(initialFilters.category || null)
     const [selectedTypes, setSelectedTypes] = useState(initialFilters.type ? [initialFilters.type] : [])
     const [selectedColors, setSelectedColors] = useState(initialFilters.color ? [initialFilters.color] : [])
-    const [priceRange, setPriceRange] = useState({ min: 0, max: 10000 }) // Default wide range
+    const [priceRange, setPriceRange] = useState({ min: 0, max: 10000 }) // The wide default lets price behave like an optional preset, not a required filter.
     const [sortOption, setSortOption] = useState(initialFilters.sort || '')
 
     // --- External Sync (if props change) ---
@@ -93,14 +93,15 @@ export function useProductsFilter(allProducts = [], initialFilters = {}) {
     // --- 1. Pre-computation / Normalization ---
     // Memoize the normalized products to avoid re-calculating on every render
     const normalizedProducts = useMemo(() => {
-        return allProducts.map(p => ({
+        return allProducts.map((p, index) => ({
             ...p,
             // Create a unified searchable string (include all variant colors)
             _searchable: `${p.name} ${p.category} ${p.type} ${p.tags?.join(' ') || ''} ${p.color} ${p.variants?.map(v => v.color).join(' ') || ''}`.toLowerCase(),
             // Ensure normalized color exists
             _normalizedColor: p.normalizedColor || normalizeColor(p.color),
             // Ensure specific price exists
-            _price: p.price || 0
+            _price: p.offerPrice || p.price || 0,
+            _catalogIndex: index
         }))
     }, [allProducts])
 
@@ -167,7 +168,17 @@ export function useProductsFilter(allProducts = [], initialFilters = {}) {
         } else if (sortOption === 'price_desc') {
             sorted.sort((a, b) => b._price - a._price)
         } else if (sortOption === 'newest') {
-            // Assuming there isn't a date field yet
+            // Tricky logic: products do not have dates yet, so "new" is inferred from badges
+            // and original catalogue order to create a stable shopping sort.
+            sorted.sort((a, b) => Number(Boolean(b.isNew || b.badge)) - Number(Boolean(a.isNew || a.badge)) || a._catalogIndex - b._catalogIndex)
+        } else if (sortOption === 'best_sellers') {
+            sorted.sort((a, b) => {
+                const aScore = /best|trending/i.test(a.badge || '') ? 2 : Number((a.discountPercent || 0) >= 20)
+                const bScore = /best|trending/i.test(b.badge || '') ? 2 : Number((b.discountPercent || 0) >= 20)
+                return bScore - aScore || a._catalogIndex - b._catalogIndex
+            })
+        } else if (sortOption === 'discount') {
+            sorted.sort((a, b) => (b.discountPercent || 0) - (a.discountPercent || 0) || a._price - b._price)
         }
         return sorted
     }, [filteredProducts, sortOption])
@@ -238,7 +249,12 @@ export function useProductsFilter(allProducts = [], initialFilters = {}) {
         if (type === 'color') toggleColor(value)
         if (type === 'type') toggleType(value)
         if (type === 'search') setSearch('')
+        if (type === 'price') setPriceRange({ min: 0, max: 10000 })
     }, [toggleColor, toggleType])
+
+    const setPricePreset = useCallback((range) => {
+        setPriceRange(range)
+    }, [])
 
     return {
         products: sortedProducts,
@@ -262,7 +278,8 @@ export function useProductsFilter(allProducts = [], initialFilters = {}) {
             toggleType,
             toggleColor,
             clearAllFilters,
-            removeFilter
+            removeFilter,
+            setPricePreset
         }
     }
 }
