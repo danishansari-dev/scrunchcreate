@@ -3,49 +3,61 @@
 .container {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 16px;
     align-items: center;
+    gap: 8px;
+    margin: 0 0 18px;
 }
 
 .chip {
     display: inline-flex;
+    min-height: 34px;
     align-items: center;
-    gap: 6px;
-    padding: 6px 12px;
-    background: var(--color-surface-soft);
-    border: 1px solid var(--color-border-soft);
-    border-radius: 20px;
+    gap: 8px;
+    padding: 0 8px 0 14px;
+    border: 1px solid #ead0d5;
+    border-radius: 999px;
+    background: #fff8f8;
+    color: #4b3535;
     font-size: 13px;
-    color: var(--color-text-main);
-    transition: all 0.2s;
-}
-
-.chip:hover {
-    background: var(--color-border-soft);
+    font-weight: 700;
+    box-shadow: 0 6px 18px rgba(55, 45, 39, 0.05);
 }
 
 .remove {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    display: flex;
+    width: 22px;
+    height: 22px;
+    display: inline-flex;
     align-items: center;
-    font-size: 16px;
-    color: var(--color-text-muted);
+    justify-content: center;
+    border: 0;
+    border-radius: 999px;
+    background: rgba(215, 137, 149, 0.16);
+    color: #8e4c58;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 1;
+    transition: background 200ms ease, color 200ms ease;
 }
 
 .remove:hover {
-    color: var(--color-error);
+    background: #c76f7e;
+    color: #ffffff;
 }
 
 .clearAll {
-    background: none;
-    border: none;
-    color: var(--color-primary);
-    font-size: 13px;
+    min-height: 34px;
+    padding: 0 2px;
+    border: 0;
+    background: transparent;
+    color: #7d7069;
     cursor: pointer;
+    font-size: 13px;
+    font-weight: 800;
     text-decoration: underline;
-    margin-left: 8px;
+    text-underline-offset: 4px;
+}
+
+.clearAll:hover {
+    color: #24201e;
 }
