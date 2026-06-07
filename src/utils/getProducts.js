@@ -8,6 +8,17 @@
 import productsData from '../data/products.json';
 import { getProductPrice } from './pricing';
 import { normalizeColor, getColorHex } from './colorNormalization';
+import cloudinaryMap from '../../scripts/cloudinary-url-map.json';
+
+/**
+ * Resolves a local asset relative path to its Cloudinary CDN URL
+ * @danishansari-dev path - The relative asset path (e.g., /assets/products/...)
+ * @returns The Cloudinary CDN URL or original path if no mapping is found
+ */
+function toCloudinary(path) {
+  if (!path) return path;
+  return cloudinaryMap[path] || path;
+}
 
 let cachedProducts = null;
 
@@ -20,7 +31,8 @@ export function getProducts() {
         const hasVariants = product.variants && product.variants.length > 0;
 
         // Use the first image from the images array if 'image' property is missing
-        const mainImage = product.image || (product.images && product.images.length > 0 ? product.images[0] : null) || (hasVariants && product.variants[0].images && product.variants[0].images[0]);
+        const rawMainImage = product.image || (product.images && product.images.length > 0 ? product.images[0] : null) || (hasVariants && product.variants[0].images && product.variants[0].images[0]);
+        const mainImage = toCloudinary(rawMainImage);
 
         // If the product has no image at all, skip it
         if (!mainImage) return null;
@@ -33,10 +45,12 @@ export function getProducts() {
           const availableColors = product.variants.map(v => normalizeColor(v.color));
           const defaultVariant = product.variants[0];
 
+          const productImages = (product.images || (defaultVariant.images && defaultVariant.images.length > 0 ? defaultVariant.images : [rawMainImage])).map(toCloudinary);
+
           return {
             ...product,
             ...pricing,
-            images: product.images || (defaultVariant.images && defaultVariant.images.length > 0 ? defaultVariant.images : [mainImage]),
+            images: productImages,
             primaryImage: mainImage,
             color: product.color || defaultVariant.color,
             normalizedColor: normalizeColor(product.color || defaultVariant.color),
@@ -45,15 +59,16 @@ export function getProducts() {
               ...v,
               colorHex: getColorHex(v.color),
               normalizedColor: normalizeColor(v.color),
-              images: v.images || []
+              images: (v.images || []).map(toCloudinary)
             }))
           };
         } else {
           // Standard case for the current flat products.json
+          const productImages = (product.images || [rawMainImage]).map(toCloudinary);
           return {
             ...product,
             ...pricing,
-            images: product.images || [mainImage],
+            images: productImages,
             primaryImage: mainImage,
             normalizedColor: normalizeColor(product.color),
             availableColors: product.color ? [normalizeColor(product.color)] : [],
@@ -89,6 +104,7 @@ export function getProductVariants(product) {
     p.id !== product.id
   );
 }
+
 
 
 
