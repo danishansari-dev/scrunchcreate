@@ -1,268 +1,316 @@
 @import '../theme/theme.css';
 
 .footer {
-  background: #f8e1e4;
-  color: #333;
+  border-top: 1px solid rgba(54, 45, 39, 0.08);
+  background: #f4ede7;
+  color: #24201e;
+}
+
+.newsletterBand,
+.main,
+.bottom {
+  width: min(100%, 1440px);
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.newsletterBand {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(360px, 0.72fr);
+  gap: 28px;
+  align-items: center;
+  padding: 44px 20px 36px;
+}
+
+.newsletterCopy {
+  max-width: 720px;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  color: #9b6670;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.newsletterCopy h2 {
+  margin: 0;
+  color: #24201e;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: 0;
+  line-height: 1.18;
+}
+
+.newsletterForm {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  padding: 8px;
+  border: 1px solid rgba(54, 45, 39, 0.08);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: 0 16px 42px rgba(42, 34, 29, 0.08);
+}
+
+.inputLabel {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.newsletterInput {
+  width: 100%;
+  min-width: 0;
+  height: 44px;
+  padding: 0 16px;
+  border: 0;
+  background: transparent;
+  color: #24201e;
+  font-size: 14px;
+  font-weight: 700;
+  outline: none;
+}
+
+.newsletterInput::placeholder {
+  color: #9a8d86;
+}
+
+.subscribeBtn {
+  height: 44px;
+  padding: 0 22px;
+  border: 1px solid #24201e;
+  border-radius: 999px;
+  background: #24201e;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 900;
+  transition: background 200ms ease, border-color 200ms ease, transform 200ms ease;
+}
+
+.subscribeBtn:hover {
+  border-color: #c76f7e;
+  background: #c76f7e;
+  transform: translateY(-1px);
 }
 
 .main {
-  padding: 48px 24px;
+  padding: 26px 20px 42px;
 }
 
 .grid {
-  max-width: 1280px;
-  margin: 0 auto;
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 32px;
+  grid-template-columns: minmax(260px, 1.5fr) minmax(150px, 0.7fr) minmax(150px, 0.7fr) minmax(280px, 1.2fr);
+  gap: 42px;
+  padding-top: 34px;
+  border-top: 1px solid rgba(54, 45, 39, 0.1);
 }
 
-@media (min-width: 768px) {
-  .grid {
-    grid-template-columns: 1.5fr 1fr 1fr 1.5fr;
-    gap: 32px;
-  }
-}
-
-@media (min-width: 1024px) {
-  .grid {
-    grid-template-columns: 2fr 1fr 1fr 1.8fr;
-    gap: 48px;
-  }
-}
-
-/* Brand & Contact Section */
-.brandSection {
+.brandSection,
+.section,
+.instagramSection {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
 .brand {
-  color: #e78592;
-  font-family: var(--font-heading);
-  font-size: 22px;
-  font-weight: 600;
+  color: #24201e;
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: 0;
   text-decoration: none;
-  text-transform: uppercase;
-  letter-spacing: 1px;
 }
 
 .brand:hover {
-  color: #d66d7a;
+  color: #9a4f5b;
 }
 
-.contactInfo {
+.address {
+  max-width: 330px;
+  margin: 0;
+  color: #5e534e;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.7;
+}
+
+.contactStack {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-.address {
-  color: #555;
-  margin: 0;
-  font-size: 13px;
-  line-height: 1.6;
+.contactLink,
+.link,
+.instagramHandle {
+  color: #5e534e;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: color 200ms ease;
 }
 
 .contactLink {
-  color: #555;
-  text-decoration: none;
-  font-size: 13px;
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 8px;
-  transition: color 0.2s;
+  gap: 9px;
 }
 
-.contactLink:hover {
-  color: #e78592;
-}
-
-.contactIcon {
-  font-size: 14px;
-}
-
-/* Link Sections */
-.section {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
+.contactLink:hover,
+.link:hover,
+.instagramHandle:hover {
+  color: #9a4f5b;
 }
 
 .sectionTitle {
   margin: 0;
+  color: #24201e;
   font-size: 13px;
-  font-weight: 700;
-  color: #333;
-  letter-spacing: 0.5px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
 .linkList {
-  list-style: none;
-  padding: 0;
-  margin: 0;
   display: flex;
   flex-direction: column;
   gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-.link {
-  color: #555;
-  text-decoration: none;
-  font-size: 13px;
-  transition: color 0.2s;
-}
-
-.link:hover {
-  color: #e78592;
-  text-decoration: underline;
-}
-
-/* Newsletter Section */
-.newsletterSection {
+.instagramHeader {
   display: flex;
-  flex-direction: column;
+  align-items: baseline;
+  justify-content: space-between;
   gap: 14px;
 }
 
-.newsletterText {
-  margin: 0;
-  color: #555;
-  font-size: 13px;
-  line-height: 1.5;
+.instagramGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
 }
 
-.newsletterForm {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+.instagramTile {
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #eadfda;
 }
 
-.newsletterInput {
-  padding: 10px 14px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 13px;
-  background: #fff;
-  color: #333;
-  outline: none;
-  transition: border-color 0.2s;
+.instagramTile img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  transition: transform 260ms ease;
 }
 
-.newsletterInput::placeholder {
-  color: #999;
-}
-
-.newsletterInput:focus {
-  border-color: #e78592;
-}
-
-.subscribeBtn {
-  background: #e78592;
-  color: #fff;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 4px;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  cursor: pointer;
-  transition: background 0.2s;
-  align-self: flex-start;
-}
-
-.subscribeBtn:hover {
-  background: #d66d7a;
-}
-
-/* Social Section */
-.socialSection {
-  margin-top: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.socialTitle {
-  margin: 0;
-  font-size: 13px;
-  font-weight: 600;
-  color: #333;
+.instagramTile:hover img {
+  transform: scale(1.06);
 }
 
 .socials {
   display: flex;
-  gap: 8px;
   flex-wrap: wrap;
+  gap: 8px;
 }
 
 .socialLink {
-  width: 28px;
-  height: 28px;
-  border-radius: 4px;
-  background: transparent;
-  display: flex;
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: #555;
-  transition: all 0.2s;
+  border: 1px solid rgba(54, 45, 39, 0.1);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.66);
+  color: #4d423d;
   text-decoration: none;
+  transition: background 200ms ease, color 200ms ease, transform 200ms ease;
 }
 
 .socialLink:hover {
-  color: #e78592;
+  background: #24201e;
+  color: #ffffff;
   transform: translateY(-2px);
 }
 
-/* Bottom Copyright */
 .bottom {
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
-  background: #f8e1e4;
-}
-
-.bottomInner {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 16px 24px;
-  text-align: center;
-}
-
-.copy {
-  color: #666;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 20px 24px;
+  border-top: 1px solid rgba(54, 45, 39, 0.1);
+  color: #6d625b;
   font-size: 12px;
+  font-weight: 800;
 }
 
-/* Mobile Responsive */
-@media (max-width: 767px) {
-  .main {
-    padding: 32px 20px;
-  }
-
+@media (max-width: 980px) {
+  .newsletterBand,
   .grid {
-    gap: 32px;
-  }
-
-  .brand {
-    font-size: 20px;
-  }
-
-  /* More breathing room between brand/contact info */
-  .brandSection {
-    gap: 20px;
-  }
-
-  /* Add spacing between each footer section */
-  .section {
-    padding-bottom: 8px;
+    grid-template-columns: 1fr;
   }
 
   .newsletterForm {
-    flex-direction: column;
+    max-width: 620px;
+  }
+
+  .instagramGrid {
+    max-width: 520px;
+  }
+}
+
+@media (max-width: 640px) {
+  .newsletterBand {
+    padding: 34px 16px 26px;
+  }
+
+  .newsletterCopy h2 {
+    font-size: 24px;
+  }
+
+  .newsletterForm {
+    grid-template-columns: 1fr;
+    border-radius: 18px;
   }
 
   .subscribeBtn {
     width: 100%;
+  }
+
+  .main {
+    padding: 22px 16px 32px;
+  }
+
+  .grid {
+    gap: 30px;
+  }
+
+  .instagramHeader {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .bottom {
+    align-items: flex-start;
+    flex-direction: column;
+    padding-right: 16px;
+    padding-left: 16px;
   }
 }
