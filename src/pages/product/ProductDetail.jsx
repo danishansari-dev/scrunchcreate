@@ -8,6 +8,7 @@ import { useToast } from '../../components/ToastContext'
 import { useWishlist } from '../../context/WishlistContext'
 import ProductCard from '../../components/ProductCard'
 import { AnimatePresence } from 'framer-motion'
+import { getColorDisplayName, getColorHex, isCanonicalColor, normalizeColor } from '../../utils/colorNormalization'
 
 // Heart Icon SVG components
 const HeartOutline = () => (
@@ -72,6 +73,25 @@ const TruckIcon = () => (
   </svg>
 )
 
+/**
+ * Returns only variants whose color field is a true shopper-facing color.
+ * @danishansari-dev product - Product detail record with optional variants
+ * @returns Variants safe to show as color swatches
+ */
+function getDisplayColorVariants(product) {
+  if (!product?.variants) return []
+  return product.variants.filter((variant) => isCanonicalColor(variant.color))
+}
+
+/**
+ * Formats a raw color value for product-detail labels.
+ * @danishansari-dev rawColor - Raw color value from product data
+ * @returns Display-ready color name
+ */
+function formatColorLabel(rawColor) {
+  return getColorDisplayName(normalizeColor(rawColor))
+}
+
 export default function ProductDetail() {
   const { slug } = useParams()
   const navigate = useNavigate()
@@ -99,7 +119,8 @@ export default function ProductDetail() {
           setProduct(productData)
           // Default to first variant if available
           if (productData.variants && productData.variants.length > 0) {
-            setSelectedVariant(productData.variants[0])
+            // Prefer real colors for the color UI; style/type variants are still preserved as product data.
+            setSelectedVariant(getDisplayColorVariants(productData)[0] || productData.variants[0])
           }
           setSelectedImageIndex(0)
           setQuantity(1)
@@ -125,8 +146,7 @@ export default function ProductDetail() {
 
   // Get color variants directly from the product
   const colorVariants = useMemo(() => {
-    if (!product || !product.variants) return []
-    return product.variants
+    return getDisplayColorVariants(product)
   }, [product])
 
   // Derive fabric type from product type
@@ -228,6 +248,9 @@ export default function ProductDetail() {
   const mainImage = images[selectedImageIndex] || product.images?.[0] || '/placeholder.jpg';
   const targetIdGlobal = product.id || product._id;
   const inWishlist = isInWishlist(targetIdGlobal)
+  const selectedColorLabel = selectedVariant && isCanonicalColor(selectedVariant.color)
+    ? formatColorLabel(selectedVariant.color)
+    : ''
 
   return (
     <div className={styles.page}>
@@ -328,7 +351,7 @@ export default function ProductDetail() {
               <div className={styles.colorVariantsSection}>
                 <span className={styles.colorVariantsLabel}>
                   Available Colors: <span style={{ fontWeight: 400, color: 'var(--color-text-muted)' }}>
-                    {selectedVariant ? selectedVariant.color : ''}
+                    {selectedColorLabel}
                   </span>
                 </span>
                 <div className={styles.colorSwatches}>
@@ -340,14 +363,14 @@ export default function ProductDetail() {
                         setSelectedImageIndex(0) // Reset image index on variant change
                       }}
                       className={`${styles.colorSwatch} ${selectedVariant && variant.id === selectedVariant.id ? styles.colorSwatchActive : ''}`}
-                      aria-label={`Select ${variant.color} variant`}
-                      title={variant.color}
+                      aria-label={`Select ${formatColorLabel(variant.color)} variant`}
+                      title={formatColorLabel(variant.color)}
                     >
                       <span
                         className={styles.swatchInner}
-                        style={{ background: variant.colorHex || '#ddd' }}
+                        style={{ background: variant.colorHex || getColorHex(variant.color) || '#ddd' }}
                       />
-                      <span className={styles.swatchLabel}>{variant.color}</span>
+                      <span className={styles.swatchLabel}>{formatColorLabel(variant.color)}</span>
                     </button>
                   ))}
                 </div>
@@ -355,10 +378,10 @@ export default function ProductDetail() {
             )}
 
             {/* Current Color Display (when no variants or single color) */}
-            {colorVariants.length <= 1 && product.color && (
+            {colorVariants.length <= 1 && product.color && isCanonicalColor(product.color) && (
               <div className={styles.colorSection}>
                 <span className={styles.colorLabel}>Color</span>
-                <span className={styles.colorValue}>{product.color}</span>
+                <span className={styles.colorValue}>{formatColorLabel(product.color)}</span>
               </div>
             )}
 

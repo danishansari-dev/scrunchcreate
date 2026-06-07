@@ -53,6 +53,8 @@ export const CANONICAL_COLORS = [
     'multi'
 ];
 
+const CANONICAL_COLOR_SET = new Set(CANONICAL_COLORS);
+
 // Map of raw color values to their canonical form
 // Keys are lowercase with hyphens, values are canonical colors
 const COLOR_ALIASES = {
@@ -168,6 +170,16 @@ export function normalizeColor(rawColor) {
     // If not recognized, return the normalized form anyway
     // (allows for new colors without breaking)
     return normalized;
+}
+
+/**
+ * Checks whether a raw value represents a real shopper-facing color.
+ * @danishansari-dev rawColor - Raw color or variant value from product data
+ * @returns True when the value normalizes to a canonical color
+ */
+export function isCanonicalColor(rawColor) {
+    const normalized = normalizeColor(rawColor);
+    return Boolean(normalized && CANONICAL_COLOR_SET.has(normalized));
 }
 
 /**

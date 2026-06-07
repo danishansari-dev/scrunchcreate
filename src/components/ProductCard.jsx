@@ -6,6 +6,7 @@ import { useCart } from '../components/CartContext'
 import { useToast } from '../components/ToastContext'
 import { useWishlist } from '../context/WishlistContext'
 import { formatTypeName, getCategoryDisplayName } from '../utils/catalogDisplay'
+import { getColorDisplayName, isCanonicalColor, normalizeColor } from '../utils/colorNormalization'
 import { createSlug } from '../utils/productUtils'
 
 /**
@@ -101,7 +102,11 @@ export default function ProductCard({ product, index = 0 }) {
     const primaryImage = imageSet[imageOffset] || imageSet[0]
     const secondaryImage = imageSet[imageOffset + 1] || imageSet[1]
     const hasMultipleImages = Boolean(secondaryImage && secondaryImage !== primaryImage)
-    const isMultiVariant = product.variants && product.variants.length > 1
+    const visibleColorVariants = useMemo(
+        () => product.variants?.filter((variant) => isCanonicalColor(variant.color)) || [],
+        [product.variants]
+    )
+    const isMultiVariant = visibleColorVariants.length > 1
     const badge = getMerchBadge(product, index)
     const rating = (4.7 + (index % 3) * 0.1).toFixed(1)
     const reviewCount = 18 + (index % 6) * 7
@@ -264,7 +269,7 @@ export default function ProductCard({ product, index = 0 }) {
 
                     {isMultiVariant && (
                         <div className={styles.variantsRow} aria-label="Available colors">
-                            {product.variants.slice(0, 5).map((variant, variantIndex) => {
+                            {visibleColorVariants.slice(0, 5).map((variant, variantIndex) => {
                                 const isSelected = activeVariantId === variant.id || (!activeVariantId && variantIndex === 0)
                                 return (
                                     <button
@@ -272,7 +277,7 @@ export default function ProductCard({ product, index = 0 }) {
                                         type="button"
                                         className={`${styles.variantSwatch} ${isSelected ? styles.variantActive : ''}`}
                                         style={{ backgroundColor: variant.colorHex || variant.color || '#ccc' }}
-                                        aria-label={`Select ${variant.color} variant`}
+                                        aria-label={`Select ${getColorDisplayName(normalizeColor(variant.color))} variant`}
                                         onClick={(event) => {
                                             event.stopPropagation()
                                             event.preventDefault()
@@ -281,8 +286,8 @@ export default function ProductCard({ product, index = 0 }) {
                                     />
                                 )
                             })}
-                            {product.variants.length > 5 && (
-                                <span className={styles.variantMore}>+{product.variants.length - 5}</span>
+                            {visibleColorVariants.length > 5 && (
+                                <span className={styles.variantMore}>+{visibleColorVariants.length - 5}</span>
                             )}
                         </div>
                     )}
