@@ -15,12 +15,15 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  position: relative;
+  min-width: 0;
   gap: 24px;
 }
 
 .brand {
   display: flex;
   align-items: center;
+  min-width: 0;
   gap: 12px;
   font-size: 18px;
   font-weight: 400;
@@ -33,6 +36,9 @@
   font-weight: 600;
   font-size: 24px;
   color: var(--color-text-main);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .nav {
@@ -211,6 +217,7 @@
 .utilityLinks {
   display: flex;
   align-items: center;
+  flex-shrink: 0;
   gap: 20px;
 }
 
@@ -220,6 +227,8 @@
   padding: 8px;
   border-radius: var(--radius-sm);
   color: var(--color-text-muted);
+  /* Explicit pointer ensures correct cursor on non-touch screens */
+  cursor: pointer;
 }
 
 .iconButton:hover {
@@ -352,6 +361,7 @@
   background: none;
   border: none;
   color: var(--color-text-muted);
+  cursor: pointer;
 }
 
 .menuButton:hover {
@@ -370,10 +380,12 @@
   position: relative;
   display: flex;
   align-items: center;
+  min-width: 0;
 }
 
 .searchInput {
   width: 0;
+  min-width: 0;
   padding: 0;
   border: none;
   background: transparent;
@@ -404,8 +416,8 @@
     padding: 10px 12px;
   }
 
-  /* Tighter brand text so it doesn't crowd icons */
   .brandText {
+    max-width: 154px;
     font-size: 18px;
   }
 
@@ -413,14 +425,37 @@
     gap: 8px;
   }
 
+  .brand {
+    flex: 1;
+  }
+
+  .headerSearchActive .brand {
+    /* Search is the highest-friction mobile task, so free brand space while the input is open. */
+    flex: 0 1 0;
+  }
+
+  .headerSearchActive .brandText {
+    display: none;
+  }
+
   .utilityLinks {
-    gap: 8px;
+    gap: 0px;
+  }
+
+  .headerSearchActive .utilityLinks {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .headerSearchActive .searchWrapper {
+    flex: 1;
   }
 
   .iconButton,
   .cartBadge,
   .menuButton {
-    padding: 6px;
+    /* Increase padding to 12px so that 20px/24px SVG meets 44px WCAG touch target guideline */
+    padding: 12px;
   }
 
   /* Prevent cart badge overflow */
@@ -436,9 +471,53 @@
     font-size: 13px;
     padding: 6px 8px;
   }
+
+  .headerSearchActive .searchWrapper.searchOpen .searchInput {
+    width: 100%;
+  }
 }
 
-/* ─── Mobile Drawer ─── */
+@media (max-width: 420px) {
+  .header {
+    padding-right: 8px;
+    padding-left: 8px;
+  }
+
+  .brandText {
+    max-width: 116px;
+    font-size: 16px;
+  }
+
+  .utilityLinks {
+    gap: 4px;
+  }
+}
+
+/* 320px — absolute minimum; collapse brand text earlier to preserve icon space. */
+@media (max-width: 340px) {
+  .header {
+    padding-right: 6px;
+    padding-left: 6px;
+  }
+
+  .brandText {
+    max-width: 96px;
+    font-size: 14px;
+  }
+
+  .utilityLinks {
+    gap: 0px;
+  }
+
+  .iconButton,
+  .cartBadge,
+  .menuButton {
+    /* Increase padding to 12px so that 20px/24px SVG meets 44px WCAG touch target guideline */
+    padding: 12px;
+  }
+}
+
+/* Mobile Drawer */
 .mobileOverlay {
   display: none;
 }
@@ -449,7 +528,7 @@
 
 @media (max-width: 1023px) {
 
-  /* Backdrop behind drawer — blocks interaction with page */
+  /* Backdrop blocks page taps while the drawer owns navigation focus. */
   .mobileOverlay {
     display: block;
     position: fixed;
@@ -466,25 +545,27 @@
     visibility: visible;
   }
 
-  /* Slide-in drawer from left */
+  /* Keep the hidden drawer out of layout width while preserving the slide animation. */
   .mobileDrawer {
     display: block;
     position: fixed;
     top: 0;
     left: 0;
-    width: 280px;
+    width: min(82vw, 280px);
     height: 100%;
     background: var(--color-surface);
     z-index: 1001;
-    transform: translateX(-100%);
+    transform: translate3d(-105%, 0, 0);
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     overflow-y: auto;
+    overflow-x: hidden;
+    contain: layout paint;
     box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
     padding-top: 56px;
   }
 
   .mobileDrawerOpen {
-    transform: translateX(0);
+    transform: translate3d(0, 0, 0);
   }
 
   .mobileNavList {
@@ -516,5 +597,22 @@
     height: 1px;
     background: var(--color-border-soft);
     margin: 8px 24px;
+  }
+
+  .drawerCloseButton {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    /* 10px padding + 24px SVG = 44px touch target */
+    padding: 10px;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    z-index: 1002;
+  }
+
+  .drawerCloseButton:hover {
+    color: var(--color-text-main);
   }
 }
