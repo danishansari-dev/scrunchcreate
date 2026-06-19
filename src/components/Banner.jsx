@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import styles from './Banner.module.css'
 
 const slide1 = '/assets/marketing/slider1.png'
