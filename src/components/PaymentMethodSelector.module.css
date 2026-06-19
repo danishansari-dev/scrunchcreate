@@ -1,0 +1,174 @@
+@import '../theme/theme.css';
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.methodWrapper {
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.methodWrapper:has(.methodActive) {
+  border-color: var(--color-primary);
+}
+
+.method {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: background 0.15s;
+  position: relative;
+}
+
+.method:hover {
+  background: var(--color-surface-soft);
+}
+
+.methodActive {
+  background: var(--color-surface-soft);
+}
+
+.radio {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.radioIndicator {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--color-border-soft);
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-left: auto;
+  position: relative;
+  transition: border-color 0.15s;
+}
+
+.methodActive .radioIndicator {
+  border-color: var(--color-primary);
+}
+
+.methodActive .radioIndicator::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 10px;
+  height: 10px;
+  background: var(--color-primary);
+  border-radius: 50%;
+}
+
+.methodIcon {
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.methodInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.methodLabel {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-main);
+}
+
+.methodDesc {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  margin-top: 2px;
+}
+
+.extraFee {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  background: var(--color-surface);
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+}
+
+/* Expanded method body */
+.methodBody {
+  padding: 0 16px 14px;
+  border-top: 1px solid var(--color-border-soft);
+  padding-top: 14px;
+  animation: expandIn 0.2s ease-out;
+}
+
+@keyframes expandIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.methodInput {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 14px;
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  background: var(--color-surface);
+  color: var(--color-text-main);
+  transition: border-color 0.2s;
+}
+
+.methodInput:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.methodHint {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+.cardFields {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cardRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.codInfo {
+  margin-top: 0;
+}
+
+.codNote {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+  background: #fff8e1;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid #ffe082;
+}
