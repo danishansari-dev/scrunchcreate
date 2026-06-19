@@ -4,9 +4,9 @@
  * auto-fill), payment selection, and order summary. Follows the best patterns
  * identified in the e-commerce checkout analysis research.
  */
-import React, { useState, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { useCart } from '../../components/CartContext'
+import { useCart } from '../../context/CartContext'
 import { useToast } from '../../components/ToastContext'
 import { placeOrder } from '../../services/api'
 import CouponField from '../../components/CouponField'
@@ -128,7 +128,34 @@ export default function Checkout() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    const validationErrors = validateForm(form, paymentMethod, paymentDetails)
+
+    // Why this exists: Prevent cross-site scripting (XSS) and invalid characters in order database
+    // and downstream systems (like WhatsApp deep linking).
+    const sanitizedForm = {
+      email: form.email.trim().toLowerCase(),
+      phone: form.phone.replace(/\D/g, '').slice(0, 10),
+      name: form.name.replace(/[<>]/g, '').trim(),
+      pincode: form.pincode.replace(/\D/g, '').slice(0, 6),
+      addressLine1: form.addressLine1.replace(/[<>]/g, '').trim(),
+      addressLine2: form.addressLine2 ? form.addressLine2.replace(/[<>]/g, '').trim() : '',
+      city: form.city.replace(/[<>]/g, '').trim(),
+      state: form.state.replace(/[<>]/g, '').trim(),
+      country: form.country,
+    }
+
+    const sanitizedPaymentDetails = {
+      ...paymentDetails,
+      upiId: paymentDetails.upiId ? paymentDetails.upiId.replace(/[<>]/g, '').trim() : '',
+      cardNumber: paymentDetails.cardNumber ? paymentDetails.cardNumber.replace(/\D/g, '') : '',
+      cardExpiry: paymentDetails.cardExpiry ? paymentDetails.cardExpiry.trim() : '',
+      cardCvv: paymentDetails.cardCvv ? paymentDetails.cardCvv.replace(/\D/g, '') : '',
+    }
+
+    // Update form states so UI displays the cleaned-up/trimmed text
+    setForm(sanitizedForm)
+    setPaymentDetails(sanitizedPaymentDetails)
+
+    const validationErrors = validateForm(sanitizedForm, paymentMethod, sanitizedPaymentDetails)
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors)
       // Scroll to first error
@@ -146,16 +173,16 @@ export default function Checkout() {
           quantity: item.qty
         })),
         shippingAddress: {
-          street: form.addressLine1 + (form.addressLine2 ? ', ' + form.addressLine2 : ''),
-          city: form.city,
-          state: form.state,
-          zipCode: form.pincode,
-          country: form.country,
+          street: sanitizedForm.addressLine1 + (sanitizedForm.addressLine2 ? ', ' + sanitizedForm.addressLine2 : ''),
+          city: sanitizedForm.city,
+          state: sanitizedForm.state,
+          zipCode: sanitizedForm.pincode,
+          country: sanitizedForm.country,
         },
         contact: {
-          name: form.name,
-          email: form.email,
-          phone: form.phone,
+          name: sanitizedForm.name,
+          email: sanitizedForm.email,
+          phone: sanitizedForm.phone,
         },
         payment: {
           method: paymentMethod,
