@@ -100,3 +100,23 @@
 .maxPrice {
   width: 75%;
 }
+
+/* Ensure filter controls have comfortable touch targets on mobile */
+@media (max-width: 480px) {
+  .select,
+  .input {
+    /* 44px satisfies WCAG touch target minimum */
+    height: 44px;
+    font-size: 16px; /* Prevents iOS auto-zoom on focus */
+  }
+
+  .apply {
+    height: 46px;
+    font-size: 15px;
+  }
+
+  .clear {
+    height: 36px;
+    font-size: 14px;
+  }
+}
