@@ -1,4 +1,3 @@
-import React from 'react';
 import styles from './InstagramSection.module.css';
 
 // Sample curated list of Instagram reels with thumbnail images
