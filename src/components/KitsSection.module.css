@@ -2,6 +2,8 @@
 
 .kitsSection {
     padding: 48px 24px;
+    width: 100%;
+    min-width: 0;
     max-width: 1400px;
     margin: 0 auto;
 }
@@ -9,6 +11,7 @@
 .kitsGrid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
+    min-width: 0;
     gap: 20px;
 }
 
@@ -94,13 +97,18 @@
 @media (max-width: 767px) {
     .kitsSection {
         padding: 32px 16px;
+        overflow-x: clip;
     }
 
-    /* Horizontal scroll on mobile for kits */
+    /* The carousel exists to preserve large tap targets without forcing the page wider. */
     .kitsGrid {
         grid-template-columns: none;
         display: flex;
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
         overflow-x: auto;
+        overflow-y: hidden;
         scroll-snap-type: x mandatory;
         gap: 12px;
         padding-bottom: 8px;
@@ -111,12 +119,11 @@
         display: none;
     }
 
-    /* Smaller cards so the next one peeks into view */
     .kitCard {
-        min-width: 230px;
+        flex: 0 0 min(76vw, 250px);
+        min-width: 0;
         max-width: 250px;
         scroll-snap-align: start;
-        flex-shrink: 0;
     }
 
     .kitName {
