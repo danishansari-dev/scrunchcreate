@@ -1,121 +1,127 @@
 @import '../../theme/theme.css';
 
 .page {
-  padding: 32px 16px 48px;
+  padding: 32px 16px 120px; /* Extra bottom padding for mobile sticky CTA */
   min-height: 60vh;
   overflow-x: clip;
 }
 
 .container {
-  max-width: 1024px;
+  max-width: 1100px;
   margin: 0 auto;
 }
 
-.title {
-  margin: 0 0 24px;
+.pageTitle {
+  margin: 0 0 28px;
   font-size: 24px;
   color: var(--color-text-main);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lockIcon {
+  font-size: 20px;
 }
 
 .content {
   display: grid;
   min-width: 0;
-  gap: 24px;
-  grid-template-columns: 1.5fr 1fr;
+  gap: 28px;
+  grid-template-columns: 1.4fr 1fr;
+  align-items: start;
 }
 
-@media (max-width: 768px) {
-  .content {
-    grid-template-columns: 1fr;
-  }
-
-  .summaryCard {
-    position: static;
-  }
+/* ─── Form Column ─── */
+.formColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
-/* Form Styles */
-.formCard {
+.section {
   background: var(--color-surface-soft);
   border: 1px solid var(--color-border-soft);
   border-radius: var(--radius-lg);
   padding: 24px;
-  min-width: 0;
 }
 
-.formTitle {
+.sectionTitle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   margin: 0 0 20px;
-  font-size: 18px;
+  font-size: 17px;
   color: var(--color-text-main);
 }
 
-.formGrid {
-  display: grid;
-  gap: 16px;
+.sectionNumber {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  border-radius: 50%;
+  font-size: 14px;
+  font-weight: 700;
+  flex-shrink: 0;
 }
 
-.formRow {
+/* ─── Form Fields ─── */
+.fieldRow {
   display: grid;
-  gap: 16px;
+  gap: 14px;
   grid-template-columns: 1fr 1fr;
-  min-width: 0;
+  margin-bottom: 14px;
 }
 
-@media (max-width: 480px) {
-  .page {
-    padding: 24px 12px 40px;
-  }
-
-  .title {
-    margin-bottom: 16px;
-    font-size: 22px;
-  }
-
-  .formCard,
-  .summaryCard {
-    padding: 16px;
-  }
-
-  .formRow {
-    grid-template-columns: 1fr;
-    gap: 14px;
-  }
-}
-
-.formGroup {
+.fieldGroup {
   display: flex;
   flex-direction: column;
   min-width: 0;
-  gap: 6px;
+  gap: 5px;
+  margin-bottom: 14px;
 }
 
-.formGroupFull {
-  grid-column: 1 / -1;
+.fieldRow .fieldGroup {
+  margin-bottom: 0;
 }
 
 .label {
-  font-size: 14px;
+  font-size: 13px;
   color: var(--color-text-muted);
   font-weight: 500;
+}
+
+.optional {
+  font-weight: 400;
+  opacity: 0.6;
 }
 
 .input {
   width: 100%;
   min-width: 0;
-  /* 44px minimum satisfies the WCAG 2.5.5 touch target guideline. */
   min-height: 44px;
   padding: 11px 14px;
   border: 1px solid var(--color-border-soft);
   border-radius: var(--radius-md);
   background: var(--color-surface);
   color: var(--color-text-main);
-  font-size: 16px; /* 16px prevents iOS auto-zoom on input focus */
+  font-size: 16px; /* 16px prevents iOS auto-zoom */
   transition: border-color 0.2s ease;
 }
 
 .input:focus {
   outline: none;
   border-color: var(--color-primary);
+}
+
+.input:disabled {
+  background: var(--color-surface-soft);
+  color: var(--color-text-muted);
+  cursor: not-allowed;
 }
 
 .inputError {
@@ -127,7 +133,27 @@
   color: #e53935;
 }
 
-/* Summary Sidebar */
+.paymentError {
+  font-size: 12px;
+  color: #e53935;
+  margin-top: 8px;
+}
+
+/* ─── Delivery Estimate ─── */
+.deliveryEstimate {
+  font-size: 13px;
+  color: #2e7d32;
+  background: #e8f5e9;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 14px;
+}
+
+.deliveryEstimate strong {
+  color: #1b5e20;
+}
+
+/* ─── Summary Sidebar ─── */
 .summaryCard {
   background: var(--color-surface-soft);
   border: 1px solid var(--color-border-soft);
@@ -135,7 +161,7 @@
   padding: 24px;
   height: fit-content;
   position: sticky;
-  top: 100px;
+  top: 90px;
   min-width: 0;
 }
 
@@ -147,40 +173,86 @@
 
 .summaryList {
   list-style: none;
-  margin: 0 0 16px;
+  margin: 0 0 8px;
   padding: 0;
   display: flex;
   flex-direction: column;
   gap: 12px;
-  max-height: 240px;
+  max-height: 280px;
   overflow-y: auto;
 }
 
 .summaryItem {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: 10px;
   font-size: 14px;
-  color: var(--color-text-muted);
+}
+
+.summaryItemThumb {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.summaryThumbImg {
+  width: 48px;
+  height: 48px;
+  background-size: cover;
+  background-position: center;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border-soft);
+  background-color: var(--color-border-soft);
+}
+
+.summaryItemQtyBadge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 20px;
+  height: 20px;
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.summaryItemInfo {
+  flex: 1;
+  min-width: 0;
 }
 
 .summaryItemName {
-  flex: 1;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  margin-right: 8px;
-}
-
-.summaryItemQty {
+  display: block;
+  font-size: 13px;
   color: var(--color-text-main);
   font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.summaryItemMeta {
+  display: block;
+  font-size: 11px;
+  color: var(--color-text-muted);
+  margin-top: 2px;
+}
+
+.summaryItemPrice {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-main);
+  white-space: nowrap;
 }
 
 .summaryDivider {
   height: 1px;
   background: var(--color-border-soft);
-  margin: 16px 0;
+  margin: 14px 0;
 }
 
 .summaryRow {
@@ -191,19 +263,41 @@
   margin-bottom: 8px;
 }
 
+.freeLabel {
+  color: #2e7d32;
+  font-weight: 600;
+}
+
+.discountRow {
+  color: #2e7d32;
+  font-weight: 500;
+}
+
 .summaryTotal {
   display: flex;
   justify-content: space-between;
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 700;
   color: var(--color-text-main);
   margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--color-border-soft);
+}
+
+.savingsCallout {
+  font-size: 13px;
+  color: #2e7d32;
+  background: #e8f5e9;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  margin-top: 12px;
+  text-align: center;
 }
 
 .placeOrderBtn {
   width: 100%;
-  height: 52px; /* Slightly taller for better thumb reach */
-  margin-top: 20px;
+  height: 52px;
+  margin-top: 16px;
   border: none;
   border-radius: var(--radius-md);
   background: var(--color-primary);
@@ -212,7 +306,6 @@
   font-weight: 600;
   cursor: pointer;
   transition: opacity 0.2s ease, transform 0.15s ease;
-  /* iOS safe-area: keep button above the home indicator */
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
@@ -229,7 +322,62 @@
   cursor: not-allowed;
 }
 
-/* Empty State */
+/* ─── Mobile Sticky Footer ─── */
+.mobileSticky {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border-soft);
+  padding: 12px 16px;
+  padding-bottom: max(12px, env(safe-area-inset-bottom));
+  z-index: 100;
+  gap: 10px;
+  box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.mobileSummaryToggle {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  min-width: 0;
+}
+
+.mobileSummaryToggle span:first-child {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-text-main);
+}
+
+.mobileSummaryArrow {
+  font-size: 12px;
+  color: var(--color-primary);
+}
+
+.mobilePlaceOrderBtn {
+  flex: 1;
+  height: 44px;
+  border: none;
+  border-radius: var(--radius-md);
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.mobilePlaceOrderBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ─── Empty State ─── */
 .empty {
   text-align: center;
   padding: 48px 16px;
@@ -239,4 +387,50 @@
 .emptyLink {
   color: var(--color-primary);
   text-decoration: underline;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+  .content {
+    grid-template-columns: 1fr;
+  }
+
+  .summaryCard {
+    position: static;
+    /* On mobile, summary card still shows but sticky footer is the CTA */
+  }
+
+  .mobileSticky {
+    display: flex;
+    align-items: center;
+  }
+
+  /* Hide desktop place order button on mobile */
+  .placeOrderBtn {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .page {
+    padding: 20px 12px 120px;
+  }
+
+  .pageTitle {
+    margin-bottom: 16px;
+    font-size: 20px;
+  }
+
+  .section {
+    padding: 16px;
+  }
+
+  .fieldRow {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .sectionTitle {
+    font-size: 15px;
+  }
 }
