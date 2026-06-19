@@ -1,9 +1,9 @@
-import React, { useMemo, useState, useEffect } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import styles from './ProductDetail.module.css'
 import { getProductBySlug, getProductsByCategory } from '../../services/api'
 
-import { useCart } from '../../components/CartContext'
+import { useCart } from '../../context/CartContext'
 import { useToast } from '../../components/ToastContext'
 import { useWishlist } from '../../context/WishlistContext'
 import ProductCard from '../../components/ProductCard'
