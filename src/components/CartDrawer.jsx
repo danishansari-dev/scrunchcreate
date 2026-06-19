@@ -1,6 +1,6 @@
-import React, { useEffect, useCallback, useState } from 'react'
+import { useEffect, useCallback, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { useCart } from './CartContext'
+import { useCart } from '../context/CartContext'
 import styles from './CartDrawer.module.css'
 
 export default function CartDrawer() {
