@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { AnimatePresence } from 'framer-motion'
 import ProductCard from './ProductCard'
 import SectionHeader from './SectionHeader'
