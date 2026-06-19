@@ -31,14 +31,20 @@ export function generateWhatsAppLink(order) {
     })
     .join('\n\n');
 
-  // Compute subtotal and shipping fee dynamically (free delivery threshold at ₹499)
   const subtotal = order.items.reduce((sum, item) => {
     const price = item.product?.offerPrice || item.product?.price || 0;
     return sum + (price * item.quantity);
   }, 0);
 
-  const delivery = subtotal >= 499 ? 0 : 49;
-  const total = subtotal + delivery;
+  // Why this exists: Use the order's pre-calculated values to accurately reflect coupon discounts,
+  // COD fees, and delivery rates decided during checkout. Falls back to dynamic math if fields are absent.
+  const delivery = order.deliveryFee !== undefined ? order.deliveryFee : (subtotal >= 499 ? 0 : 49);
+  const couponDiscount = order.couponDiscount || 0;
+  const codFee = order.codFee || 0;
+  const total = order.total !== undefined ? order.total : (subtotal + delivery - couponDiscount + codFee);
+  
+  const couponText = order.coupon ? `\n- Coupon Discount: −₹${couponDiscount} (${order.coupon})` : '';
+  const codText = codFee > 0 ? `\n- COD Handling Fee: ₹${codFee}` : '';
 
   // Resolve shipping address parameters
   const addr = order.shippingAddress || {};
@@ -51,7 +57,7 @@ ${itemsText}
 
 *Summary:*
 - Subtotal: ₹${subtotal}
-- Delivery: ${delivery === 0 ? 'FREE' : `₹${delivery}`}
+- Delivery: ${delivery === 0 ? 'FREE' : `₹${delivery}`}${couponText}${codText}
 - *Total: ₹${total}*
 
 *Shipping Address:*
