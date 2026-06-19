@@ -4,8 +4,8 @@
  * Follows Baymard Institute best practice: hidden by default behind
  * a "Have a promo code?" link, expanding only when clicked.
  */
-import React, { useState } from 'react'
-import { useCart } from './CartContext'
+import { useState } from 'react'
+import { useCart } from '../context/CartContext'
 import styles from './CouponField.module.css'
 
 export default function CouponField() {
