@@ -4,8 +4,8 @@
  * slide-out CartDrawer. Includes cross-sell recommendations, coupon
  * field, savings messaging, and trust badges near the checkout CTA.
  */
-import React, { useState, useEffect } from 'react'
-import { useCart } from '../../components/CartContext'
+import { useState, useEffect } from 'react'
+import { useCart } from '../../context/CartContext'
 import CouponField from '../../components/CouponField'
 import TrustBadges from '../../components/TrustBadges'
 import styles from './Cart.module.css'
