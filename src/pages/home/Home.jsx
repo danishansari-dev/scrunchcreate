@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import Banner from '../../components/Banner'
 import FeaturesSection from '../../components/FeaturesSection'
 import CollectionsSection from '../../components/CollectionsSection'
@@ -15,14 +15,18 @@ import styles from './Home.module.css'
  */
 export default function Home() {
   const [products, setProducts] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
+        setIsLoading(true)
         const data = await getProducts()
         setProducts(data)
       } catch (err) {
         console.error(err)
+      } finally {
+        setIsLoading(false)
       }
     }
     fetchProducts()
@@ -47,6 +51,7 @@ export default function Home() {
           products={newArrivals}
           showViewAllLink
           viewAllHref="/products?category=scrunchie"
+          isLoading={isLoading}
         />
 
         {/* FIX #6: Hardcoded kits section with 3 curated kits */}
