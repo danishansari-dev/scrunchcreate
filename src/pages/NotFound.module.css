@@ -1,0 +1,224 @@
+.container {
+  position: relative;
+  min-height: calc(100vh - 120px); /* Adjust based on navbar/footer height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-10) 24px;
+  background-color: var(--color-cream);
+  overflow: hidden;
+  font-family: var(--font-body);
+  color: var(--color-text-main);
+}
+
+/* Glowing background ambient lighting */
+.backgroundGlow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(231, 133, 146, 0.15) 0%, rgba(253, 246, 239, 0) 70%);
+  z-index: 1;
+  pointer-events: none;
+  animation: glowPulse 8s ease-in-out infinite alternate;
+}
+
+.content {
+  position: relative;
+  z-index: 2;
+  max-width: 540px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: var(--radius-lg);
+  padding: 48px 36px;
+  box-shadow: 0 10px 30px rgba(74, 28, 64, 0.04);
+  animation: fadeIn 0.8s ease-out;
+}
+
+/* Floating aesthetic bubbles */
+.decorations {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+}
+
+.bubble {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.8) 0%, rgba(231, 133, 146, 0.25) 100%);
+  box-shadow: inset -2px -2px 6px rgba(74, 28, 64, 0.05);
+}
+
+.bubbleOne {
+  top: 15%;
+  left: 10%;
+  width: 45px;
+  height: 45px;
+  animation: floatBubble 5s ease-in-out infinite;
+}
+
+.bubbleTwo {
+  bottom: 20%;
+  right: 8%;
+  width: 60px;
+  height: 60px;
+  animation: floatBubble 7s ease-in-out infinite 1s;
+}
+
+.bubbleThree {
+  top: 45%;
+  right: 15%;
+  width: 30px;
+  height: 30px;
+  animation: floatBubble 6s ease-in-out infinite 0.5s;
+}
+
+.errorCode {
+  font-family: var(--font-display);
+  font-size: 110px;
+  font-weight: 300;
+  line-height: 1;
+  margin: 0 0 10px 0;
+  background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-primary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  letter-spacing: -2px;
+  animation: scaleBounce 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 500;
+  color: var(--color-secondary);
+  margin: 0 0 16px 0;
+}
+
+.description {
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--color-text-muted);
+  margin: 0 0 32px 0;
+}
+
+.actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+
+.primaryBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-secondary);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 500;
+  padding: 12px 28px;
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  transition: var(--transition-fast);
+  box-shadow: 0 4px 12px rgba(74, 28, 64, 0.15);
+}
+
+.primaryBtn:hover {
+  background-color: var(--color-primary-strong);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(246, 114, 128, 0.25);
+}
+
+.secondaryBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  color: var(--color-secondary);
+  font-size: 15px;
+  font-weight: 500;
+  padding: 11px 27px;
+  border: 1px solid var(--color-secondary);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  transition: var(--transition-fast);
+}
+
+.secondaryBtn:hover {
+  background-color: rgba(74, 28, 64, 0.04);
+  transform: translateY(-2px);
+}
+
+/* Animations */
+@keyframes glowPulse {
+  0% {
+    opacity: 0.8;
+    transform: translate(-50%, -50%) scale(0.95);
+  }
+  100% {
+    opacity: 1.2;
+    transform: translate(-50%, -50%) scale(1.05);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleBounce {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes floatBubble {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-12px) scale(1.04);
+  }
+}
+
+@media (max-width: 580px) {
+  .content {
+    padding: 36px 24px;
+    margin: 0 12px;
+  }
+  .errorCode {
+    font-size: 80px;
+  }
+  .title {
+    font-size: 26px;
+  }
+  .actions {
+    flex-direction: column;
+    gap: 12px;
+  }
+  .primaryBtn, .secondaryBtn {
+    width: 100%;
+  }
+}
