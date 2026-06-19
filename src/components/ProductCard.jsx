@@ -1,8 +1,9 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+// Why: Framer Motion imports may flag as unused depending on ESLint JSX configuration.
 import { motion } from 'framer-motion' // eslint-disable-line no-unused-vars
 import styles from './ProductCard.module.css'
-import { useCart } from '../components/CartContext'
+import { useCart } from '../context/CartContext'
 import { useToast } from '../components/ToastContext'
 import { useWishlist } from '../context/WishlistContext'
 import { formatTypeName, getCategoryDisplayName } from '../utils/catalogDisplay'
