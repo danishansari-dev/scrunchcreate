@@ -463,7 +463,8 @@
 }
 
 .qtyBtn {
-  width: 36px;
+  /* Ensure touch target width is at least 44px for WCAG mobile accessibility */
+  width: 44px;
   height: 100%;
   background: none;
   border: none;
