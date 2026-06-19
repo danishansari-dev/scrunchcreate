@@ -132,6 +132,8 @@ const COLOR_ALIASES = {
     'dark-blue': 'navy',
     'light-pink': 'baby-pink',
     'dark-pink': 'hot-pink',
+
+
     'light-purple': 'lilac',
     'dark-purple': 'purple',
 
@@ -163,7 +165,7 @@ export function normalizeColor(rawColor) {
     }
 
     // Check if it's already a canonical color
-    if (CANONICAL_COLORS.includes(normalized)) {
+    if (CANONICAL_COLOR_SET.has(normalized)) {
         return normalized;
     }
 
