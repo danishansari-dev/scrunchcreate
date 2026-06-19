@@ -61,12 +61,18 @@
   display: none;
   background-color: var(--color-secondary);
   height: 36px;
+  width: 100%;
+  max-width: 100%;
   overflow: hidden;
   position: relative;
+  contain: paint;
 }
 
 .tickerContent {
   height: 100%;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
   display: flex;
   align-items: center;
 }
