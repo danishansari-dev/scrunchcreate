@@ -92,3 +92,28 @@
         padding: 1.5rem 1rem;
     }
 }
+
+/* Very small phones \u2014 shrink heading further to prevent overflow */
+@media (max-width: 400px) {
+    .whyChooseSection {
+        padding: 2.5rem 0.875rem;
+    }
+
+    .sectionTitle {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .featureCard {
+        padding: 1.25rem 0.875rem;
+    }
+
+    .iconWrapper {
+        width: 56px;
+        height: 56px;
+    }
+
+    .featureTitle {
+        font-size: 1rem;
+    }
+}
