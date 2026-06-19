@@ -535,8 +535,9 @@
     .wishlistBtn {
         top: 8px;
         right: 8px;
-        width: 32px;
-        height: 32px;
+        /* Ensure touch target size is at least 44px on mobile viewports */
+        width: 44px;
+        height: 44px;
     }
 
     .imageActions {
@@ -551,7 +552,8 @@
     }
 
     .quickAddBtn {
-        height: 38px;
+        /* Ensure touch target height is at least 44px on mobile viewports */
+        height: 44px;
         font-size: 12px;
     }
 
@@ -560,6 +562,10 @@
         flex-direction: column;
         gap: 3px;
         font-size: 11px;
+    }
+
+    .rating span {
+        display: none;
     }
 
     .cardTitle {
@@ -575,12 +581,12 @@
     }
 
     .originalPrice,
-    .discountBadge,
-    .stockStatus {
+    .discountBadge {
         font-size: 10px;
     }
 
-    .trustRow {
+    .trustRow,
+    .stockStatus {
         display: none;
     }
 
