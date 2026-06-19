@@ -114,8 +114,9 @@
 
 .closeBtn {
     display: none;
-    width: 34px;
-    height: 34px;
+    /* Ensure touch target is at least 44px for mobile devices */
+    width: 44px;
+    height: 44px;
     align-items: center;
     justify-content: center;
     border: 1px solid #eadfda;
@@ -234,7 +235,8 @@
 .categoryPill,
 .priceChip {
     display: inline-flex;
-    min-height: 36px;
+    /* Ensure minimum height of 44px for touch targets */
+    min-height: 44px;
     align-items: center;
     justify-content: center;
     gap: 8px;
@@ -328,7 +330,8 @@
 .showMore {
     display: inline-flex;
     margin-top: 12px;
-    padding: 0;
+    /* Add vertical padding so hit target height is at least 44px */
+    padding: 12px 0;
 }
 
 .drawerFooter {
