@@ -1,5 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react'
+// Why: WishlistContext exports both WishlistProvider and useWishlist hook, triggering react-refresh warnings.
+import { createContext, useContext, useState, useEffect, useCallback } from 'react'
 
 const WishlistContext = createContext()
 
