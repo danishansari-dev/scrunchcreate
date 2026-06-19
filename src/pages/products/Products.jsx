@@ -1,8 +1,9 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 import styles from './Products.module.css'
 import ProductCard from '../../components/ProductCard'
+import ProductSkeleton from '../../components/ProductSkeleton'
 import FilterSidebar from '../../components/products/FilterSidebar'
 import ActiveFilters from '../../components/products/ActiveFilters'
 import ProductSearch from '../../components/products/ProductSearch'
@@ -73,6 +74,7 @@ export default function Products() {
   const { category: categorySlug } = useParams()
   const [searchParams] = useSearchParams()
   const [allProducts, setAllProducts] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false)
   const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_COUNT)
   const [recentlyViewedIds, setRecentlyViewedIds] = useState([])
@@ -80,10 +82,13 @@ export default function Products() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
+        setIsLoading(true)
         const data = await getProducts()
         setAllProducts(data)
       } catch (err) {
         console.error('Failed to load products', err)
+      } finally {
+        setIsLoading(false)
       }
     }
 
@@ -284,7 +289,15 @@ export default function Products() {
 
           <ActiveFilters activeFilters={filterState} handlers={handlers} />
 
-          {filteredProducts.length === 0 ? (
+          {isLoading ? (
+            <ul className={styles.grid}>
+              {Array.from({ length: 8 }).map((_, idx) => (
+                <li key={idx} style={{ listStyle: 'none' }}>
+                  <ProductSkeleton />
+                </li>
+              ))}
+            </ul>
+          ) : filteredProducts.length === 0 ? (
             <div className={styles.noResults}>
               <h2>No matching pieces</h2>
               <p>Try a different color, category, or price range.</p>
