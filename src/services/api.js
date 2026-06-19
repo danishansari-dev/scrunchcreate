@@ -255,11 +255,20 @@ export const placeOrder = async (orderData) => {
     })
     .filter((item) => item.product);
 
+  // Build enriched order with contact, payment, coupon, and fee data
+  // so the confirmation page can display full details without recalculating.
   const newOrder = {
     _id: `order_${Date.now()}`,
     user: user ? user._id : 'guest',
     items: orderItems,
     shippingAddress: orderData.shippingAddress,
+    contact: orderData.contact || null,
+    payment: orderData.payment || null,
+    coupon: orderData.coupon || null,
+    couponDiscount: orderData.couponDiscount || 0,
+    deliveryFee: orderData.deliveryFee ?? 0,
+    codFee: orderData.codFee || 0,
+    total: orderData.total || 0,
     status: 'Pending',
     createdAt: new Date().toISOString(),
   };
