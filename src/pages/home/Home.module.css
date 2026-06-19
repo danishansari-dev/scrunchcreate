@@ -3,13 +3,24 @@
 .homeContainer {
   display: flex;
   flex-direction: column;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
 }
 
 .contentWrapper {
   display: flex;
   flex-direction: column;
+  min-width: 0;
+  width: 100%;
   gap: 0;
   /* Gaps handled by individual sections */
+}
+
+.contentWrapper > * {
+  /* Mobile rails live inside flex children, so prevent their scroll width from widening the page. */
+  min-width: 0;
+  width: 100%;
 }
 
 @media (max-width: 767px) {
