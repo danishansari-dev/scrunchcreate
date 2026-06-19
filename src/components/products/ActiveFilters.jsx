@@ -1,4 +1,3 @@
-import React from 'react'
 import styles from './ActiveFilters.module.css'
 import { formatTypeName } from '../../utils/catalogDisplay'
 import { getColorDisplayName } from '../../utils/colorNormalization'
