@@ -15,6 +15,7 @@
 .contentWithFilters,
 .discoveryRail {
   width: min(100%, 1440px);
+  min-width: 0;
   margin-right: auto;
   margin-left: auto;
 }
@@ -94,7 +95,10 @@
 .categoryBar {
   display: flex;
   gap: 10px;
+  max-width: 100%;
   overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
   padding: 10px 0 18px;
   scrollbar-width: none;
 }
@@ -188,7 +192,8 @@
   top: 72px;
   z-index: 7;
   display: grid;
-  grid-template-columns: minmax(220px, 1fr) minmax(420px, auto);
+  /* Ensure inner columns can shrink below their content size — prevents overflow. */
+  grid-template-columns: minmax(0, 1fr) minmax(0, auto);
   gap: 18px;
   align-items: center;
   margin-bottom: 18px;
@@ -213,6 +218,7 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  min-width: 0;
   gap: 10px;
 }
 
@@ -292,6 +298,7 @@
 .grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
+  min-width: 0;
   gap: 24px;
   margin: 0;
   padding: 0;
@@ -503,6 +510,10 @@
 }
 
 @media (max-width: 640px) {
+  .page {
+    padding: 18px 12px 48px;
+  }
+
   .title {
     font-size: 28px;
   }
@@ -541,6 +552,11 @@
     grid-template-columns: 1fr;
   }
 
+  .toolbar {
+    /* Static toolbar gives small screens more reading space after filters are chosen. */
+    position: static;
+  }
+
   .filterToggleBtn,
   .sortSelect {
     width: 100%;
@@ -554,5 +570,44 @@
   .railGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
+  }
+}
+
+/* Minimum supported width — keep text and chips from wrapping awkwardly on 320px phones. */
+@media (max-width: 380px) {
+  .page {
+    padding: 14px 10px 40px;
+  }
+
+  .title {
+    font-size: 24px;
+  }
+
+  .categoryChip {
+    font-size: 12px;
+    padding: 0 10px;
+    min-height: 36px;
+  }
+
+  .toolbar {
+    padding: 10px;
+    border-radius: 14px;
+  }
+
+  .categoryTitle {
+    font-size: 18px;
+  }
+
+  .grid,
+  .railGrid {
+    gap: 8px;
+  }
+
+  .headerStats div {
+    padding: 10px 6px;
+  }
+
+  .headerStats strong {
+    font-size: 18px;
   }
 }
