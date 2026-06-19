@@ -213,3 +213,33 @@
     cursor: pointer;
   }
 }
+
+/* Minimum supported width \u2014 prevent headline overflow on 320px phones. */
+@media (max-width: 380px) {
+  .mobileHeroOverlay {
+    height: 65vh;
+    min-height: 380px;
+  }
+
+  .heroContent {
+    padding: 24px 16px 32px;
+  }
+
+  .line1 {
+    font-size: 22px;
+  }
+
+  .line2 {
+    font-size: 28px;
+  }
+
+  .heroSubtitle {
+    font-size: 12px;
+  }
+
+  .primaryBtn,
+  .secondaryBtn {
+    height: 44px;
+    font-size: 13px;
+  }
+}
