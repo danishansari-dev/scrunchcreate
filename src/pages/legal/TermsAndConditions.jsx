@@ -1,4 +1,3 @@
-import React from 'react'
 import styles from './TermsAndConditions.module.css'
 
 export default function TermsAndConditions() {
