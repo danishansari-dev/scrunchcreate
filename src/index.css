@@ -7,19 +7,42 @@
   box-sizing: border-box;
 }
 
+/* Smooth scrolling improves perceived performance on anchor links. */
+html {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+  scroll-behavior: smooth;
+}
+
 body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
   background-color: var(--color-surface);
   color: var(--color-text-main);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.6;
+  /* Eliminates the grey flash on tap in iOS WebKit */
+  -webkit-tap-highlight-color: transparent;
 }
-
 
 #root {
   min-height: 100vh;
+  /* Use dvh as fallback for browsers that support it (iOS Safari 15.4+) */
+  min-height: 100dvh;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
   background-color: var(--color-surface);
+}
+
+img,
+svg,
+video {
+  max-width: 100%;
 }
 
 h1,
@@ -31,7 +54,7 @@ h6 {
   font-family: var(--font-heading);
   font-weight: 500;
   line-height: 1.3;
-  letter-spacing: -0.02em;
+  letter-spacing: 0;
   color: var(--heading);
 }
 
@@ -39,4 +62,17 @@ a {
   text-decoration: none;
   color: inherit;
   transition: var(--transition);
+}
+
+/*
+ * Eliminate 300ms tap delay on all interactive elements.
+ * This makes buttons/links feel instant on mobile browsers.
+ */
+a,
+button,
+input,
+select,
+textarea,
+[role="button"] {
+  touch-action: manipulation;
 }
