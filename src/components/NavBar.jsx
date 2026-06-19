@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import styles from './NavBar.module.css';
-import { useCart } from '../components/CartContext';
+import { useCart } from '../context/CartContext';
 import { getProducts } from '../services/api';
 import { useWishlist } from '../context/WishlistContext';
 
@@ -287,7 +287,9 @@ const NavBar = () => {
       <div
         className={`${styles.mobileOverlay} ${isMenuOpen ? styles.mobileOverlayVisible : ''}`}
         onClick={() => setIsMenuOpen(false)}
-        aria-hidden="true"
+        role="button"
+        tabIndex={-1}
+        aria-label="Close navigation menu"
       />
       <nav
         className={`${styles.mobileDrawer} ${isMenuOpen ? styles.mobileDrawerOpen : ''}`}
