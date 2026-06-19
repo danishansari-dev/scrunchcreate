@@ -3,6 +3,7 @@
 .page {
     padding: 32px 16px 48px;
     min-height: 80vh;
+    overflow-x: clip;
 }
 
 .header {
@@ -34,12 +35,31 @@
     margin: 0;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    min-width: 0;
     gap: 24px;
 }
 
 @media (max-width: 600px) {
+    .page {
+        padding: 24px 12px 40px;
+    }
+
+    .header {
+        margin-bottom: 24px;
+    }
+
+    .title {
+        font-size: 28px;
+    }
+
     .grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+    }
+
+    .emptyState {
+        margin-top: 16px;
+        padding: 44px 16px;
     }
 }
 
