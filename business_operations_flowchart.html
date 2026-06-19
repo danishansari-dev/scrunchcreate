@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scrunch & Create — Business Operations & User Flow Analysis</title>
+    <!-- Load Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Load Mermaid JS from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'base',
+            themeVariables: {
+                primaryColor: '#FFF0F5',
+                primaryTextColor: '#3D2C2C',
+                primaryBorderColor: '#DB7093',
+                lineColor: '#8B3A4A',
+                secondaryColor: '#E6F2FF',
+                tertiaryColor: '#FFF5E6'
+            }
+        });
+    </script>
+    
+    <style>
+        :root {
+            --rose-deep: #8B3A4A;
+            --rose-medium: #DB7093;
+            --rose-light: #FFF0F5;
+            --rose-accent: #E8C4D8;
+            --dark-brown: #3D2C2C;
+            --bg-gray: #FAF7F8;
+            --card-border: rgba(219, 112, 147, 0.15);
+            --shadow: 0 10px 30px rgba(139, 58, 74, 0.05);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-gray);
+            color: var(--dark-brown);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Outfit', sans-serif;
+            color: var(--rose-deep);
+            font-weight: 600;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #5B2333 0%, #8B3A4A 50%, #C9A87C 100%);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            color: white;
+            font-size: 2.8rem;
+            margin: 0 0 10px 0;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin: 0;
+            font-weight: 300;
+        }
+
+        .meta-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-top: 15px;
+            backdrop-filter: blur(5px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            border: 1px solid var(--card-border);
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s ease;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            border-bottom: 2px solid var(--rose-light);
+            padding-bottom: 10px;
+            margin-top: 0;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Mermaid Diagram Wrapper */
+        .diagram-container {
+            background: #FFFFFF;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 20px 0;
+            overflow-x: auto;
+            display: flex;
+            justify-content: center;
+        }
+
+        .mermaid {
+            width: 100%;
+            text-align: center;
+        }
+
+        /* Executive Summary layout */
+        .exec-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .exec-item {
+            background: var(--bg-gray);
+            border-radius: 10px;
+            padding: 20px;
+            border-left: 4px solid var(--rose-medium);
+        }
+
+        .exec-item h3 {
+            margin-top: 0;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        /* Tables styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+
+        th {
+            background-color: var(--rose-deep);
+            color: white;
+            text-align: left;
+            padding: 12px 16px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 500;
+        }
+
+        td {
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        tr:nth-child(even) {
+            background-color: var(--bg-gray);
+        }
+
+        .badge {
+            background-color: var(--rose-light);
+            color: var(--rose-deep);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        /* API flow drawing */
+        .api-map {
+            background: #282c34;
+            color: #abb2bf;
+            font-family: monospace;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            white-space: pre;
+            line-height: 1.4;
+        }
+
+        /* Warning Banner */
+        .vs-code-tip {
+            background-color: #E6F2FF;
+            border-left: 4px solid #0066CC;
+            color: #004085;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+        }
+
+        .vs-code-tip a {
+            color: #004085;
+            text-decoration: underline;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>🎀 Scrunch & Create</h1>
+        <p>Business Operations & User Flow Analysis Report</p>
+        <span class="meta-badge">Fulfillment Audit: June 2026</span>
+    </div>
+
+    <div class="container">
+        
+        <div class="vs-code-tip">
+            <strong>💡 VS Code Tip:</strong> The default VS Code Markdown preview pane does not support rendering Mermaid diagrams. If you prefer to view them inside VS Code, install the <strong>Markdown Preview Mermaid Support</strong> extension. Otherwise, you can use this HTML page as a live, interactive visualization.
+        </div>
+
+        <!-- Section A: Executive Summary -->
+        <div class="card">
+            <h2 class="section-title">A. Executive Summary</h2>
+            <p>Scrunch & Create operates on a hybrid e-commerce setup. The storefront is a modern React SPA, but actual checkout transitions to direct-to-owner WhatsApp conversation to close payments, finalize design customization, and establish logistics options.</p>
+            
+            <div class="exec-grid">
+                <div class="exec-item">
+                    <h3>1. Storefront App (On-Platform)</h3>
+                    <p>React 19 + Vite 7 SPA hosted on Vercel. Catalog browsing, filters, cart, and checkout forms are managed locally in browser localStorage mock APIs.</p>
+                </div>
+                <div class="exec-item">
+                    <h3>2. Checkout Handoff</h3>
+                    <p>Submitting the checkout form triggers WhatsApp deep-linking with pre-filled cart details, shipping address, and order subtotal directed to the boutique owner.</p>
+                </div>
+                <div class="exec-item">
+                    <h3>3. Logistics & Booking</h3>
+                    <p>Boutique owner manually validates payments via UPI, processes physical stock check, packages items, and books shipping labels in Delhivery/Shiprocket dashboards.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section B: High-Level Architecture -->
+        <div class="card">
+            <h2 class="section-title">B. High-Level Architecture Diagram</h2>
+            <p>Shows the current operational layout mapping user interfaces, cloud services, manual backoffice steps, and third-party courier portals.</p>
+            <div class="diagram-container">
+                <pre class="mermaid">
+graph TD
+    %% Define Styles
+    classDef client fill:#FFF0F5,stroke:#DB7093,stroke-width:2px;
+    classDef cloud fill:#E6F2FF,stroke:#0066CC,stroke-width:2px;
+    classDef manual fill:#FFF5E6,stroke:#E68A00,stroke-width:2px;
+    classDef thirdparty fill:#EBF9EB,stroke:#2EB82E,stroke-width:2px;
+
+    %% Nodes
+    Customer([Customer Browser]):::client
+    Vercel[Vercel Edge Network<br/>Vite Static Files]:::cloud
+    Cloudinary[Cloudinary Image CDN<br/>WebP Product Assets]:::cloud
+    LocalStorage[(Browser LocalStorage<br/>Mock Cart/Orders/Wishlist)]:::client
+    WhatsAppLink[WhatsApp Deep-Link<br/>wa.me/917300969491]:::client
+    
+    WhatsAppWeb[WhatsApp Chat Channel<br/>Conversational Checkout]:::thirdparty
+    UPI[UPI/GPay/NetBanking<br/>Manual Payment Verification]:::thirdparty
+    OwnerPanel[Boutique Owner / Operations<br/>Manual Product Prep & Packing]:::manual
+    DelhiveryPanel[Delhivery Merchant Panel<br/>Manual Shipment Booking]:::thirdparty
+    Courier[Delhivery Courier Agent<br/>Doorstep Pickup & Delivery]:::thirdparty
+
+    %% Flows
+    Customer -->|Fetches Static Assets| Vercel
+    Customer -->|Displays CDN Images| Cloudinary
+    Customer -->|Reads/Writes Cart & Wishlist| LocalStorage
+    Customer -->|Triggers Order Submission| LocalStorage
+    Customer -->|Redirects to Checkout Link| WhatsAppLink
+    
+    WhatsAppLink -->|Loads Text Payload| WhatsAppWeb
+    WhatsAppWeb <-->|1. Agree Payment & Color Details| OwnerPanel
+    WhatsAppWeb -->|2. Share Payment Screenshot| OwnerPanel
+    
+    OwnerPanel -->|3. Verifies Transfer| UPI
+    OwnerPanel -->|4. Checks Physical Stock| OwnerPanel
+    OwnerPanel -->|5. Hand-crafts / Packs Items| OwnerPanel
+    OwnerPanel -->|6. Copy-Paste Shipping Details| DelhiveryPanel
+    
+    DelhiveryPanel -->|7. Dispatches Agent| Courier
+    Courier -->|8. Picks Up Parcel| OwnerPanel
+    Courier -->|9. Doorstep Delivery| Customer
+    OwnerPanel -->|10. Text Tracking Link (AWB)| WhatsAppWeb
+                </pre>
+            </div>
+        </div>
+
+        <!-- Section C: User Flow -->
+        <div class="card">
+            <h2 class="section-title">C. User Flow (Browsing to WhatsApp Redirection)</h2>
+            <p>Traces the customer journey from catalog landing pages down to cart, checkout validation, and the automated WhatsApp redirection sequence.</p>
+            <div class="diagram-container">
+                <pre class="mermaid">
+graph TD
+    Start([Customer Enters Website]) --> Home[Home Page / Featured Sections]
+    Home -->|Click Product| Details[Product Detail Page]
+    Home -->|Select Category| Catalog[Catalog Grid / Filter Sidebar]
+    Catalog -->|Click Product| Details
+    
+    Details -->|Select Color/Variant| Variant[Update Main Image & SKU]
+    Variant -->|Add to Wishlist| Wishlist[Saved in LocalStorage]
+    Variant -->|Add to Cart| CartContext[React Context Update]
+    
+    CartContext -->|Check Quantity| CartDrawer[Slide-Out Cart Drawer]
+    CartDrawer -->|Adjust Quantity / Delete| CartContext
+    CartDrawer -->|Click Checkout| CheckoutForm[Checkout Form Page]
+    
+    CheckoutForm -->|Input Details & Validate| ValidateForm{Valid Form?}
+    ValidateForm -->|No: Highlight Errors| CheckoutForm
+    ValidateForm -->|Yes: Click Place Order| SaveOrder[Save Guest Order in LocalStorage]
+    
+    SaveOrder --> ClearCart[Clear In-App Cart Context]
+    ClearCart --> SuccessPage[Order Success Redirection Page]
+    SuccessPage -->|2-Second Timer Auto-Redirect| WhatsAppAPI[wa.me Redirect]
+    SuccessPage -->|Fail/Manual Button| WhatsAppAPI
+    WhatsAppAPI --> Handoff([WhatsApp Chat with Formatted Order Details])
+                </pre>
+            </div>
+        </div>
+
+        <!-- Section D: Admin & Operations Flow -->
+        <div class="card">
+            <h2 class="section-title">D. Admin & Operations Flow</h2>
+            <p>Highlights the backoffice operations, including inventory checks, payment matching, and handcrafting of the ordered items.</p>
+            <div class="diagram-container">
+                <pre class="mermaid">
+graph TD
+    ReceiveChat([Receive Formatted Order on WhatsApp]) --> CheckStock{Verify Physical Stock}
+    
+    CheckStock -->|Unavailable| SuggestVariants[Suggest Substitute Colors/Designs via Chat]
+    SuggestVariants -->|Customer Rejects| CancelOrder[Mark Cancelled / Terminate Chat]
+    SuggestVariants -->|Customer Accepts| LockOrder[Confirm Order Modification]
+    
+    CheckStock -->|Available| LockOrder
+    
+    LockOrder --> SendPaymentInfo[Send UPI ID / QR / Payment Link to Client]
+    SendPaymentInfo --> WaitPayment{Wait for Screenshot / Payment Confirmation}
+    
+    WaitPayment -->|No Payment / Ghosted| AutoCancel[Cancel after 24 hrs]
+    WaitPayment -->|Payment Received| VerifyBank[Verify Inbound Credit via UPI/Bank App]
+    
+    VerifyBank -->|Verification Failed| RequestValidation[Ask Client to Check Bank Status]
+    VerifyBank -->|Verified Successful| ConfirmOrder[Send Order Confirmation Message]
+    
+    ConfirmOrder --> CraftProduct{Item Needs Handcrafting?}
+    CraftProduct -->|Yes| ProduceItem[Tailor Satin/Velvet Hair Accessories]
+    CraftProduct -->|No| PullFromShelves[Retrieve Item from Finished Inventory]
+    
+    ProduceItem --> QualityCheck[Perform Quality Inspection]
+    PullFromShelves --> QualityCheck
+    
+    QualityCheck --> PackItem[Pack in Aesthetic Box + Add handwritten Thank-You Card]
+    PackItem --> StageLogistics([Staged for Logistics Dispatch])
+                </pre>
+            </div>
+        </div>
+
+        <!-- Section E: Logistics & Delivery Flow -->
+        <div class="card">
+            <h2 class="section-title">E. Logistics Flow (Delhivery Shipping Integration)</h2>
+            <p>Depicts the logistics workflow, including merchant portal booking, pickup verification, routing, and doorstep delivery attempts.</p>
+            <div class="diagram-container">
+                <pre class="mermaid">
+graph TD
+    StageLogistics([Staged for Logistics Dispatch]) --> LogDashboard[Log in to Delhivery/Shiprocket Merchant Panel]
+    LogDashboard --> CopyDetails[Copy Pinned Address from WhatsApp Chat]
+    
+    CopyDetails --> CreateShipment[Create Single Shipment Form]
+    CreateShipment --> InputSpecs[Input Dimensions, Weight, and Value]
+    InputSpecs --> SelectMode{Select Payment Mode}
+    
+    SelectMode -->|Customer paid online| PrepaidMode[Mark Shipment: Prepaid]
+    SelectMode -->|Agreement for COD| CODMode[Mark COD Amount on Label]
+    
+    PrepaidMode --> GenLabel[Generate Shipping Label & Manifest]
+    CODMode --> GenLabel
+    
+    GenLabel --> PrintLabel[Print Label & Paste onto Packed Box]
+    PrintLabel --> ManifestHandover[Hand over package to Delhivery Pickup Agent]
+    
+    ManifestHandover --> PickupScan{Agent Scans AWB?}
+    PickupScan -->|Failed: No Show / Agent Delay| Reschedule[Reschedule Pickup via Dashboard]
+    Reschedule --> ManifestHandover
+    
+    PickupScan -->|Success: In Transit| SendAWB[Copy AWB/Tracking URL & Text Customer on WhatsApp]
+    
+    SendAWB --> TransitRouting[Package routed through Delhivery Hubs]
+    TransitRouting --> DeliveryAttempt{Delivery Attempted?}
+    
+    DeliveryAttempt -->|Failed: Incorrect Address / Customer Unavailable| RTOFlow[Initiate RTO Return to Origin Flow]
+    DeliveryAttempt -->|Success| Delivered([Delivered Success & Status Saved])
+                </pre>
+            </div>
+        </div>
+
+        <!-- Section F: Exception & Error Flow -->
+        <div class="card">
+            <h2 class="section-title">F. Exception & Error Flow</h2>
+            <p>Visualizes the error recovery loops for payment failure, stock shortages, delivery delays, and Return to Origin (RTO).</p>
+            <div class="diagram-container">
+                <pre class="mermaid">
+graph TD
+    StartException([Exception Occurred]) --> Type{Exception Type}
+
+    %% Payment Exception
+    Type -->|Payment Failed| NotifyFail[Notify Client on WhatsApp -> Ask to Retry UPI / Netbanking]
+    
+    %% Stock Exception
+    Type -->|Out of Stock / Custom Delay| InformTime[Inform Buyer: Handmade creation requires 48 hrs -> Get Approval]
+    
+    %% Courier Pickup Failure
+    Type -->|Courier Pickup Failed| LodgeTicket[Lodge Support Ticket in Delhivery Panel -> Coordinate Pickup]
+    
+    %% Transit Delay
+    Type -->|Delivery Delayed / Lost| Escalation[Escalate with Courier Partner -> Inform Customer via WhatsApp]
+    
+    %% Return Request
+    Type -->|Return Requested| CheckDamage{Damage Proof Provided? e.g. Unboxing Video}
+    CheckDamage -->|No| DeclineReturn[Decline return due to personal hygiene policy]
+    CheckDamage -->|Yes| ApproveReturn[Approve Refund/Replacement]
+    ApproveReturn --> TransferUPI[Transfer Refund directly to Customer UPI Wallet]
+    
+    %% RTO Exception
+    Type -->|RTO: Return to Origin| RTOPaymentCheck{Original Order Prepaid?}
+    RTOPaymentCheck -->|Yes| ContactPrepaid[Contact customer -> Offer reshipping with new delivery fee OR Refund minus original shipping]
+    RTOPaymentCheck -->|No / COD| RestockMark[Return items to inventory -> Flag phone number for future COD restrictions]
+
+    NotifyFail --> Resolve([Resolved])
+    InformTime --> Resolve
+    LodgeTicket --> Resolve
+    Escalation --> Resolve
+    DeclineReturn --> Resolve
+    TransferUPI --> Resolve
+    ContactPrepaid --> Resolve
+    RestockMark --> Resolve
+                </pre>
+            </div>
+        </div>
+
+        <!-- Section G: Database ERD -->
+        <div class="card">
+            <h2 class="section-title">G. Database Entity Relationship Overview (ERD)</h2>
+            <p>Illustrates the structural data mapping, separating storefront localStorage models from manual spreadsheet and logistics fields.</p>
+            <div class="diagram-container">
+                <pre class="mermaid">
+erDiagram
+    MOCK_USER {
+        string id PK "localStorage user_*"
+        string name
+        string email UK
+        string password "bcrypt plain hash"
+        string role "user | admin"
+    }
+
+    PRODUCT_CATALOG {
+        string id PK "products.json"
+        string name
+        string slug UK
+        string category "Enum: scrunchie, hairbow, hairclip, etc."
+        string type "classic, tulip, satin, etc."
+        string description
+        string images "Cloudinary URLs"
+    }
+
+    PRODUCT_VARIANT {
+        string id PK "variant_*"
+        string color
+        string images "Cloudinary URLs"
+        string colorHex
+    }
+
+    MOCK_CART {
+        string id PK "mock_cart_[email]"
+        string productId FK
+        int quantity
+    }
+
+    MOCK_ORDER {
+        string id PK "order_*"
+        string userId FK
+        float totalAmount
+        string status "Pending, Shipped, Delivered, Cancelled"
+        string createdAt
+    }
+
+    SHIPPING_ADDRESS {
+        string id PK
+        string orderId FK
+        string street
+        string city
+        string state
+        string zipCode
+        string country
+    }
+
+    OFF_PLATFORM_PAYMENT {
+        string transactionId PK "Manual check"
+        string orderId FK
+        string payMethod "UPI, GPay, COD"
+        float amount
+        string status "Unverified, Success, Failed"
+    }
+
+    OFF_PLATFORM_SHIPMENT {
+        string awbNumber PK "Delhivery AWB"
+        string orderId FK
+        string carrier "Delhivery / Shiprocket"
+        string trackingUrl
+        string status "Pending, PickedUp, InTransit, OutForDelivery, Delivered, RTO"
+    }
+
+    PRODUCT_CATALOG ||--o{ PRODUCT_VARIANT : contains
+    MOCK_USER ||--o{ MOCK_CART : owns
+    MOCK_CART }|--|| PRODUCT_CATALOG : references
+    MOCK_USER ||--o{ MOCK_ORDER : places
+    MOCK_ORDER ||--|| SHIPPING_ADDRESS : delivers_to
+    MOCK_ORDER ||--o{ MOCK_CART : snaps_items
+    MOCK_ORDER ||--|| OFF_PLATFORM_PAYMENT : verified_by
+    MOCK_ORDER ||--|| OFF_PLATFORM_SHIPMENT : fulfilled_by
+                </pre>
+            </div>
+        </div>
+
+        <!-- Section H: API Interaction Map -->
+        <div class="card">
+            <h2 class="section-title">H. API Interaction Map</h2>
+            <p>Describes how React UI inputs travel through the frontend mockup service layer and redirect to WhatsApp.</p>
+            <div class="api-map">
+                  ┌──────────────────────────────────────────────────────────┐
+                  │                 CLIENT-SIDE REACT SPA                    │
+                  └───────────────┬──────────────────────────┬───────────────┘
+                                  │                          │
+              Requests to Mock APIs                      Routing/Page state
+                                  │                          │
+                                  ▼                          ▼
+                  ┌────────────────────────┐    ┌────────────────────────────┐
+                  │   src/services/api.js  │    │     React Router Dom       │
+                  └───────┬────────┬───────┘    └────────────────────────────┘
+                          │        │
+     Reads/Writes mock db │        │ Prepares data for redirect
+                          │        │
+                          ▼        ▼
+ ┌───────────────────────────┐  ┌────────────────────────────────────────────┐
+ │    Browser LocalStorage   │  │   whatsappUtils.js (generateWhatsAppLink)  │
+ ├───────────────────────────┤  ├────────────────────────────────────────────┤
+ │ - mock_users              │  │ Evaluates:                                 │
+ │ - mock_cart_[email]       │  │ - subtotal                                 │
+ │ - mock_orders_[email]     │  │ - shipping charge (Free >= 499, else 49)   │
+ │ - last_order              │  │ - Formats address & items into text        │
+ │ - wishlist                │  │ - Appends: https://wa.me/917300969491      │
+ └───────────────────────────┘  └─────────────────────┬──────────────────────┘
+                                                      │
+                                                      │ Redirects customer
+                                                      ▼
+                                ┌────────────────────────────────────────────┐
+                                │             WhatsApp Messenger             │
+                                └────────────────────────────────────────────┘
+            </div>
+        </div>
+
+        <!-- Section I: Bottlenecks & Recommendations -->
+        <div class="card">
+            <h2 class="section-title">I. Bottlenecks & Optimization Recommendations</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Target Area</th>
+                        <th>Current Manual Process</th>
+                        <th>Proposed Automation Path</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Payment Collection</strong></td>
+                        <td>Share UPI details -> check bank app -> confirm chat.</td>
+                        <td><span class="badge">Razorpay/UPI Gateway</span> Add checkout redirect for automatic verification.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Shipment Booking</strong></td>
+                        <td>Copy address from WhatsApp -> paste into Delhivery.</td>
+                        <td><span class="badge">Delhivery/Shiprocket API</span> Create shipment records on order submission automatically.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Tracking Notifications</strong></td>
+                        <td>Copy AWB link -> send manually in chat.</td>
+                        <td><span class="badge">WhatsApp Business API</span> Send automated shipping status templates (AWB) to customers.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Inventory Count</strong></td>
+                        <td>Catalog items always "In Stock" -> manual check in boxes.</td>
+                        <td><span class="badge">Admin Dashboard</span> MongoDB-backed inventory editor and real-time checkout validations.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</body>
+</html>
