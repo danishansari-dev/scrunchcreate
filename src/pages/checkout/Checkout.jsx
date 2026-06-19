@@ -1,49 +1,81 @@
-import React, { useState } from 'react'
+/**
+ * Why this file exists:
+ * One-page checkout combining contact info, delivery address (with pincode
+ * auto-fill), payment selection, and order summary. Follows the best patterns
+ * identified in the e-commerce checkout analysis research.
+ */
+import React, { useState, useCallback } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useCart } from '../../components/CartContext'
 import { useToast } from '../../components/ToastContext'
 import { placeOrder } from '../../services/api'
+import CouponField from '../../components/CouponField'
+import PaymentMethodSelector from '../../components/PaymentMethodSelector'
+import TrustBadges from '../../components/TrustBadges'
+import { lookupPincode, getDeliveryDate } from '../../utils/pincodeUtils'
 import styles from './Checkout.module.css'
 
 const initialFormState = {
-  name: '',
-  phone: '',
   email: '',
+  phone: '',
+  name: '',
+  pincode: '',
   addressLine1: '',
   addressLine2: '',
   city: '',
   state: '',
-  pincode: '',
   country: 'India',
 }
 
-function validateForm(form) {
+/**
+ * Validates all checkout form fields
+ * @param {object} form - Form state object
+ * @param {string} paymentMethod - Selected payment method
+ * @param {object} paymentDetails - Payment detail fields
+ * @returns {object} Error messages keyed by field name
+ */
+function validateForm(form, paymentMethod, paymentDetails) {
   const errors = {}
-  if (!form.name.trim()) errors.name = 'Name is required'
-  if (!form.phone.trim()) errors.phone = 'Phone is required'
-  else if (!/^\d{10}$/.test(form.phone.trim())) errors.phone = 'Enter a valid 10-digit phone number'
   if (!form.email.trim()) errors.email = 'Email is required'
   else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) errors.email = 'Enter a valid email'
+  if (!form.phone.trim()) errors.phone = 'Phone is required'
+  else if (!/^\d{10}$/.test(form.phone.trim())) errors.phone = 'Enter a valid 10-digit phone number'
+  if (!form.name.trim()) errors.name = 'Full name is required'
+  if (!form.pincode.trim()) errors.pincode = 'Pincode is required'
+  else if (!/^\d{6}$/.test(form.pincode.trim())) errors.pincode = 'Enter a valid 6-digit pincode'
   if (!form.addressLine1.trim()) errors.addressLine1 = 'Address is required'
   if (!form.city.trim()) errors.city = 'City is required'
   if (!form.state.trim()) errors.state = 'State is required'
-  if (!form.pincode.trim()) errors.pincode = 'Pincode is required'
-  else if (!/^\d{6}$/.test(form.pincode.trim())) errors.pincode = 'Enter a valid 6-digit pincode'
-  if (!form.country.trim()) errors.country = 'Country is required'
+
+  // Payment-specific validation
+  if (paymentMethod === 'upi' && !paymentDetails.upiId?.trim()) {
+    errors.payment = 'Please enter your UPI ID'
+  }
+  if (paymentMethod === 'card') {
+    if (!paymentDetails.cardNumber?.trim()) errors.payment = 'Card number is required'
+    else if (!paymentDetails.cardExpiry?.trim()) errors.payment = 'Card expiry is required'
+    else if (!paymentDetails.cardCvv?.trim()) errors.payment = 'CVV is required'
+  }
+
   return errors
 }
 
 export default function Checkout() {
   const navigate = useNavigate()
-  const { items, subtotal, clearCart } = useCart()
+  const { items, subtotal, clearCart, deliveryFee, grandTotal, couponDiscount, appliedCoupon, totalSavings } = useCart()
   const { show } = useToast()
 
   const [form, setForm] = useState(initialFormState)
   const [errors, setErrors] = useState({})
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [paymentMethod, setPaymentMethod] = useState('upi')
+  const [paymentDetails, setPaymentDetails] = useState({})
+  const [deliveryEstimate, setDeliveryEstimate] = useState(null)
+  const [showMobileSummary, setShowMobileSummary] = useState(false)
 
-  const delivery = subtotal >= 499 ? 0 : 49
-  const total = subtotal + delivery
+  // COD handling fee
+  const codFee = paymentMethod === 'cod' ? 30 : 0
+  const finalTotal = grandTotal + codFee
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -54,18 +86,60 @@ export default function Checkout() {
     }
   }
 
+  /**
+   * Handles pincode input — triggers auto-fill of city and state
+   * when a valid 6-digit code is entered
+   */
+  const handlePincodeChange = useCallback((e) => {
+    const value = e.target.value.replace(/\D/g, '').slice(0, 6)
+    setForm((prev) => ({ ...prev, pincode: value }))
+    if (errors.pincode) setErrors((prev) => ({ ...prev, pincode: '' }))
+
+    if (value.length === 6) {
+      const result = lookupPincode(value)
+      if (result.found) {
+        setForm((prev) => ({
+          ...prev,
+          pincode: value,
+          city: result.city,
+          state: result.state,
+        }))
+      } else if (result.state) {
+        // Partial match: state guessed from prefix
+        setForm((prev) => ({
+          ...prev,
+          pincode: value,
+          state: result.state,
+        }))
+      }
+      setDeliveryEstimate({
+        days: result.deliveryDays,
+        date: getDeliveryDate(result.deliveryDays),
+      })
+    } else {
+      setDeliveryEstimate(null)
+    }
+  }, [errors.pincode])
+
+  const handlePaymentDetailChange = (field, value) => {
+    setPaymentDetails((prev) => ({ ...prev, [field]: value }))
+    if (errors.payment) setErrors((prev) => ({ ...prev, payment: '' }))
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
-    const validationErrors = validateForm(form)
+    const validationErrors = validateForm(form, paymentMethod, paymentDetails)
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors)
+      // Scroll to first error
+      const firstErrorField = document.querySelector('[data-error="true"]')
+      if (firstErrorField) firstErrorField.scrollIntoView({ behavior: 'smooth', block: 'center' })
       return
     }
 
     setIsSubmitting(true)
 
     try {
-      // Prepare payload for backend
       const orderData = {
         items: items.map(item => ({
           productId: item.id,
@@ -77,12 +151,24 @@ export default function Checkout() {
           state: form.state,
           zipCode: form.pincode,
           country: form.country,
-        }
+        },
+        contact: {
+          name: form.name,
+          email: form.email,
+          phone: form.phone,
+        },
+        payment: {
+          method: paymentMethod,
+        },
+        coupon: appliedCoupon ? appliedCoupon.code : null,
+        couponDiscount,
+        deliveryFee,
+        codFee,
+        total: finalTotal,
       }
 
       await placeOrder(orderData)
 
-      // Clear cart from context (this now also clears backend cart)
       clearCart()
       show('Order placed successfully!', 'success')
       navigate('/order-success')
@@ -97,7 +183,7 @@ export default function Checkout() {
     return (
       <main className={styles.page}>
         <div className={styles.container}>
-          <h1 className={styles.title}>Checkout</h1>
+          <h1 className={styles.pageTitle}>Checkout</h1>
           <div className={styles.empty}>
             Your cart is empty. <Link to="/products" className={styles.emptyLink}>Browse products</Link>.
           </div>
@@ -109,176 +195,275 @@ export default function Checkout() {
   return (
     <main className={styles.page}>
       <div className={styles.container}>
-        <h1 className={styles.title}>Checkout</h1>
+        <h1 className={styles.pageTitle}>
+          <span className={styles.lockIcon}>🔒</span> Secure Checkout
+        </h1>
 
-        <form className={styles.content} onSubmit={handleSubmit}>
-          {/* Shipping Form */}
-          <div className={styles.formCard}>
-            <h2 className={styles.formTitle}>Shipping Address</h2>
-            <div className={styles.formGrid}>
-              <div className={styles.formRow}>
-                <div className={styles.formGroup}>
-                  <label className={styles.label} htmlFor="name">Full Name *</label>
+        <form className={styles.content} onSubmit={handleSubmit} noValidate>
+          {/* ─── Left Column: Form Sections ─── */}
+          <div className={styles.formColumn}>
+
+            {/* Section 1: Contact Information */}
+            <section className={styles.section}>
+              <h2 className={styles.sectionTitle}>
+                <span className={styles.sectionNumber}>1</span>
+                Contact Information
+              </h2>
+              <div className={styles.fieldRow}>
+                <div className={styles.fieldGroup} data-error={!!errors.email}>
+                  <label className={styles.label} htmlFor="email">Email *</label>
                   <input
-                    id="name"
-                    name="name"
-                    type="text"
-                    className={`${styles.input} ${errors.name ? styles.inputError : ''}`}
-                    value={form.name}
+                    id="email" name="email" type="email"
+                    className={`${styles.input} ${errors.email ? styles.inputError : ''}`}
+                    value={form.email}
                     onChange={handleChange}
-                    placeholder="Your full name"
+                    placeholder="your@email.com"
+                    autoComplete="email"
                   />
-                  {errors.name && <span className={styles.errorText}>{errors.name}</span>}
+                  {errors.email && <span className={styles.errorText}>{errors.email}</span>}
                 </div>
-                <div className={styles.formGroup}>
+                <div className={styles.fieldGroup} data-error={!!errors.phone}>
                   <label className={styles.label} htmlFor="phone">Phone *</label>
                   <input
-                    id="phone"
-                    name="phone"
-                    type="tel"
+                    id="phone" name="phone" type="tel"
                     className={`${styles.input} ${errors.phone ? styles.inputError : ''}`}
                     value={form.phone}
                     onChange={handleChange}
                     placeholder="10-digit mobile number"
+                    autoComplete="tel"
+                    inputMode="numeric"
                   />
                   {errors.phone && <span className={styles.errorText}>{errors.phone}</span>}
                 </div>
               </div>
+            </section>
 
-              <div className={`${styles.formGroup} ${styles.formGroupFull}`}>
-                <label className={styles.label} htmlFor="email">Email *</label>
+            {/* Section 2: Delivery Address */}
+            <section className={styles.section}>
+              <h2 className={styles.sectionTitle}>
+                <span className={styles.sectionNumber}>2</span>
+                Delivery Address
+              </h2>
+
+              <div className={styles.fieldGroup} data-error={!!errors.name}>
+                <label className={styles.label} htmlFor="name">Full Name *</label>
                 <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  className={`${styles.input} ${errors.email ? styles.inputError : ''}`}
-                  value={form.email}
+                  id="name" name="name" type="text"
+                  className={`${styles.input} ${errors.name ? styles.inputError : ''}`}
+                  value={form.name}
                   onChange={handleChange}
-                  placeholder="your@email.com"
+                  placeholder="Your full name"
+                  autoComplete="name"
                 />
-                {errors.email && <span className={styles.errorText}>{errors.email}</span>}
+                {errors.name && <span className={styles.errorText}>{errors.name}</span>}
               </div>
 
-              <div className={`${styles.formGroup} ${styles.formGroupFull}`}>
-                <label className={styles.label} htmlFor="addressLine1">Address Line 1 *</label>
-                <input
-                  id="addressLine1"
-                  name="addressLine1"
-                  type="text"
-                  className={`${styles.input} ${errors.addressLine1 ? styles.inputError : ''}`}
-                  value={form.addressLine1}
-                  onChange={handleChange}
-                  placeholder="House no., Building, Street"
-                />
-                {errors.addressLine1 && <span className={styles.errorText}>{errors.addressLine1}</span>}
-              </div>
-
-              <div className={`${styles.formGroup} ${styles.formGroupFull}`}>
-                <label className={styles.label} htmlFor="addressLine2">Address Line 2</label>
-                <input
-                  id="addressLine2"
-                  name="addressLine2"
-                  type="text"
-                  className={styles.input}
-                  value={form.addressLine2}
-                  onChange={handleChange}
-                  placeholder="Apartment, Landmark (optional)"
-                />
-              </div>
-
-              <div className={styles.formRow}>
-                <div className={styles.formGroup}>
+              {/* Pincode first — triggers city/state auto-fill */}
+              <div className={styles.fieldRow}>
+                <div className={styles.fieldGroup} data-error={!!errors.pincode}>
+                  <label className={styles.label} htmlFor="pincode">Pincode *</label>
+                  <input
+                    id="pincode" name="pincode" type="text"
+                    className={`${styles.input} ${errors.pincode ? styles.inputError : ''}`}
+                    value={form.pincode}
+                    onChange={handlePincodeChange}
+                    placeholder="6-digit pincode"
+                    inputMode="numeric"
+                    maxLength={6}
+                    autoComplete="postal-code"
+                  />
+                  {errors.pincode && <span className={styles.errorText}>{errors.pincode}</span>}
+                </div>
+                <div className={styles.fieldGroup}>
                   <label className={styles.label} htmlFor="city">City *</label>
                   <input
-                    id="city"
-                    name="city"
-                    type="text"
+                    id="city" name="city" type="text"
                     className={`${styles.input} ${errors.city ? styles.inputError : ''}`}
                     value={form.city}
                     onChange={handleChange}
                     placeholder="City"
+                    autoComplete="address-level2"
                   />
                   {errors.city && <span className={styles.errorText}>{errors.city}</span>}
                 </div>
-                <div className={styles.formGroup}>
+              </div>
+
+              {/* Delivery estimation */}
+              {deliveryEstimate && (
+                <div className={styles.deliveryEstimate}>
+                  📅 Expected delivery: <strong>{deliveryEstimate.date}</strong>
+                </div>
+              )}
+
+              <div className={styles.fieldGroup}>
+                <label className={styles.label} htmlFor="addressLine1">Address *</label>
+                <input
+                  id="addressLine1" name="addressLine1" type="text"
+                  className={`${styles.input} ${errors.addressLine1 ? styles.inputError : ''}`}
+                  value={form.addressLine1}
+                  onChange={handleChange}
+                  placeholder="House no., Building, Street"
+                  autoComplete="address-line1"
+                />
+                {errors.addressLine1 && <span className={styles.errorText}>{errors.addressLine1}</span>}
+              </div>
+
+              <div className={styles.fieldGroup}>
+                <label className={styles.label} htmlFor="addressLine2">Landmark / Address Line 2 <span className={styles.optional}>(optional)</span></label>
+                <input
+                  id="addressLine2" name="addressLine2" type="text"
+                  className={styles.input}
+                  value={form.addressLine2}
+                  onChange={handleChange}
+                  placeholder="Apartment, Landmark"
+                  autoComplete="address-line2"
+                />
+              </div>
+
+              <div className={styles.fieldRow}>
+                <div className={styles.fieldGroup}>
                   <label className={styles.label} htmlFor="state">State *</label>
                   <input
-                    id="state"
-                    name="state"
-                    type="text"
+                    id="state" name="state" type="text"
                     className={`${styles.input} ${errors.state ? styles.inputError : ''}`}
                     value={form.state}
                     onChange={handleChange}
                     placeholder="State"
+                    autoComplete="address-level1"
                   />
                   {errors.state && <span className={styles.errorText}>{errors.state}</span>}
                 </div>
-              </div>
-
-              <div className={styles.formRow}>
-                <div className={styles.formGroup}>
-                  <label className={styles.label} htmlFor="pincode">Pincode *</label>
+                <div className={styles.fieldGroup}>
+                  <label className={styles.label} htmlFor="country">Country</label>
                   <input
-                    id="pincode"
-                    name="pincode"
-                    type="text"
-                    className={`${styles.input} ${errors.pincode ? styles.inputError : ''}`}
-                    value={form.pincode}
-                    onChange={handleChange}
-                    placeholder="6-digit pincode"
-                  />
-                  {errors.pincode && <span className={styles.errorText}>{errors.pincode}</span>}
-                </div>
-                <div className={styles.formGroup}>
-                  <label className={styles.label} htmlFor="country">Country *</label>
-                  <input
-                    id="country"
-                    name="country"
-                    type="text"
-                    className={`${styles.input} ${errors.country ? styles.inputError : ''}`}
+                    id="country" name="country" type="text"
+                    className={styles.input}
                     value={form.country}
                     onChange={handleChange}
-                    placeholder="Country"
+                    disabled
+                    autoComplete="country-name"
                   />
-                  {errors.country && <span className={styles.errorText}>{errors.country}</span>}
                 </div>
               </div>
-            </div>
+            </section>
+
+            {/* Section 3: Payment Method */}
+            <section className={styles.section}>
+              <h2 className={styles.sectionTitle}>
+                <span className={styles.sectionNumber}>3</span>
+                Payment Method
+              </h2>
+              <PaymentMethodSelector
+                selected={paymentMethod}
+                onSelect={setPaymentMethod}
+                paymentDetails={paymentDetails}
+                onDetailChange={handlePaymentDetailChange}
+              />
+              {errors.payment && <div className={styles.paymentError}>{errors.payment}</div>}
+            </section>
           </div>
 
-          {/* Order Summary */}
+          {/* ─── Right Column: Order Summary (Sticky) ─── */}
           <aside className={styles.summaryCard}>
             <h2 className={styles.summaryTitle}>Order Summary</h2>
+
             <ul className={styles.summaryList}>
               {items.map((item) => (
                 <li key={item.id} className={styles.summaryItem}>
-                  <span className={styles.summaryItemName}>{item.name}</span>
-                  <span className={styles.summaryItemQty}>× {item.qty}</span>
+                  <div className={styles.summaryItemThumb}>
+                    {(item.image || (item.images && item.images[0])) && (
+                      <div
+                        className={styles.summaryThumbImg}
+                        style={{ backgroundImage: `url(${item.image || item.images[0]})` }}
+                      />
+                    )}
+                    <span className={styles.summaryItemQtyBadge}>{item.qty}</span>
+                  </div>
+                  <div className={styles.summaryItemInfo}>
+                    <span className={styles.summaryItemName}>{item.name}</span>
+                    {item.color && <span className={styles.summaryItemMeta}>{item.color}</span>}
+                  </div>
+                  <span className={styles.summaryItemPrice}>
+                    ₹{((item.offerPrice || item.price) * item.qty).toLocaleString('en-IN')}
+                  </span>
                 </li>
               ))}
             </ul>
+
             <div className={styles.summaryDivider} />
+
+            {/* Coupon Field */}
+            <CouponField />
+
+            <div className={styles.summaryDivider} />
+
+            {/* Price Breakdown */}
             <div className={styles.summaryRow}>
               <span>Subtotal</span>
               <span>₹{subtotal.toLocaleString('en-IN')}</span>
             </div>
             <div className={styles.summaryRow}>
               <span>Delivery</span>
-              <span>{delivery === 0 ? 'Free' : `₹${delivery}`}</span>
+              <span className={deliveryFee === 0 ? styles.freeLabel : ''}>
+                {deliveryFee === 0 ? 'FREE' : `₹${deliveryFee}`}
+              </span>
             </div>
+            {couponDiscount > 0 && (
+              <div className={`${styles.summaryRow} ${styles.discountRow}`}>
+                <span>Discount</span>
+                <span>−₹{couponDiscount.toLocaleString('en-IN')}</span>
+              </div>
+            )}
+            {codFee > 0 && (
+              <div className={styles.summaryRow}>
+                <span>COD handling fee</span>
+                <span>₹{codFee}</span>
+              </div>
+            )}
+
             <div className={styles.summaryTotal}>
               <span>Total</span>
-              <span>₹{total.toLocaleString('en-IN')}</span>
+              <span>₹{finalTotal.toLocaleString('en-IN')}</span>
             </div>
+
+            {totalSavings > 0 && (
+              <div className={styles.savingsCallout}>
+                🎉 You save ₹{totalSavings.toLocaleString('en-IN')} on this order!
+              </div>
+            )}
+
             <button
               type="submit"
               className={styles.placeOrderBtn}
               disabled={isSubmitting}
             >
-              {isSubmitting ? 'Placing Order...' : 'Place Order'}
+              {isSubmitting ? 'Placing Order...' : `Place Order — ₹${finalTotal.toLocaleString('en-IN')}`}
             </button>
+
+            <TrustBadges compact />
           </aside>
         </form>
+
+        {/* ─── Mobile Sticky Footer ─── */}
+        <div className={styles.mobileSticky}>
+          <button
+            className={styles.mobileSummaryToggle}
+            onClick={() => setShowMobileSummary(!showMobileSummary)}
+            type="button"
+          >
+            <span>₹{finalTotal.toLocaleString('en-IN')}</span>
+            <span className={styles.mobileSummaryArrow}>{showMobileSummary ? '▼' : '▲'} View details</span>
+          </button>
+          <button
+            type="submit"
+            form="checkout-form"
+            className={styles.mobilePlaceOrderBtn}
+            disabled={isSubmitting}
+            onClick={handleSubmit}
+          >
+            {isSubmitting ? 'Placing...' : 'Place Order'}
+          </button>
+        </div>
       </div>
     </main>
   )
