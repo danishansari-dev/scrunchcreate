@@ -56,8 +56,15 @@ export function validateCoupon(code, subtotal) {
       break
 
     case 'freeShipping':
-      // Discount equals the delivery fee the user would have paid
-      discount = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : DELIVERY_FEE
+      if (subtotal >= FREE_SHIPPING_THRESHOLD) {
+        return {
+          valid: false,
+          discount: 0,
+          coupon: null,
+          error: 'You already qualify for FREE shipping on this order!',
+        }
+      }
+      discount = DELIVERY_FEE
       break
 
     default:
