@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import styles from './CollectionsSection.module.css'
 import { getProducts } from '../services/api'
