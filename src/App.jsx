@@ -1,4 +1,3 @@
-import React from 'react'
 import { Routes, Route } from 'react-router-dom'
 import Home from './pages/home/Home'
 import Products from './pages/products/Products'
@@ -10,6 +9,7 @@ import TermsAndConditions from './pages/legal/TermsAndConditions'
 import Layout from './components/Layout'
 import Checkout from './pages/checkout/Checkout'
 import OrderSuccess from './pages/checkout/OrderSuccess'
+import NotFound from './pages/NotFound'
 
 export default function App() {
 
@@ -26,6 +26,7 @@ export default function App() {
         <Route path='/order-success' element={<OrderSuccess />} />
         <Route path='/privacy-policy' element={<PrivacyPolicy />} />
         <Route path='/terms-and-conditions' element={<TermsAndConditions />} />
+        <Route path='*' element={<NotFound />} />
       </Route>
     </Routes>
   )
