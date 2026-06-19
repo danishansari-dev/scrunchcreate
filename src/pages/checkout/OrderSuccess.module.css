@@ -96,3 +96,42 @@
 .secondaryBtn:hover {
     background: var(--color-surface-soft);
 }
+
+@media (max-width: 480px) {
+    .page {
+        padding: 32px 14px 48px;
+        /* Accounts for iOS home indicator at the bottom */
+        padding-bottom: max(48px, calc(32px + env(safe-area-inset-bottom)));
+    }
+
+    .icon {
+        width: 68px;
+        height: 68px;
+        margin-bottom: 20px;
+    }
+
+    .iconSvg {
+        width: 34px;
+        height: 34px;
+    }
+
+    .title {
+        font-size: 24px;
+    }
+
+    .subtitle {
+        font-size: 15px;
+    }
+
+    /* Stack buttons vertically and make them full-width for easy tapping */
+    .actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .primaryBtn,
+    .secondaryBtn {
+        text-align: center;
+        padding: 14px 24px;
+    }
+}
