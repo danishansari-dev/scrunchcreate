@@ -3,7 +3,6 @@
  * Trust badges reduce payment anxiety at the checkout stage.
  * Placed near the "Place Order" button per Baymard Institute recommendation.
  */
-import React from 'react'
 import styles from './TrustBadges.module.css'
 
 /**
