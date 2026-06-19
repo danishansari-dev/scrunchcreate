@@ -2,10 +2,12 @@
 
 .page {
   padding: 32px 16px 48px;
+  overflow-x: clip;
 }
 
 .title {
-  margin: 0 0 12px;
+  max-width: 1280px;
+  margin: 0 auto 12px;
   font-size: 22px;
   color: var(--color-text-main);
 }
@@ -18,6 +20,7 @@
   max-width: 1280px;
   margin: 0 auto;
   display: grid;
+  min-width: 0;
   gap: 16px;
   grid-template-columns: 2fr 1fr;
 }
@@ -34,6 +37,7 @@
   display: grid;
   grid-template-columns: 1fr auto auto auto;
   align-items: center;
+  min-width: 0;
   gap: 12px;
   background: var(--color-surface-soft);
   border: 1px solid var(--color-border-soft);
@@ -44,19 +48,27 @@
 .info {
   display: grid;
   grid-template-columns: 80px 1fr;
+  min-width: 0;
   gap: 12px;
   align-items: center;
 }
 
 .thumb {
+  /* Explicit width so the grid column doesn't shrink the thumbnail below its target. */
+  width: 80px;
   height: 60px;
   background: var(--color-surface-soft);
+  background-size: cover;
+  background-position: center;
   border: 1px solid var(--color-border-soft);
   border-radius: var(--radius-md);
 }
 
 .productTitle {
+  min-width: 0;
   font-size: 14px;
+  font-weight: 600;
+  line-height: 1.35;
 }
 
 .price {
@@ -71,13 +83,23 @@
 }
 
 .qtyBtn {
-  width: 28px;
-  height: 28px;
+  /* Ensure touch target is at least 44px for accessibility */
+  width: 44px;
+  height: 44px;
   border-radius: var(--radius-sm);
   border: 1px solid var(--color-border-soft);
   background: var(--color-surface);
   color: var(--color-text-main);
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  transition: background 0.15s ease;
+}
+
+.qtyBtn:active {
+  background: var(--color-surface-soft);
 }
 
 .qty {
@@ -87,6 +109,7 @@
 
 .rowTotal {
   font-weight: 700;
+  white-space: nowrap;
 }
 
 .remove {
@@ -94,7 +117,13 @@
   background: transparent;
   color: var(--color-text-main);
   border-radius: var(--radius-md);
-  padding: 6px 8px;
+  /* Ensure a minimum height of 44px for touch targets */
+  height: 44px;
+  padding: 0 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
   cursor: pointer;
 }
 
@@ -105,6 +134,69 @@
   padding: 14px;
   height: fit-content;
   box-shadow: var(--shadow-soft);
+}
+
+@media (max-width: 900px) {
+  .content {
+    grid-template-columns: 1fr;
+  }
+
+  .summary {
+    position: static;
+  }
+}
+
+@media (max-width: 640px) {
+  .page {
+    padding: 24px 12px 40px;
+  }
+
+  .row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "info remove"
+      "controls total";
+    align-items: start;
+    gap: 12px 10px;
+    padding: 12px;
+  }
+
+  .info {
+    grid-area: info;
+    grid-template-columns: 62px minmax(0, 1fr);
+  }
+
+  .controls {
+    grid-area: controls;
+  }
+
+  .rowTotal {
+    grid-area: total;
+    align-self: center;
+    justify-self: end;
+  }
+
+  .remove {
+    grid-area: remove;
+    justify-self: end;
+    /* Height is already set to 44px, padding ensures comfortable width */
+    padding: 0 16px;
+  }
+}
+
+@media (max-width: 360px) {
+  .info {
+    grid-template-columns: 52px minmax(0, 1fr);
+    gap: 10px;
+  }
+
+  .thumb {
+    height: 52px;
+  }
+
+  .remove {
+    font-size: 12px;
+  }
 }
 
 .summaryTitle {
@@ -128,7 +220,7 @@
 
 .checkout {
   width: 100%;
-  height: 42px;
+  height: 48px;
   border: none;
   border-radius: var(--radius-md);
   background: var(--color-primary);
@@ -144,7 +236,7 @@
 
 .clear {
   width: 100%;
-  height: 42px;
+  height: 48px;
   border: 1px solid var(--color-border-soft);
   border-radius: var(--radius-md);
   background: transparent;
