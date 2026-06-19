@@ -16,7 +16,9 @@
 
 .newsletterBand {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(360px, 0.72fr);
+  /* FIXED: was minmax(360px, 0.72fr) — the 360px floor caused horizontal overflow
+   * on any phone narrower than 720px. Now fully fluid. */
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.72fr);
   gap: 28px;
   align-items: center;
   padding: 44px 20px 36px;
@@ -272,6 +274,8 @@
 
   .instagramGrid {
     max-width: 520px;
+    /* 3 columns on tablet so tiles don't stretch too wide */
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
@@ -301,6 +305,12 @@
     gap: 30px;
   }
 
+  /* Instagram grid drops to 2 columns on mobile */
+  .instagramGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: 100%;
+  }
+
   .instagramHeader {
     align-items: flex-start;
     flex-direction: column;
@@ -312,5 +322,48 @@
     flex-direction: column;
     padding-right: 16px;
     padding-left: 16px;
+  }
+}
+
+/* Extra-small phones (375px and under) — tighter padding to maximise reading space. */
+@media (max-width: 480px) {
+  .newsletterBand {
+    padding: 28px 14px 22px;
+  }
+
+  .newsletterCopy h2 {
+    font-size: 22px;
+  }
+
+  .eyebrow {
+    font-size: 11px;
+  }
+
+  .newsletterInput {
+    font-size: 13px;
+  }
+
+  .subscribeBtn {
+    font-size: 12px;
+    padding: 0 16px;
+  }
+
+  .main {
+    padding: 18px 14px 26px;
+  }
+
+  .sectionTitle {
+    font-size: 11px;
+  }
+
+  .brand {
+    font-size: 20px;
+  }
+
+  .bottom {
+    padding-right: 14px;
+    padding-left: 14px;
+    font-size: 11px;
+    gap: 10px;
   }
 }
