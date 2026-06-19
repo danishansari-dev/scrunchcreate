@@ -4,16 +4,18 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
+    min-width: 0;
     padding-bottom: 12px;
     margin-bottom: 24px;
     border-bottom: 1px solid #f0e6e0;
-    /* Warm warm border separator */
+    /* Warm separator keeps product sections readable when cards are dense on mobile. */
     gap: 16px;
 }
 
 .left {
     display: flex;
     flex-direction: column;
+    min-width: 0;
     gap: 4px;
 }
 
@@ -57,7 +59,16 @@
 
 @media (max-width: 767px) {
     .sectionHeader {
+        align-items: flex-start;
         margin-left: 0;
         margin-right: 0;
+    }
+
+    .title {
+        font-size: 23px;
+    }
+
+    .link {
+        flex-shrink: 0;
     }
 }
