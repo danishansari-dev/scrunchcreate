@@ -32,6 +32,10 @@ const categoryDisplayNames = {
 // Categories to show in navbar with dropdowns
 const navCategories = ['HairBow', 'Scrunchie', 'GiftHamper', 'FlowerJewellery', 'Hairclip'];
 
+/**
+ * Renders the storefront navigation and keeps mobile commerce shortcuts reachable.
+ * @returns Responsive navigation header and mobile drawer
+ */
 const NavBar = () => {
   const { totalItems, toggleCart } = useCart();
   const { wishlist } = useWishlist();
@@ -135,7 +139,7 @@ const NavBar = () => {
   return (
     <>
       <header className={styles.header}>
-        <div className={styles.headerContainer}>
+        <div className={`${styles.headerContainer} ${searchOpen ? styles.headerSearchActive : ''}`}>
           {/* Hamburger / close toggle for mobile drawer */}
           <button
             className={styles.menuButton}
@@ -220,7 +224,7 @@ const NavBar = () => {
                                       className={styles.megaMenuViewAll}
                                       onClick={() => setActiveDropdown(null)}
                                     >
-                                      View all {typeGroup.colors.length} colors →
+                                      View all {typeGroup.colors.length} colors &rarr;
                                     </Link>
                                   </li>
                                 )}
@@ -289,6 +293,16 @@ const NavBar = () => {
         className={`${styles.mobileDrawer} ${isMenuOpen ? styles.mobileDrawerOpen : ''}`}
         aria-label="Mobile navigation"
       >
+        {/* Close button placed inside mobile drawer because the header menu button is covered by the drawer panel when open */}
+        <button
+          className={styles.drawerCloseButton}
+          onClick={() => setIsMenuOpen(false)}
+          aria-label="Close menu"
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <path d="M18 6L6 18M6 6l12 12"></path>
+          </svg>
+        </button>
         <ul className={styles.mobileNavList}>
           <li>
             <Link to="/products" className={styles.mobileNavLink} onClick={() => setIsMenuOpen(false)}>
@@ -309,7 +323,7 @@ const NavBar = () => {
           <li className={styles.mobileNavDivider} />
           <li>
             <Link to="/wishlist" className={styles.mobileNavLink} onClick={() => setIsMenuOpen(false)}>
-              ♡ Wishlist
+              Wishlist
             </Link>
           </li>
         </ul>
