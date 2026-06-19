@@ -1,0 +1,118 @@
+.skeletonCard {
+  background-color: var(--color-surface);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-soft);
+  border: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(240, 240, 240, 0.6) 25%,
+    rgba(248, 248, 248, 0.9) 37%,
+    rgba(240, 240, 240, 0.6) 63%
+  );
+  background-size: 400% 100%;
+  animation: shimmerAnim 1.6s ease-in-out infinite;
+}
+
+.image {
+  aspect-ratio: 1 / 1;
+  width: 100%;
+}
+
+.body {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex-grow: 1;
+}
+
+.metaRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.type {
+  height: 14px;
+  width: 60px;
+  border-radius: var(--radius-sm);
+}
+
+.rating {
+  height: 14px;
+  width: 50px;
+  border-radius: var(--radius-sm);
+}
+
+.titleLine {
+  height: 18px;
+  width: 85%;
+  border-radius: var(--radius-sm);
+}
+
+.titleLineShort {
+  height: 18px;
+  width: 50%;
+  border-radius: var(--radius-sm);
+  margin-top: -4px;
+}
+
+.swatchesRow {
+  display: flex;
+  gap: 6px;
+  margin: 4px 0;
+}
+
+.swatch {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.priceRow {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.price {
+  height: 20px;
+  width: 65px;
+  border-radius: var(--radius-sm);
+}
+
+.originalPrice {
+  height: 16px;
+  width: 45px;
+  border-radius: var(--radius-sm);
+}
+
+.footerRow {
+  display: flex;
+  justify-content: space-between;
+  margin-top: auto;
+  border-top: 1px solid var(--color-border);
+  padding-top: 12px;
+}
+
+.footerItem {
+  height: 12px;
+  width: 70px;
+  border-radius: var(--radius-sm);
+}
+
+@keyframes shimmerAnim {
+  0% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
