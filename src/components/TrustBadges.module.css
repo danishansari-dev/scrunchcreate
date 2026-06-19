@@ -1,0 +1,79 @@
+@import '../theme/theme.css';
+
+.container {
+  margin-top: 16px;
+}
+
+.badges {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.badge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+}
+
+.badgeIcon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.badgeTitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-main);
+}
+
+.badgeDesc {
+  font-size: 11px;
+  color: var(--color-text-muted);
+}
+
+.paymentIcons {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--color-border-soft);
+}
+
+.paymentIcon {
+  font-size: 20px;
+  opacity: 0.7;
+}
+
+/* Compact variant */
+.compactRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 0;
+  flex-wrap: wrap;
+}
+
+.compactBadge {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.compactDivider {
+  font-size: 8px;
+  color: var(--color-text-muted);
+  opacity: 0.5;
+}
+
+@media (max-width: 480px) {
+  .badges {
+    gap: 4px;
+  }
+
+  .badge {
+    padding: 6px 0;
+  }
+}
