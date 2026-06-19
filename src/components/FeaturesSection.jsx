@@ -1,4 +1,3 @@
-import React from 'react'
 import styles from './FeaturesSection.module.css'
 
 const TruckIcon = () => (
