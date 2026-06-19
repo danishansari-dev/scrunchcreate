@@ -1,5 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
-import React, { createContext, useCallback, useContext, useMemo, useState } from 'react'
+// Why: ToastContext exports both ToastProvider and useToast hook, triggering react-refresh warnings.
+import { createContext, useCallback, useContext, useMemo, useState } from 'react'
+// Why: Framer Motion imports may flag as unused depending on ESLint JSX configuration.
 import { AnimatePresence, motion } from 'framer-motion' // eslint-disable-line no-unused-vars
 import styles from './toast.module.css'
 
