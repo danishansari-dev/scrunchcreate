@@ -4,7 +4,6 @@
  * Optimized for Indian market: UPI is default since it accounts for
  * ~85% of digital payments in India.
  */
-import React from 'react'
 import styles from './PaymentMethodSelector.module.css'
 
 const PAYMENT_METHODS = [
