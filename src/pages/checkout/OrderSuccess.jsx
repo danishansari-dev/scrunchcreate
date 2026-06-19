@@ -8,11 +8,12 @@
  * confirmation page, keeping WhatsApp as a secondary option.
  */
 
-import React, { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo } from 'react'
 import { Link } from 'react-router-dom';
 import { generateWhatsAppLink } from '../../utils/whatsappUtils';
 import { getDeliveryDate } from '../../utils/pincodeUtils';
 import { getProducts } from '../../services/api';
+import { shuffle } from '../../utils/shuffle';
 import styles from './OrderSuccess.module.css';
 
 export default function OrderSuccess() {
@@ -35,7 +36,7 @@ export default function OrderSuccess() {
     // Load cross-sell recommendations
     getProducts()
       .then((products) => {
-        const shuffled = products.sort(() => Math.random() - 0.5);
+        const shuffled = shuffle(products);
         setRecommendations(shuffled.slice(0, 4));
       })
       .catch(() => {});
