@@ -184,6 +184,10 @@ export const register = async (name, email, password) => {
     throw createAxiosError('User already exists with this email.');
   }
 
+  // Why this exists: Mock user registration storing passwords in localStorage.
+  // Tricky logic / WARNING: Passwords are currently stored in plaintext. This is strictly
+  // for local mock demonstration and must never be used in a production backend.
+  // TODO: Implement bcrypt/scrypt hashing when integrating a real backend database.
   const newUser = {
     _id: `user_${Date.now()}`,
     name,
@@ -217,6 +221,9 @@ export const login = async (email, password) => {
     (u) => u.email.toLowerCase() === email.toLowerCase()
   );
 
+  // Why this exists: Local auth mock validation.
+  // Tricky logic / WARNING: Direct comparison of plaintext password.
+  // TODO: Use secure comparison (e.g., bcrypt.compare) when integrating a real backend database.
   if (!foundUser || foundUser.password !== password) {
     throw createAxiosError('Invalid email or password.');
   }
