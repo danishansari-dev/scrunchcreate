@@ -2,220 +2,371 @@
 
 .page {
   padding: 32px 16px 48px;
-  overflow-x: clip;
+  max-width: 1100px;
+  margin: 0 auto;
+  min-height: 60vh;
 }
 
 .title {
-  max-width: 1280px;
-  margin: 0 auto 12px;
-  font-size: 22px;
+  margin: 0 0 20px;
+  font-size: 24px;
   color: var(--color-text-main);
 }
 
+/* ─── Empty State ─── */
 .empty {
+  text-align: center;
+  padding: 48px 16px;
   color: var(--color-text-muted);
 }
 
-.content {
-  max-width: 1280px;
-  margin: 0 auto;
-  display: grid;
-  min-width: 0;
-  gap: 16px;
-  grid-template-columns: 2fr 1fr;
+.emptyIcon {
+  font-size: 48px;
+  margin-bottom: 12px;
 }
 
+.empty p {
+  margin: 0 0 16px;
+  font-size: 16px;
+}
+
+.emptyLink {
+  display: inline-block;
+  padding: 10px 24px;
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  text-decoration: none;
+  border-radius: var(--radius-md);
+  font-weight: 500;
+}
+
+/* ─── Free Shipping Bar ─── */
+.shippingBar {
+  padding: 12px 16px;
+  background: var(--color-surface-soft);
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-md);
+  margin-bottom: 20px;
+}
+
+.shippingText {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  margin-bottom: 8px;
+}
+
+.shippingText strong {
+  color: var(--color-primary);
+}
+
+.shippingTrack {
+  width: 100%;
+  height: 6px;
+  background: var(--color-border-soft);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.shippingFill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-primary), #e8a87c);
+  border-radius: 3px;
+  transition: width 0.4s ease-out;
+}
+
+.shippingComplete {
+  font-size: 13px;
+  color: #2e7d32;
+  font-weight: 500;
+}
+
+/* ─── Content Grid ─── */
+.content {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: 1.5fr 1fr;
+  align-items: start;
+}
+
+.itemsColumn {
+  min-width: 0;
+}
+
+/* ─── Item List ─── */
 .list {
   list-style: none;
   margin: 0;
   padding: 0;
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 12px;
 }
 
 .row {
   display: grid;
   grid-template-columns: 1fr auto auto auto;
+  gap: 16px;
   align-items: center;
-  min-width: 0;
-  gap: 12px;
+  padding: 16px;
   background: var(--color-surface-soft);
-  border: 1px solid var(--color-border-soft);
-  border-radius: var(--radius-lg);
-  padding: 10px;
-}
-
-.info {
-  display: grid;
-  grid-template-columns: 80px 1fr;
-  min-width: 0;
-  gap: 12px;
-  align-items: center;
-}
-
-.thumb {
-  /* Explicit width so the grid column doesn't shrink the thumbnail below its target. */
-  width: 80px;
-  height: 60px;
-  background: var(--color-surface-soft);
-  background-size: cover;
-  background-position: center;
   border: 1px solid var(--color-border-soft);
   border-radius: var(--radius-md);
 }
 
-.productTitle {
+.info {
+  display: flex;
+  gap: 14px;
+  align-items: center;
   min-width: 0;
-  font-size: 14px;
+}
+
+.thumb {
+  width: 64px;
+  height: 64px;
+  background: var(--color-border-soft);
+  background-size: cover;
+  background-position: center;
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.discountBadge {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  background: #e53935;
+  color: #fff;
+  font-size: 9px;
   font-weight: 600;
-  line-height: 1.35;
+  padding: 1px 4px;
+  border-radius: 3px;
+  line-height: 1.3;
+}
+
+.itemDetails {
+  min-width: 0;
+}
+
+.productTitle {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-main);
+  margin-bottom: 4px;
+}
+
+.priceRow {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
 }
 
 .price {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.originalPrice {
+  font-size: 12px;
   color: var(--color-text-muted);
-  font-size: 13px;
+  text-decoration: line-through;
+}
+
+.meta {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  margin-top: 2px;
 }
 
 .controls {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 .qtyBtn {
-  /* Ensure touch target is at least 44px for accessibility */
-  width: 44px;
-  height: 44px;
+  width: 32px;
+  height: 32px;
   border-radius: var(--radius-sm);
   border: 1px solid var(--color-border-soft);
   background: var(--color-surface);
   color: var(--color-text-main);
   cursor: pointer;
+  font-size: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
-  transition: background 0.15s ease;
+  transition: background 0.15s;
 }
 
-.qtyBtn:active {
+.qtyBtn:hover {
   background: var(--color-surface-soft);
 }
 
 .qty {
-  min-width: 20px;
+  min-width: 24px;
   text-align: center;
+  font-size: 14px;
+  font-weight: 500;
 }
 
 .rowTotal {
-  font-weight: 700;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-main);
   white-space: nowrap;
 }
 
 .remove {
-  border: 1px solid var(--color-border-soft);
-  background: transparent;
-  color: var(--color-text-main);
-  border-radius: var(--radius-md);
-  /* Ensure a minimum height of 44px for touch targets */
-  height: 44px;
-  padding: 0 16px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  box-sizing: border-box;
+  background: none;
+  border: none;
   cursor: pointer;
+  padding: 8px;
+  color: var(--color-text-muted);
+  transition: color 0.15s;
+  border-radius: var(--radius-sm);
 }
 
+.remove:hover {
+  color: #e53935;
+}
+
+/* ─── Cross-sell Section ─── */
+.crossSell {
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid var(--color-border-soft);
+}
+
+.crossSellTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text-main);
+  margin: 0 0 16px;
+}
+
+.crossSellGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.crossSellCard {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  background: var(--color-surface-soft);
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-md);
+}
+
+.crossSellThumb {
+  width: 44px;
+  height: 44px;
+  background-size: cover;
+  background-position: center;
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+  background-color: var(--color-border-soft);
+}
+
+.crossSellInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.crossSellName {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.crossSellPrice {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-primary);
+  margin-top: 2px;
+}
+
+.crossSellAddBtn {
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-primary);
+  background: transparent;
+  border: 1.5px solid var(--color-primary);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+
+.crossSellAddBtn:hover {
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+}
+
+/* ─── Summary Sidebar ─── */
 .summary {
   background: var(--color-surface-soft);
   border: 1px solid var(--color-border-soft);
   border-radius: var(--radius-lg);
-  padding: 14px;
-  height: fit-content;
-  box-shadow: var(--shadow-soft);
-}
-
-@media (max-width: 900px) {
-  .content {
-    grid-template-columns: 1fr;
-  }
-
-  .summary {
-    position: static;
-  }
-}
-
-@media (max-width: 640px) {
-  .page {
-    padding: 24px 12px 40px;
-  }
-
-  .row {
-    grid-template-columns: minmax(0, 1fr) auto;
-    grid-template-areas:
-      "info remove"
-      "controls total";
-    align-items: start;
-    gap: 12px 10px;
-    padding: 12px;
-  }
-
-  .info {
-    grid-area: info;
-    grid-template-columns: 62px minmax(0, 1fr);
-  }
-
-  .controls {
-    grid-area: controls;
-  }
-
-  .rowTotal {
-    grid-area: total;
-    align-self: center;
-    justify-self: end;
-  }
-
-  .remove {
-    grid-area: remove;
-    justify-self: end;
-    /* Height is already set to 44px, padding ensures comfortable width */
-    padding: 0 16px;
-  }
-}
-
-@media (max-width: 360px) {
-  .info {
-    grid-template-columns: 52px minmax(0, 1fr);
-    gap: 10px;
-  }
-
-  .thumb {
-    height: 52px;
-  }
-
-  .remove {
-    font-size: 12px;
-  }
+  padding: 24px;
+  position: sticky;
+  top: 90px;
+  min-width: 0;
 }
 
 .summaryTitle {
-  margin: 0 0 8px;
-  font-size: 16px;
+  margin: 0 0 16px;
+  font-size: 18px;
+  color: var(--color-text-main);
+}
+
+.savingsMessage {
+  font-size: 13px;
+  color: #2e7d32;
+  background: #e8f5e9;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 14px;
+  text-align: center;
 }
 
 .summaryRow {
   display: flex;
   justify-content: space-between;
+  font-size: 14px;
   color: var(--color-text-muted);
   margin-bottom: 6px;
+}
+
+.freeLabel {
+  color: #2e7d32;
+  font-weight: 600;
+}
+
+.discountRow {
+  color: #2e7d32;
+  font-weight: 500;
 }
 
 .summaryTotal {
   display: flex;
   justify-content: space-between;
-  margin: 10px 0;
+  font-size: 16px;
   font-weight: 700;
+  color: var(--color-text-main);
+  margin: 12px 0 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--color-border-soft);
 }
 
 .checkout {
@@ -225,21 +376,108 @@
   border-radius: var(--radius-md);
   background: var(--color-primary);
   color: var(--color-on-primary);
-  cursor: pointer;
-  margin-bottom: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-decoration: none;
+  font-size: 15px;
   font-weight: 600;
+  cursor: pointer;
+  margin-top: 12px;
+  transition: opacity 0.15s, transform 0.1s;
+}
+
+.checkout:hover {
+  opacity: 0.9;
+}
+
+.checkout:active {
+  transform: scale(0.98);
+}
+
+.checkout:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .clear {
   width: 100%;
-  height: 48px;
-  border: 1px solid var(--color-border-soft);
-  border-radius: var(--radius-md);
-  background: transparent;
-  color: var(--color-text-main);
+  height: 36px;
+  border: none;
+  background: none;
+  color: var(--color-text-muted);
+  font-size: 13px;
   cursor: pointer;
+  margin-top: 8px;
+  transition: color 0.15s;
+}
+
+.clear:hover {
+  color: #e53935;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+  .content {
+    grid-template-columns: 1fr;
+  }
+
+  .summary {
+    position: static;
+  }
+
+  .crossSellGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .page {
+    padding: 24px 12px 40px;
+  }
+
+  .title {
+    font-size: 22px;
+  }
+
+  .row {
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "info remove"
+      "controls total";
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .info {
+    grid-area: info;
+  }
+
+  .remove {
+    grid-area: remove;
+    justify-self: end;
+  }
+
+  .controls {
+    grid-area: controls;
+  }
+
+  .rowTotal {
+    grid-area: total;
+    justify-self: end;
+  }
+
+  .thumb {
+    width: 52px;
+    height: 52px;
+  }
+
+  .qtyBtn {
+    width: 44px;
+    height: 44px;
+  }
+
+  .crossSellGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .summary {
+    padding: 16px;
+  }
 }
