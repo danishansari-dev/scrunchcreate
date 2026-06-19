@@ -1,4 +1,5 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+// Why: Framer Motion imports may flag as unused depending on ESLint JSX configuration.
 import { AnimatePresence, motion } from 'framer-motion' // eslint-disable-line no-unused-vars
 import styles from './FilterSidebar.module.css'
 import { formatTypeName } from '../../utils/catalogDisplay'
