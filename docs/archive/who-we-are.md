@@ -1,6 +1,6 @@
 # 🎀 Scrunch & Create — Who We Are
 
-Welcome to **Scrunch & Create**, a boutique designer brand dedicated to crafting premium, stylish, and affordable hair accessories, jewellery, and gift hampers. 
+Welcome to **Scrunch & Create**, a boutique designer brand dedicated to crafting premium, stylish, and affordable hair accessories, jewellery, and gift hampers.
 
 Over the past year, we have grown from a home-grown studio into a thriving social-commerce brand, building a vibrant community of accessory lovers who value timeless elegance, high-quality materials, and handcrafted detail.
 
@@ -8,7 +8,7 @@ Over the past year, we have grown from a home-grown studio into a thriving socia
 
 ## 🧵 Our Story & Philosophy
 
-At **Scrunch & Create**, we believe that hair accessories are not just functional items—they are expressions of individuality, confidence, and charm. 
+At **Scrunch & Create**, we believe that hair accessories are not just functional items—they are expressions of individuality, confidence, and charm.
 
 - **Made with Love**: Every single piece in our collection is 100% handmade in-house.
 - **Timeless & Effortless**: Designed to seamlessly complement both everyday casual styles and grand festive lookups.
@@ -20,26 +20,8 @@ At **Scrunch & Create**, we believe that hair accessories are not just functiona
 
 Our business combines high-reach organic social marketing with direct conversational commerce and established e-commerce marketplaces.
 
-```
-┌───────────────────────────────────────┐
-│     Organic Social Media Discovery    │
-│ (Instagram Reels, Pinterest, YouTube) │
-└──────────────────┬────────────────────┘
-                   │
-                   ▼
-┌───────────────────────────────────────┐
-│           WhatsApp Commerce           │
-│    (Direct negotiation & purchase)    │
-└──────────────────┬────────────────────┘
-                   │
-                   ▼
-┌───────────────────────────────────────┐
-│           Delhivery Shipping          │
-│     (Nationwide doorstep delivery)    │
-└───────────────────────────────────────┘
-```
-
 ### 🛍️ Sales Touchpoints
+
 1. **Social to Conversational (Primary)**: Most of our boutique sales flow from **Instagram DM → WhatsApp Consultation → Delhivery doorstep delivery**. This enables personalized orders, color customization, and custom packaging.
 2. **Meesho Marketplace**: For volume sales, we run our official [Meesho Storefront](https://www.meesho.com/ScrunchCreate).
    - **500+ Orders** successfully fulfilled.
@@ -53,11 +35,14 @@ Our business combines high-reach organic social marketing with direct conversati
 Our product architecture is divided into six main categories, each focusing on premium fabric selections, custom sizing, a rich color palette, and clear pricing structure (including dynamically calculated MRP / discount rates):
 
 ### 1. Hair Bows
+
 Elevated ribbon bows that clip on easily, adding instant charm to ponytails, half-up styles, and braids.
-- **Color Palette**: 
+
+- **Color Palette**:
   - *Standard Colors*: Brown, Cream, Grey, Lavender, Magenta, Peach, Petrol, Red, Sky Blue, White, Wine, Yellow.
   - *Velvet Collection*: Black, Red.
 - **Sub-Types & Pricing (Offer vs MRP)**:
+
   | Style / Type | Offer Price (₹) | MRP (₹) | Discount (%) | Features / Notes |
   | --- | --- | --- | --- | --- |
   | **Jimmy Choo** | ₹99 | ₹129 | ~23% off | Premium glittery, festive collection |
@@ -72,12 +57,15 @@ Elevated ribbon bows that clip on easily, adding instant charm to ponytails, hal
   | **Combo Bow Sets** | ₹399 | ₹499 | ~20% off | Value multi-packs |
 
 ### 2. Scrunchies
+
 Gentle, hair-friendly scrunchies designed to prevent creasing and hair breakage.
+
 - **Color Palette**:
   - *Classic*: Brown, Cream, Golden, Grey, Lavender, Magenta, Metallic Olive, Peach, Petrol, Red, Sky Blue, White, Wine, Yellow.
   - *Tulip & Tulip-Sheer*: Brown, Cream, Grey, Lavender, Magenta, Peach, Petrol, Red, Sky Blue, White, Wine, Yellow.
   - *Combo Sets*: Curated mix packs (no color variants).
 - **Sub-Types & Pricing (Offer vs MRP)**:
+
   | Style / Type | Offer Price (₹) | MRP (₹) | Discount (%) | Features / Notes |
   | --- | --- | --- | --- | --- |
   | **Satin Mini** | ₹30 | ₹39 | ~23% off | Sleek, small satin ties |
@@ -99,22 +87,28 @@ Gentle, hair-friendly scrunchies designed to prevent creasing and hair breakage.
   - **Tulip Sheer Combo (Pack of 6)**: ₹599 *(MRP ₹749, ~20% off)*
 
 ### 3. Flower Jewellery
+
 Custom floral jewelry designed for pre-wedding functions, Haldi, Mehendi, and traditional festivals.
+
 - **Sub-Type**: Rose.
 - **Colors**: Orange, Pink, Red, White, Yellow.
-- **Pricing**: 
+- **Pricing**:
   - **Single Rose Set**: ₹399 *(MRP ₹469, ~15% off)*
   - **Rose Combo Set**: ₹399 *(MRP ₹469, ~15% off)*
 
 ### 4. Gift Hampers
+
 Curated aesthetic sets combining satins, accessories, and bows in beautiful packaging. Perfect for birthdays, bridesmaid favors, and festivals.
+
 - **Sub-Types & Pricing**:
   - **General Gift Hamper**: ₹199 *(MRP ₹239, ~17% off)*
   - **Glimmer & Grace Hamper**: ₹189 *(MRP ₹219, ~13% off)*
   - **Satin Hamper**: ₹699 *(MRP ₹899, ~22% off)*
 
 ### 5. Festive Accessories
+
 Specialty categories expanding our cultural and holiday catalog:
+
 - **Earrings**: Premium statement pieces.
   - **Pricing**: ₹99 *(MRP ₹129, ~23% off)*
 - **Paraandis**: Traditional hair braids adorned with custom floral details.
@@ -140,6 +134,7 @@ We have built a highly engaged, organic audience across multiple visual platform
 > Every Scrunch & Create accessory is designed, hand-stitched, inspected, packaged, and dispatched in-house.
 
 ### In-House Production Model
+
 - **Strict Quality Control**: Fabric is hand-checked for shine, stretch, and elasticity before cutting.
 - **Accurate Cost-Tracking**: We maintain a robust ledger tracking materials (satin meters, thread, tags, packaging boxes) to ensure sustainable business practices while keeping end-prices fair for customers.
 - **Ethical & Clean Manufacturing**: Produced in a clean, pet-free home-studio environment.
