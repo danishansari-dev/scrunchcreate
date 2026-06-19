@@ -1,4 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
+// Why: CartContext exports both CartProvider and useCart hook, triggering react-refresh warnings.
 /**
  * Why this file exists:
  * Manages cart state globally for the application. Since authentication has
@@ -8,10 +9,11 @@
  * Extended to include: coupon management, centralized shipping calculation,
  * cross-sell recommendations, and savings tracking.
  */
-import React, { createContext, useContext, useEffect, useMemo, useState, useCallback } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState, useCallback } from 'react'
 import { getCart, addToCartAPI, updateCartItemAPI, removeFromCartAPI, clearCartAPI, getProducts } from '../services/api';
-import { useToast } from './ToastContext';
+import { useToast } from '../components/ToastContext';
 import { validateCoupon, calculateDeliveryFee } from '../utils/couponUtils';
+import { shuffle } from '../utils/shuffle';
 import { FREE_SHIPPING_THRESHOLD } from '../config/coupons';
 
 const CartContext = createContext(null);
@@ -222,7 +224,7 @@ export function CartProvider({ children }) {
     }
 
     // Shuffle and take 3
-    const shuffled = candidates.sort(() => Math.random() - 0.5);
+    const shuffled = shuffle(candidates);
     return shuffled.slice(0, 3);
   }, [items, allProducts]);
 
