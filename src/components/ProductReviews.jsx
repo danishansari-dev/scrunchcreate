@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import styles from './ProductReviews.module.css'
 
 // Simulated reviews data - in a real app this would come from an API or localStorage
