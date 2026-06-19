@@ -26,6 +26,7 @@
     right: 0;
     width: 100%;
     max-width: 420px;
+    min-width: 0;
     height: 100%;
     background: var(--color-surface);
     box-shadow: -4px 0 24px rgba(0, 0, 0, 0.15);
@@ -66,7 +67,8 @@
     background: none;
     border: none;
     cursor: pointer;
-    padding: 8px;
+    /* Increase padding to 10px so 24px SVG meets 44px touch target size */
+    padding: 10px;
     color: var(--color-text-muted);
     transition: color 0.15s;
 }
@@ -79,6 +81,7 @@
 .content {
     flex: 1;
     overflow-y: auto;
+    min-width: 0;
     padding: 16px 20px;
 }
 
@@ -113,6 +116,7 @@
 .item {
     display: grid;
     grid-template-columns: 60px 1fr auto auto;
+    min-width: 0;
     gap: 12px;
     align-items: center;
     padding: 12px;
@@ -207,7 +211,8 @@
     background: none;
     border: none;
     cursor: pointer;
-    padding: 6px;
+    /* Increase padding to 14px so 16px SVG meets 44px touch target size */
+    padding: 14px;
     color: var(--color-text-muted);
     transition: color 0.15s;
 }
@@ -290,18 +295,41 @@
     }
 
     .item {
-        grid-template-columns: 50px 1fr auto auto;
-        gap: 8px;
-        padding: 10px;
+        /* Drawer rows become two-line cards so quantity controls keep a usable tap size. */
+        grid-template-columns: 50px minmax(0, 1fr) auto;
+        grid-template-areas:
+            "thumb details remove"
+            "thumb qty qty";
+        align-items: start;
+        gap: 8px 10px;
+        padding: 12px;
     }
 
     .removeBtn {
+        grid-area: remove;
+        justify-self: end;
         position: static;
     }
 
     .thumb {
+        grid-area: thumb;
         width: 50px;
         height: 50px;
+    }
+
+    .details {
+        grid-area: details;
+    }
+
+    .qtyControls {
+        grid-area: qty;
+        justify-self: start;
+    }
+
+    .qtyBtn {
+        /* Ensure 44px touch target size on mobile screens */
+        width: 44px;
+        height: 44px;
     }
 
     .itemName {
