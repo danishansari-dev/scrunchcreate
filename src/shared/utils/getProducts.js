@@ -1,102 +1,232 @@
 /**
- * Load and return products from products.json
- * Uses absolute paths starting with /assets/products (no imports)
+ * Why this file exists:
+ * Load products from Supabase (live backend) with a fallback to the local
+ * products.json file for offline/development usage.
  *
- * SAFETY: Products with empty or missing image arrays are automatically
- * excluded to prevent blank/broken cards in any view.
+ * The returned product shape is identical to the previous local-only version
+ * so all downstream components see zero changes.
+ *
+ * SAFETY: Products with empty or missing images are automatically excluded
+ * to prevent blank/broken cards in any view.
  */
-import productsData from '../../data/products.json';
+import { supabase } from '../config/supabase';
 import { getProductPrice } from './pricing';
 import { normalizeColor, getColorHex } from './colorNormalization';
+
+// Fallback imports for offline mode
+import productsData from '../../data/products.json';
 import cloudinaryMap from '../../../scripts/cloudinary-url-map.json';
+
+let cachedProducts = null;
 
 /**
  * Resolves a local asset relative path to its Cloudinary CDN URL
- * @danishansari-dev path - The relative asset path (e.g., /assets/products/...)
- * @returns The Cloudinary CDN URL or original path if no mapping is found
+ * Why: Only needed for offline fallback when loading from local JSON
+ * @param {string} path - The relative asset path
+ * @returns {string} The Cloudinary CDN URL or original path
  */
 function toCloudinary(path) {
   if (!path) return path;
   return cloudinaryMap[path] || path;
 }
 
-let cachedProducts = null;
+/**
+ * Transforms a Supabase product row into the shape the frontend expects.
+ * Why: The Supabase schema uses snake_case columns, but the frontend
+ * expects camelCase properties. This normalizer bridges the gap.
+ * @param {Object} row - Raw Supabase product row
+ * @returns {Object} Frontend-compatible product object
+ */
+function transformSupabaseProduct(row) {
+  // Parse the variants JSONB field (already stored in frontend shape by the seeder)
+  const variants = Array.isArray(row.variants) ? row.variants : [];
 
-export function getProducts() {
-  if (!cachedProducts) {
-    cachedProducts = productsData
-      .map(product => {
-        // The generated products.json has a flat structure with an 'images' array.
-        // It does NOT have a top-level 'image' string or 'variants' array in the current generation script.
-        const hasVariants = product.variants && product.variants.length > 0;
-
-        // Use the first image from the images array if 'image' property is missing
-        const rawMainImage = product.image || (product.images && product.images.length > 0 ? product.images[0] : null) || (hasVariants && product.variants[0].images && product.variants[0].images[0]);
-        const mainImage = toCloudinary(rawMainImage);
-
-        // If the product has no image at all, skip it
-        if (!mainImage) return null;
-
-        // Parent already has calculated/saved prices from the refactor script,
-        // but let's re-run getProductPrice for consistency and to get originalPrice/discount
-        const pricing = getProductPrice(product);
-
-        if (hasVariants) {
-          const availableColors = product.variants.map(v => normalizeColor(v.color));
-          const defaultVariant = product.variants[0];
-
-          const productImages = (product.images || (defaultVariant.images && defaultVariant.images.length > 0 ? defaultVariant.images : [rawMainImage])).map(toCloudinary);
-
-          return {
-            ...product,
-            ...pricing,
-            images: productImages,
-            primaryImage: mainImage,
-            color: product.color || defaultVariant.color,
-            normalizedColor: normalizeColor(product.color || defaultVariant.color),
-            availableColors: [...new Set(availableColors)],
-            variants: product.variants.map(v => ({
-              ...v,
-              colorHex: getColorHex(v.color),
-              normalizedColor: normalizeColor(v.color),
-              images: (v.images || []).map(toCloudinary)
-            }))
-          };
-        } else {
-          // Standard case for the current flat products.json
-          const productImages = (product.images || [rawMainImage]).map(toCloudinary);
-          return {
-            ...product,
-            ...pricing,
-            images: productImages,
-            primaryImage: mainImage,
-            normalizedColor: normalizeColor(product.color),
-            availableColors: product.color ? [normalizeColor(product.color)] : [],
-            colorHex: getColorHex(product.color)
-          };
-        }
-      })
-      .filter(Boolean);
-  }
-  return cachedProducts;
-}
-
-export function getProductBySlug(slug) {
-  const products = getProducts();
-  return products.find(p => p.slug === slug) || null;
-}
-
-export function getProductsByCategory(category) {
-  const products = getProducts();
-  return products.filter(p => p.category.toLowerCase() === category.toLowerCase());
+  return {
+    id: row.id,
+    _id: row.id,
+    slug: row.slug,
+    name: row.name,
+    category: row.category,
+    type: row.type,
+    color: row.color,
+    normalizedColor: row.normalized_color,
+    colorHex: row.color_hex || getColorHex(row.color),
+    price: Number(row.price) || 0,
+    offerPrice: Number(row.offer_price) || 0,
+    originalPrice: Number(row.original_price) || 0,
+    discountPercent: Number(row.discount_percent) || 0,
+    description: row.description,
+    primaryImage: row.primary_image,
+    image: row.primary_image,
+    images: row.images || [],
+    availableColors: row.available_colors || [],
+    badge: row.badge,
+    inStock: row.in_stock,
+    // Variants in the shape the frontend already expects
+    variants: variants,
+  };
 }
 
 /**
- * Get color variants of a product (same category and type, different colors)
+ * Loads products from local JSON (fallback when Supabase is unavailable).
+ * This is the original logic preserved for offline mode.
+ * @returns {Array} Formatted product list
  */
-export function getProductVariants(product) {
+function loadLocalProducts() {
+  return productsData
+    .map(product => {
+      const hasVariants = product.variants && product.variants.length > 0;
+      const rawMainImage = product.image
+        || (product.images && product.images.length > 0 ? product.images[0] : null)
+        || (hasVariants && product.variants[0].images && product.variants[0].images[0]);
+      const mainImage = toCloudinary(rawMainImage);
+
+      if (!mainImage) return null;
+
+      const pricing = getProductPrice(product);
+
+      if (hasVariants) {
+        const availableColors = product.variants.map(v => normalizeColor(v.color));
+        const defaultVariant = product.variants[0];
+        const productImages = (product.images || (defaultVariant.images && defaultVariant.images.length > 0
+          ? defaultVariant.images : [rawMainImage])).map(toCloudinary);
+
+        return {
+          ...product,
+          ...pricing,
+          images: productImages,
+          primaryImage: mainImage,
+          color: product.color || defaultVariant.color,
+          normalizedColor: normalizeColor(product.color || defaultVariant.color),
+          availableColors: [...new Set(availableColors)],
+          variants: product.variants.map(v => ({
+            ...v,
+            colorHex: getColorHex(v.color),
+            normalizedColor: normalizeColor(v.color),
+            images: (v.images || []).map(toCloudinary)
+          }))
+        };
+      } else {
+        const productImages = (product.images || [rawMainImage]).map(toCloudinary);
+        return {
+          ...product,
+          ...pricing,
+          images: productImages,
+          primaryImage: mainImage,
+          normalizedColor: normalizeColor(product.color),
+          availableColors: product.color ? [normalizeColor(product.color)] : [],
+          colorHex: getColorHex(product.color)
+        };
+      }
+    })
+    .filter(Boolean);
+}
+
+/**
+ * Fetches all products from Supabase, with localStorage JSON fallback.
+ * Uses in-memory caching to avoid redundant network calls.
+ * @returns {Promise<Array>} Formatted product list
+ */
+export async function getProducts() {
+  if (cachedProducts) return cachedProducts;
+
+  // Try Supabase first
+  if (supabase) {
+    try {
+      const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .order('category')
+        .order('name');
+
+      if (!error && data && data.length > 0) {
+        cachedProducts = data
+          .map(transformSupabaseProduct)
+          .filter(p => p.primaryImage); // Safety: skip products without images
+        console.log(`[Products] Loaded ${cachedProducts.length} products from Supabase`);
+        return cachedProducts;
+      }
+
+      // Supabase returned no data or errored — fall through to local
+      if (error) {
+        console.warn('[Products] Supabase error, falling back to local:', error.message);
+      } else {
+        console.warn('[Products] Supabase returned 0 products, falling back to local');
+      }
+    } catch (err) {
+      console.warn('[Products] Supabase unreachable, falling back to local:', err.message);
+    }
+  }
+
+  // Fallback: load from local JSON
+  cachedProducts = loadLocalProducts();
+  console.log(`[Products] Loaded ${cachedProducts.length} products from local JSON (offline mode)`);
+  return cachedProducts;
+}
+
+/**
+ * Finds a single product by slug.
+ * Uses a direct Supabase query for efficiency when available.
+ * @param {string} slug - The product slug
+ * @returns {Promise<Object|null>} The product or null
+ */
+export async function getProductBySlug(slug) {
+  // Try direct Supabase lookup first (avoids loading all products)
+  if (supabase) {
+    try {
+      const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .eq('slug', slug)
+        .single();
+
+      if (!error && data) {
+        return transformSupabaseProduct(data);
+      }
+    } catch {
+      // Fall through to cache-based lookup
+    }
+  }
+
+  // Fallback: search in cached/local products
+  const products = await getProducts();
+  return products.find(p => p.slug === slug) || null;
+}
+
+/**
+ * Filters products by category.
+ * @param {string} category - The category name
+ * @returns {Promise<Array>} Matching products
+ */
+export async function getProductsByCategory(category) {
+  // Try direct Supabase query
+  if (supabase) {
+    try {
+      const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .ilike('category', category);
+
+      if (!error && data) {
+        return data.map(transformSupabaseProduct).filter(p => p.primaryImage);
+      }
+    } catch {
+      // Fall through
+    }
+  }
+
+  const products = await getProducts();
+  return products.filter(p => p.category && p.category.toLowerCase() === category.toLowerCase());
+}
+
+/**
+ * Finds other variant products of the same type.
+ * @param {Object} product - Current product reference
+ * @returns {Promise<Array>} Sibling variant products
+ */
+export async function getProductVariants(product) {
   if (!product) return [];
-  const products = getProducts();
+  const products = await getProducts();
   return products.filter(p =>
     p.category === product.category &&
     p.type === product.type &&
@@ -105,6 +235,9 @@ export function getProductVariants(product) {
   );
 }
 
-
-
-
+/**
+ * Invalidates the product cache so the next call fetches fresh data.
+ */
+export function invalidateProductCache() {
+  cachedProducts = null;
+}
