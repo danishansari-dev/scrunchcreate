@@ -1,0 +1,540 @@
+@import '../../../../shared/theme/theme.css';
+
+/* Overlay */
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Drawer Panel */
+.drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 100%;
+    max-width: 420px;
+    min-width: 0;
+    height: 100%;
+    background: var(--color-surface);
+    box-shadow: -4px 0 24px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    z-index: 1001;
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--color-border-soft);
+    flex-shrink: 0;
+}
+
+.title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--color-text-main);
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+}
+
+.itemCount {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--color-text-muted);
+}
+
+.closeBtn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    /* 44px touch target */
+    padding: 10px;
+    color: var(--color-text-muted);
+    transition: color 0.15s;
+}
+
+.closeBtn:hover {
+    color: var(--color-text-main);
+}
+
+/* ─── Free Shipping Progress Bar ─── */
+.shippingBar {
+    padding: 12px 20px;
+    background: var(--color-surface-soft);
+    border-bottom: 1px solid var(--color-border-soft);
+    flex-shrink: 0;
+}
+
+.shippingBarText {
+    font-size: 13px;
+    color: var(--color-text-muted);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.shippingBarText strong {
+    color: var(--color-primary);
+}
+
+.shippingIcon {
+    font-size: 16px;
+}
+
+.shippingTrack {
+    width: 100%;
+    height: 6px;
+    background: var(--color-border-soft);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.shippingFill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--color-primary), #e8a87c);
+    border-radius: 3px;
+    transition: width 0.4s ease-out;
+}
+
+.shippingBarComplete {
+    font-size: 13px;
+    color: #2e7d32;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Content */
+.content {
+    flex: 1;
+    overflow-y: auto;
+    min-width: 0;
+    padding: 16px 20px;
+}
+
+/* Empty State */
+.empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--color-text-muted);
+}
+
+.emptyIcon {
+    font-size: 48px;
+    margin-bottom: 12px;
+}
+
+.browseLink {
+    display: inline-block;
+    margin-top: 16px;
+    padding: 10px 24px;
+    background: var(--color-primary);
+    color: var(--color-on-primary);
+    text-decoration: none;
+    border-radius: var(--radius-md);
+    font-weight: 500;
+    transition: opacity 0.15s;
+}
+
+.browseLink:hover {
+    opacity: 0.9;
+}
+
+/* Item List */
+.list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.item {
+    display: grid;
+    grid-template-columns: 60px 1fr auto auto;
+    min-width: 0;
+    gap: 12px;
+    align-items: center;
+    padding: 12px;
+    background: var(--color-surface-soft);
+    border: 1px solid var(--color-border-soft);
+    border-radius: var(--radius-md);
+}
+
+/* Thumbnail */
+.thumb {
+    width: 60px;
+    height: 60px;
+    background: var(--color-border-soft);
+    background-size: cover;
+    background-position: center;
+    border-radius: var(--radius-sm);
+    position: relative;
+    overflow: hidden;
+}
+
+.discountBadge {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    background: #e53935;
+    color: #fff;
+    font-size: 9px;
+    font-weight: 600;
+    padding: 1px 4px;
+    border-radius: 3px;
+    line-height: 1.3;
+}
+
+/* Details */
+.details {
+    min-width: 0;
+}
+
+.itemName {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-text-main);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.meta {
+    font-size: 12px;
+    color: var(--color-text-muted);
+    margin-top: 2px;
+}
+
+.priceContainer {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    margin-top: 4px;
+}
+
+.itemPrice {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-primary);
+}
+
+.itemOriginalPrice {
+    font-size: 11px;
+    color: var(--color-text-muted);
+    text-decoration: line-through;
+}
+
+/* Quantity Controls */
+.qtyControls {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.qtyBtn {
+    width: 28px;
+    height: 28px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-border-soft);
+    background: var(--color-surface);
+    color: var(--color-text-main);
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+}
+
+.qtyBtn:hover {
+    background: var(--color-surface-soft);
+}
+
+.qty {
+    min-width: 20px;
+    text-align: center;
+    font-size: 14px;
+}
+
+/* Remove Button */
+.removeBtn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    /* 44px touch target */
+    padding: 14px;
+    color: var(--color-text-muted);
+    transition: color 0.15s;
+}
+
+.removeBtn:hover {
+    color: #e53935;
+}
+
+/* ─── Cross-sell Section ─── */
+.crossSell {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--color-border-soft);
+}
+
+.crossSellTitle {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-text-main);
+    margin: 0 0 12px;
+}
+
+.crossSellScroll {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.crossSellCard {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    background: var(--color-surface-soft);
+    border: 1px solid var(--color-border-soft);
+    border-radius: var(--radius-md);
+}
+
+.crossSellThumb {
+    width: 40px;
+    height: 40px;
+    background-size: cover;
+    background-position: center;
+    border-radius: var(--radius-sm);
+    flex-shrink: 0;
+    background-color: var(--color-border-soft);
+}
+
+.crossSellInfo {
+    flex: 1;
+    min-width: 0;
+}
+
+.crossSellName {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--color-text-main);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.crossSellPrice {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-primary);
+    margin-top: 2px;
+}
+
+.crossSellAddBtn {
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-primary);
+    background: transparent;
+    border: 1.5px solid var(--color-primary);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.15s;
+    flex-shrink: 0;
+}
+
+.crossSellAddBtn:hover {
+    background: var(--color-primary);
+    color: var(--color-on-primary);
+}
+
+/* ─── Footer / Summary ─── */
+.footer {
+    padding: 16px 20px;
+    border-top: 1px solid var(--color-border-soft);
+    background: var(--color-surface-soft);
+    flex-shrink: 0;
+}
+
+.savingsMessage {
+    font-size: 13px;
+    color: #2e7d32;
+    background: #e8f5e9;
+    padding: 8px 12px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 12px;
+    text-align: center;
+}
+
+.summaryRow {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    color: var(--color-text-muted);
+    margin-bottom: 6px;
+}
+
+.freeLabel {
+    color: #2e7d32;
+    font-weight: 600;
+}
+
+.summaryTotal {
+    display: flex;
+    justify-content: space-between;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--color-text-main);
+    margin: 12px 0 16px;
+}
+
+.checkoutBtn {
+    width: 100%;
+    height: 48px;
+    border: none;
+    border-radius: var(--radius-md);
+    background: var(--color-primary);
+    color: var(--color-on-primary);
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 8px;
+    transition: opacity 0.15s, transform 0.1s;
+}
+
+.checkoutBtn:hover {
+    opacity: 0.9;
+}
+
+.checkoutBtn:active {
+    transform: scale(0.98);
+}
+
+.drawerActions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 4px;
+}
+
+.viewCartLink {
+    font-size: 13px;
+    color: var(--color-primary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.clearBtn {
+    background: none;
+    border: none;
+    color: var(--color-text-muted);
+    font-size: 13px;
+    cursor: pointer;
+    padding: 4px 8px;
+    transition: color 0.15s;
+}
+
+.clearBtn:hover {
+    color: #e53935;
+}
+
+/* ─── Mobile Responsive ─── */
+@media (max-width: 480px) {
+    .drawer {
+        max-width: 100%;
+    }
+
+    .header {
+        padding: 12px 16px;
+    }
+
+    .shippingBar {
+        padding: 10px 16px;
+    }
+
+    .content {
+        padding: 12px 16px;
+    }
+
+    .item {
+        grid-template-columns: 50px minmax(0, 1fr) auto;
+        grid-template-areas:
+            "thumb details remove"
+            "thumb qty qty";
+        align-items: start;
+        gap: 8px 10px;
+        padding: 12px;
+    }
+
+    .removeBtn {
+        grid-area: remove;
+        justify-self: end;
+        position: static;
+    }
+
+    .thumb {
+        grid-area: thumb;
+        width: 50px;
+        height: 50px;
+    }
+
+    .details {
+        grid-area: details;
+    }
+
+    .qtyControls {
+        grid-area: qty;
+        justify-self: start;
+    }
+
+    .qtyBtn {
+        /* 44px touch target on mobile */
+        width: 44px;
+        height: 44px;
+    }
+
+    .itemName {
+        font-size: 13px;
+    }
+
+    .footer {
+        padding: 12px 16px;
+        margin-top: auto;
+    }
+
+    .summaryTotal {
+        margin: 8px 0 12px;
+        font-size: 15px;
+    }
+
+    .checkoutBtn {
+        height: 44px;
+        font-size: 14px;
+    }
+}
