@@ -171,93 +171,148 @@ export const getProduct = async (id) => {
   return found;
 };
 
-// ─── Auth Exports (local mock, unchanged) ────────────────────────────
+// ─── Auth Exports (Supabase Auth Integration) ─────────────────────────
 
 /**
- * Retrieves list of registered mock users from localStorage
- * @returns {Array} User objects
- */
-const getStoredUsers = () => {
-  try {
-    return JSON.parse(localStorage.getItem('mock_users') || '[]');
-  } catch {
-    return [];
-  }
-};
-
-/**
- * Saves mock users list to localStorage
- * @param {Array} users - User objects
- */
-const saveStoredUsers = (users) => {
-  localStorage.setItem('mock_users', JSON.stringify(users));
-};
-
-/**
- * Registers a new user locally
- * TODO: Replace with Supabase Auth when authentication is added
- * @param {string} name - New user's name
- * @param {string} email - User's email address
- * @param {string} password - User's password
- * @returns {Promise<Object>} Register response
+ * Registers a user in Supabase Auth
+ * Why: Supabase Auth handles database-level secure user creation.
+ * We also save the name as custom user metadata so it's accessible.
+ * @danishansari-dev name - User's full name
+ * @danishansari-dev email - User's unique email address
+ * @danishansari-dev password - User's chosen password
+ * @returns {Promise<Object>} Success status and user data
  */
 export const register = async (name, email, password) => {
-  const users = getStoredUsers();
-  if (users.some((u) => u.email.toLowerCase() === email.toLowerCase())) {
-    throw createAxiosError('User already exists with this email.');
+  if (!supabase) {
+    throw createAxiosError('Supabase is not configured.');
   }
 
-  // WARNING: Passwords stored in plaintext. Strictly for local mock.
-  // TODO: Implement Supabase Auth when integrating real authentication.
-  const newUser = {
-    _id: `user_${Date.now()}`,
-    name,
+  const { data, error } = await supabase.auth.signUp({
     email: email.toLowerCase(),
     password,
-  };
+    options: {
+      data: {
+        name,
+      },
+    },
+  });
 
-  users.push(newUser);
-  saveStoredUsers(users);
+  if (error) {
+    throw createAxiosError(error.message);
+  }
 
-  const token = `mock-jwt-${newUser._id}`;
-  localStorage.setItem('token', token);
-  localStorage.setItem('mock_current_user', JSON.stringify(newUser));
+  // Tricky logic: Store user email in localStorage synchronously so that
+  // subsequent getLocalUserEmail() reads use their logged-in cart name right away.
+  if (data.user) {
+    localStorage.setItem('scrunch_current_user_email', email.toLowerCase());
+    await mergeGuestCartIntoUserCart(email.toLowerCase());
+  }
 
-  return { success: true, token, data: newUser };
+  return { success: true, user: data.user, session: data.session };
 };
 
 /**
- * Logs in a user locally
- * TODO: Replace with Supabase Auth when authentication is added
- * @param {string} email - Registered user's email
- * @param {string} password - Plaintext password
- * @returns {Promise<Object>} Login response
+ * Logs in a user in Supabase Auth
+ * Why: Verifies credentials against Supabase Auth storage and returns user session.
+ * @danishansari-dev email - User's email address
+ * @danishansari-dev password - User's password
+ * @returns {Promise<Object>} Login status and user data
  */
 export const login = async (email, password) => {
-  const users = getStoredUsers();
-  const foundUser = users.find(
-    (u) => u.email.toLowerCase() === email.toLowerCase()
-  );
-
-  // WARNING: Direct comparison of plaintext password.
-  // TODO: Use Supabase Auth with secure password handling.
-  if (!foundUser || foundUser.password !== password) {
-    throw createAxiosError('Invalid email or password.');
+  if (!supabase) {
+    throw createAxiosError('Supabase is not configured.');
   }
 
-  const token = `mock-jwt-${foundUser._id}`;
-  localStorage.setItem('token', token);
-  localStorage.setItem('mock_current_user', JSON.stringify(foundUser));
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email: email.toLowerCase(),
+    password,
+  });
 
-  return { success: true, token, data: foundUser };
+  if (error) {
+    throw createAxiosError(error.message);
+  }
+
+  if (data.user) {
+    localStorage.setItem('scrunch_current_user_email', email.toLowerCase());
+    await mergeGuestCartIntoUserCart(email.toLowerCase());
+  }
+
+  return { success: true, user: data.user, session: data.session };
+};
+
+/**
+ * Logs out the current user session
+ * Why: Clears the session tokens in Supabase Auth client and browser local storage.
+ * @returns {Promise<void>}
+ */
+export const logout = async () => {
+  if (!supabase) return;
+  const { error } = await supabase.auth.signOut();
+  if (error) {
+    throw createAxiosError(error.message);
+  }
+  // Remove user email cache
+  localStorage.removeItem('scrunch_current_user_email');
+  localStorage.removeItem('mock_current_user');
+};
+
+/**
+ * Retrieves current authenticated user profile
+ * Why: React contexts need a reliable way to get user data on mount.
+ * Tricky logic: Session checks are done first, followed by getting details from supabase.auth.getUser() to prevent JWT bypass.
+ * @returns {Promise<Object|null>} User object or null if not authenticated
+ */
+export const getCurrentUser = async () => {
+  if (!supabase) return null;
+  const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+  if (sessionError || !session) return null;
+
+  const { data: { user }, error: userError } = await supabase.auth.getUser();
+  if (userError || !user) return null;
+
+  return {
+    id: user.id,
+    email: user.email,
+    name: user.user_metadata?.name || user.user_metadata?.full_name || 'User',
+    createdAt: user.created_at,
+  };
+};
+
+/**
+ * Merges guest cart items into a user's persistent cart
+ * Why: If a visitor shops as guest, we want their items migrated to their account cart upon login.
+ * Tricky logic: Merges duplicate items by summing their quantities, then clears the guest cart to avoid duplicate checkouts.
+ * @danishansari-dev email - User's email address to merge items into
+ * @returns {Promise<void>}
+ */
+export const mergeGuestCartIntoUserCart = async (email) => {
+  if (!email || email === 'guest') return;
+  const guestCart = getStoredCart('guest');
+  if (guestCart.length === 0) return;
+
+  const userCart = getStoredCart(email);
+
+  guestCart.forEach((guestItem) => {
+    const existingItem = userCart.find((userItem) => userItem.productId === guestItem.productId);
+    if (existingItem) {
+      existingItem.quantity += guestItem.quantity;
+    } else {
+      userCart.push({ ...guestItem });
+    }
+  });
+
+  saveStoredCart(email, userCart);
+  saveStoredCart('guest', []); // Clear guest cart
 };
 
 // ─── Order Exports (Supabase-backed) ─────────────────────────────────
 
 /**
- * Places a new order — saves to Supabase if available, localStorage fallback.
- * @param {Object} orderData - Object containing items list and shipping address
- * @returns {Promise<Object>} Order confirmation
+ * Places an order and records it in the database
+ * Why: Stores order details securely in Supabase with user_id mapping if authenticated.
+ * Tricky logic: Falls back to localStorage if Supabase is unreachable so checkout never breaks.
+ * @danishansari-dev orderData - Object containing checkout form inputs and items
+ * @returns {Promise<Object>} Order confirmation status
  */
 export const placeOrder = async (orderData) => {
   const products = await getProducts();
@@ -271,12 +326,24 @@ export const placeOrder = async (orderData) => {
   const orderId = `order_${Date.now()}`;
   const sessionId = getSessionId();
 
+  // Try to get authenticated user ID if logged in
+  let currentUserId = null;
+  if (supabase) {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        currentUserId = user.id;
+      }
+    } catch { /* ignore and leave as guest order */ }
+  }
+
   // Build enriched order with contact, payment, coupon, and fee data
   const newOrder = {
     id: orderId,
     _id: orderId,
     session_id: sessionId,
-    user: sessionId,
+    user: currentUserId || sessionId,
+    user_id: currentUserId,
     items: orderItems,
     shippingAddress: orderData.shippingAddress,
     shipping_address: orderData.shippingAddress,
@@ -302,6 +369,7 @@ export const placeOrder = async (orderData) => {
       const supabaseRow = {
         id: orderId,
         session_id: sessionId,
+        user_id: currentUserId,
         items: orderItems,
         shipping_address: orderData.shippingAddress,
         contact: orderData.contact || null,
@@ -320,7 +388,6 @@ export const placeOrder = async (orderData) => {
 
       if (error) {
         console.warn('[Orders] Supabase insert failed, using localStorage:', error.message);
-        // Fall through to localStorage backup
         saveOrderLocally(newOrder);
       } else {
         console.log('[Orders] Order saved to Supabase:', orderId);
@@ -356,6 +423,10 @@ function saveOrderLocally(order) {
  * @returns {string} User email or 'guest'
  */
 function getLocalUserEmail() {
+  const email = localStorage.getItem('scrunch_current_user_email');
+  if (email) return email;
+
+  // Fallback to legacy mock user representation
   const userStr = localStorage.getItem('mock_current_user');
   const user = userStr ? JSON.parse(userStr) : null;
   return user ? user.email : 'guest';
@@ -384,8 +455,10 @@ const saveStoredOrders = (email, orders) => {
 };
 
 /**
- * Fetches current user's order history (Supabase + localStorage merge)
- * @returns {Promise<Array>} Orders array
+ * Retrieves order history for the current user
+ * Why: Displays past purchases in the profile page.
+ * Tricky logic: Queries orders by user ID OR current session ID to show both guest and logged-in purchases.
+ * @returns {Promise<Array>} List of orders
  */
 export const getMyOrders = async () => {
   const sessionId = getSessionId();
@@ -394,11 +467,18 @@ export const getMyOrders = async () => {
   // Try Supabase
   if (supabase) {
     try {
-      const { data, error } = await supabase
-        .from('orders')
-        .select('*')
-        .eq('session_id', sessionId)
-        .order('created_at', { ascending: false });
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      let query = supabase.from('orders').select('*');
+      
+      // Fetch orders associated with this user ID OR this guest session
+      if (user) {
+        query = query.or(`user_id.eq.${user.id},session_id.eq.${sessionId}`);
+      } else {
+        query = query.eq('session_id', sessionId);
+      }
+
+      const { data, error } = await query.order('created_at', { ascending: false });
 
       if (!error && data) {
         supabaseOrders = data.map(row => ({
@@ -410,6 +490,7 @@ export const getMyOrders = async () => {
           deliveryFee: row.delivery_fee,
           codFee: row.cod_fee,
           createdAt: row.created_at,
+          userId: row.user_id,
         }));
       }
     } catch {
@@ -522,6 +603,24 @@ export const clearCartAPI = async () => {
 const mockApi = {
   get: async (url) => {
     if (url === '/auth/me') {
+      if (supabase) {
+        try {
+          const { data: { user } } = await supabase.auth.getUser();
+          if (user) {
+            return {
+              data: {
+                success: true,
+                data: {
+                  id: user.id,
+                  email: user.email,
+                  name: user.user_metadata?.name || 'User',
+                },
+              },
+            };
+          }
+        } catch { /* fallback to mock */ }
+      }
+      
       const userStr = localStorage.getItem('mock_current_user');
       if (!userStr) {
         throw createAxiosError('Not authenticated', 401);
