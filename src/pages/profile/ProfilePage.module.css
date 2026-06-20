@@ -1,0 +1,542 @@
+.page {
+  min-height: calc(100vh - 80px);
+  background: var(--color-surface-soft);
+  padding: var(--space-10) var(--space-4);
+  display: flex;
+  justify-content: center;
+}
+
+.container {
+  width: 100%;
+  max-width: 1140px;
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 32px;
+}
+
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 120px);
+  gap: var(--space-3);
+  color: var(--color-text-muted);
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--color-border-soft);
+  border-radius: 50%;
+  border-top-color: var(--color-primary-strong);
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Sidebar Profile Card */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+}
+
+.profileCard {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: 32px 24px;
+  border: 1px solid var(--color-border-soft);
+  box-shadow: var(--shadow-soft);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: sticky;
+  top: 100px;
+}
+
+.avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-primary) 100%);
+  color: var(--color-surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: var(--space-4);
+  border: 4px solid var(--color-surface-soft);
+  box-shadow: 0 8px 16px rgba(74, 28, 64, 0.1);
+}
+
+.userName {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--color-secondary);
+  margin-bottom: 4px;
+}
+
+.userEmail {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-4);
+  word-break: break-all;
+}
+
+.metaRow {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.82rem;
+  padding: 12px 0;
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 24px;
+}
+
+.metaRow span {
+  color: var(--color-text-muted);
+}
+
+.metaRow strong {
+  color: var(--color-text-main);
+  font-weight: 600;
+}
+
+.logoutBtn {
+  width: 100%;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-error);
+  background: transparent;
+  border: 1.5px solid var(--color-error);
+  padding: 10px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.logoutBtn:hover {
+  background: var(--color-error);
+  color: var(--color-surface);
+  box-shadow: 0 4px 10px rgba(210, 0, 0, 0.15);
+}
+
+/* Right Side Dashboard Content */
+.content {
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboardTitle {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--color-secondary);
+  margin-bottom: 4px;
+}
+
+.dashboardSub {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-10);
+}
+
+/* Empty Orders State */
+.emptyOrders {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: var(--space-10) var(--space-4);
+  text-align: center;
+  border: 1px dashed var(--color-border-soft);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: var(--shadow-soft);
+}
+
+.emptyIcon {
+  font-size: 3rem;
+  margin-bottom: var(--space-4);
+}
+
+.emptyOrders h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-secondary);
+  margin-bottom: 8px;
+}
+
+.emptyOrders p {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  max-width: 420px;
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+.shopBtn {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-on-primary);
+  background: var(--color-secondary);
+  padding: 12px 28px;
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 10px rgba(74, 28, 64, 0.15);
+}
+
+.shopBtn:hover {
+  background: #391431;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(74, 28, 64, 0.25);
+}
+
+/* Orders Cards List */
+.ordersList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.orderCard {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border-soft);
+  box-shadow: var(--shadow-soft);
+  overflow: hidden;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.orderCardExpanded {
+  box-shadow: 0 10px 25px rgba(74, 28, 64, 0.06);
+  border-color: var(--color-surface-accent);
+}
+
+.orderHeader {
+  padding: 18px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  background-color: var(--color-surface);
+  transition: background-color 0.15s ease;
+}
+
+.orderHeader:hover {
+  background-color: var(--color-surface-soft);
+}
+
+.headerMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.orderIdLabel {
+  font-weight: 600;
+  color: var(--color-secondary);
+  font-size: 0.95rem;
+}
+
+.orderDate {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.orderTotalHeader {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--color-text-main);
+}
+
+.arrowIcon {
+  color: var(--color-text-muted);
+  transition: transform 0.2s ease;
+}
+
+.arrowIconRotated {
+  transform: rotate(180deg);
+}
+
+/* Status Badges */
+.statusBadge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 12px;
+  text-transform: capitalize;
+}
+
+.statusPending {
+  background-color: #fff3e0;
+  color: #e65100;
+}
+
+.statusProcessing {
+  background-color: #e3f2fd;
+  color: #0d47a1;
+}
+
+.statusShipped {
+  background-color: #e8eaf6;
+  color: #1a237e;
+}
+
+.statusDelivered {
+  background-color: #e8f5e9;
+  color: #1b5e20;
+}
+
+.statusCancelled {
+  background-color: #ffebee;
+  color: #b71c1c;
+}
+
+/* Expanded Details Section */
+.orderDetails {
+  border-top: 1px solid var(--color-border-soft);
+  background-color: #fafbfc;
+  animation: slideDown 0.25s ease-out;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; max-height: 0; }
+  to { opacity: 1; max-height: 1000px; }
+}
+
+.detailsGrid {
+  padding: 24px;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 32px;
+}
+
+.detailsItems h4,
+.detailsSummary h4 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-secondary);
+  margin-bottom: var(--space-4);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.itemsList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.itemRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--color-border-soft);
+}
+
+.itemRow:last-child {
+  border-bottom: none;
+}
+
+.itemThumb {
+  width: 50px;
+  height: 50px;
+  border-radius: var(--radius-sm);
+  background-size: cover;
+  background-position: center;
+  border: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.itemThumbPlaceholder {
+  width: 50px;
+  height: 50px;
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  border: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.itemInfo {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.itemName {
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--color-text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.itemMeta {
+  display: flex;
+  gap: var(--space-3);
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.itemPrice {
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: var(--color-text-main);
+}
+
+/* Invoice Summary Table */
+.invoiceTable {
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  border: 1px solid var(--color-border);
+  margin-bottom: 20px;
+}
+
+.invoiceRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: var(--color-text-main);
+  margin-bottom: 8px;
+}
+
+.invoiceDiscount {
+  color: var(--color-primary-strong);
+  font-weight: 500;
+}
+
+.invoiceDivider {
+  height: 1px;
+  background-color: var(--color-border);
+  margin: 12px 0 8px 0;
+}
+
+.invoiceTotal {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-secondary);
+  margin-bottom: 0;
+}
+
+/* Shipping Info Summary */
+.shippingInfo {
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  border: 1px solid var(--color-border);
+  margin-bottom: 20px;
+}
+
+.shippingInfo h5 {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text-main);
+  margin-bottom: 8px;
+}
+
+.shippingInfo p {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  line-height: 1.4;
+  margin-bottom: 2px;
+}
+
+/* Details Actions CTAs */
+.actionsGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.btnCompleteCheckout,
+.btnSupport {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: var(--radius-md);
+  text-align: center;
+  transition: var(--transition-fast);
+}
+
+.btnCompleteCheckout {
+  background-color: #25D366; /* WhatsApp brand color */
+  color: var(--color-surface);
+  box-shadow: 0 4px 10px rgba(37, 211, 102, 0.15);
+}
+
+.btnCompleteCheckout:hover {
+  background-color: #20ba59;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(37, 211, 102, 0.25);
+}
+
+.btnSupport {
+  background-color: var(--color-surface);
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border-soft);
+}
+
+.btnSupport:hover {
+  border-color: var(--color-secondary);
+  color: var(--color-secondary);
+  background-color: var(--color-surface-soft);
+}
+
+/* Responsive Grid layouts */
+@media (max-width: 991px) {
+  .container {
+    grid-template-columns: 1fr;
+  }
+
+  .profileCard {
+    position: static;
+    padding: 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .detailsGrid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding: 16px;
+  }
+
+  .orderHeader {
+    padding: 16px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .headerRight {
+    width: 100%;
+    justify-content: space-between;
+    border-top: 1px solid var(--color-surface-soft);
+    padding-top: 12px;
+  }
+}
