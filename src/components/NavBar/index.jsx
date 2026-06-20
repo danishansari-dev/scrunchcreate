@@ -4,6 +4,7 @@ import styles from './NavBar.module.css';
 import { useCart } from '../../features/cart/context/CartContext';
 import { getProducts } from '../../services/api';
 import { useWishlist } from '../../features/wishlist/context/WishlistContext';
+import { useAuth } from '../../features/auth/context/AuthContext';
 
 // Map category names to URL slugs
 const categoryToSlug = {
@@ -39,11 +40,13 @@ const navCategories = ['HairBow', 'Scrunchie', 'GiftHamper', 'FlowerJewellery', 
 const NavBar = () => {
   const { totalItems, toggleCart } = useCart();
   const { wishlist } = useWishlist();
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
 
   // Category data built from async product fetch
   const [categoryData, setCategoryData] = useState({});
@@ -199,9 +202,9 @@ const NavBar = () => {
                           {data.types.map(typeGroup => (
                             <div key={typeGroup.name} className={styles.megaMenuColumn}>
                               <Link
-                                to={`/products/${slug}?type=${encodeURIComponent(typeGroup.name)}`}
-                                className={styles.megaMenuHeading}
-                                onClick={() => setActiveDropdown(null)}
+                                  to={`/products/${slug}?type=${encodeURIComponent(typeGroup.name)}`}
+                                  className={styles.megaMenuHeading}
+                                  onClick={() => setActiveDropdown(null)}
                               >
                                 {typeGroup.name}
                               </Link>
@@ -262,8 +265,59 @@ const NavBar = () => {
                 </svg>
               </button>
             </div>
-            
-            
+
+            {/* Profile Dropdown Container */}
+            <div 
+              className={styles.profileMenuContainer}
+              onMouseLeave={() => setProfileDropdownOpen(false)}
+            >
+              {user ? (
+                <div className={styles.profileWrapper}>
+                  <button
+                    onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
+                    className={styles.avatarButton}
+                    aria-label="Open profile menu"
+                    aria-haspopup="true"
+                    aria-expanded={profileDropdownOpen}
+                  >
+                    {user.name ? user.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) : 'U'}
+                  </button>
+                  {profileDropdownOpen && (
+                    <div className={styles.profileDropdown}>
+                      <div className={styles.dropdownHeader}>
+                        <span className={styles.userName}>{user.name}</span>
+                        <span className={styles.userEmail}>{user.email}</span>
+                      </div>
+                      <div className={styles.dropdownDivider} />
+                      <Link
+                        to="/profile"
+                        className={styles.dropdownLink}
+                        onClick={() => setProfileDropdownOpen(false)}
+                      >
+                        My Dashboard
+                      </Link>
+                      <button
+                        onClick={() => {
+                          logout();
+                          setProfileDropdownOpen(false);
+                          navigate('/');
+                        }}
+                        className={styles.dropdownLogoutBtn}
+                      >
+                        Sign Out
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <Link to="/login" className={styles.iconButton} aria-label="Sign In">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                    <circle cx="12" cy="7" r="4" />
+                  </svg>
+                </Link>
+              )}
+            </div>
 
             <Link to="/wishlist" aria-label="Wishlist" className={styles.cartBadge}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
@@ -322,6 +376,47 @@ const NavBar = () => {
               </Link>
             </li>
           ))}
+          <li className={styles.mobileNavDivider} />
+          
+          {user ? (
+            <>
+              <li>
+                <div className={styles.mobileUserHeader}>
+                  <span className={styles.mobileUserInitials}>
+                    {user.name ? user.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) : 'U'}
+                  </span>
+                  <div className={styles.mobileUserInfo}>
+                    <span className={styles.mobileUserName}>{user.name}</span>
+                    <span className={styles.mobileUserEmail}>{user.email}</span>
+                  </div>
+                </div>
+              </li>
+              <li>
+                <Link to="/profile" className={styles.mobileNavLink} onClick={() => setIsMenuOpen(false)}>
+                  My Dashboard
+                </Link>
+              </li>
+              <li>
+                <button
+                  onClick={() => {
+                    logout();
+                    setIsMenuOpen(false);
+                    navigate('/');
+                  }}
+                  className={styles.mobileLogoutBtn}
+                >
+                  Sign Out
+                </button>
+              </li>
+            </>
+          ) : (
+            <li>
+              <Link to="/login" className={styles.mobileNavLink} onClick={() => setIsMenuOpen(false)}>
+                Sign In / Register
+              </Link>
+            </li>
+          )}
+
           <li className={styles.mobileNavDivider} />
           <li>
             <Link to="/wishlist" className={styles.mobileNavLink} onClick={() => setIsMenuOpen(false)}>
