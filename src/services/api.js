@@ -295,25 +295,29 @@ export const mergeGuestCartIntoUserCart = async (email) => {
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
         // Fetch existing user cart items first to merge quantities
-        const { data: userCartItems } = await supabase
+        const { data: userCartItems, error: selectError } = await supabase
           .from('cart_items')
           .select('product_id, quantity')
           .eq('user_id', user.id);
+
+        if (selectError) throw selectError;
 
         const userCartMap = new Map((userCartItems || []).map(item => [item.product_id, item.quantity]));
 
         for (const guestItem of guestCart) {
           const existingQty = userCartMap.get(guestItem.productId);
           if (existingQty !== undefined) {
-            await supabase
+            const { error: updateError } = await supabase
               .from('cart_items')
               .update({ quantity: existingQty + guestItem.quantity })
               .eq('user_id', user.id)
               .eq('product_id', guestItem.productId);
+            if (updateError) throw updateError;
           } else {
-            await supabase
+            const { error: insertError } = await supabase
               .from('cart_items')
               .insert({ user_id: user.id, product_id: guestItem.productId, quantity: guestItem.quantity });
+            if (insertError) throw insertError;
           }
         }
         
@@ -612,7 +616,8 @@ export const getCart = async () => {
           .from('cart_items')
           .select('*')
           .eq('user_id', user.id);
-        if (!error && data) {
+        if (error) throw error;
+        if (data) {
           return data
             .map((item) => {
               const product = resolveProductById(products, item.product_id);
@@ -649,22 +654,26 @@ export const addToCartAPI = async (productId, quantity = 1) => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
-        const { data: existing } = await supabase
+        const { data: existing, error: selectError } = await supabase
           .from('cart_items')
           .select('id, quantity')
           .eq('user_id', user.id)
           .eq('product_id', productId)
           .maybeSingle();
 
+        if (selectError) throw selectError;
+
         if (existing) {
-          await supabase
+          const { error: updateError } = await supabase
             .from('cart_items')
             .update({ quantity: existing.quantity + quantity })
             .eq('id', existing.id);
+          if (updateError) throw updateError;
         } else {
-          await supabase
+          const { error: insertError } = await supabase
             .from('cart_items')
             .insert({ user_id: user.id, product_id: productId, quantity });
+          if (insertError) throw insertError;
         }
         return getCart();
       }
@@ -704,7 +713,8 @@ export const updateCartItemAPI = async (productId, quantity) => {
           .update({ quantity })
           .eq('user_id', user.id)
           .eq('product_id', productId);
-        if (!error) return getCart();
+        if (error) throw error;
+        return getCart();
       }
     } catch (err) {
       console.warn('[Cart] Failed to update Supabase cart, using localStorage:', err.message);
@@ -739,7 +749,8 @@ export const removeFromCartAPI = async (productId) => {
           .delete()
           .eq('user_id', user.id)
           .eq('product_id', productId);
-        if (!error) return getCart();
+        if (error) throw error;
+        return getCart();
       }
     } catch (err) {
       console.warn('[Cart] Failed to remove from Supabase cart, using localStorage:', err.message);
@@ -768,7 +779,8 @@ export const clearCartAPI = async () => {
           .from('cart_items')
           .delete()
           .eq('user_id', user.id);
-        if (!error) return [];
+        if (error) throw error;
+        return [];
       }
     } catch (err) {
       console.warn('[Cart] Failed to clear Supabase cart, using localStorage:', err.message);
@@ -793,13 +805,27 @@ export const getWishlistAPI = async () => {
           .from('wishlist_items')
           .select('product_id')
           .eq('user_id', user.id);
-        if (!error && data) {
+        if (error) throw error;
+        if (data) {
           return data.map(item => item.product_id);
         }
       }
     } catch (err) {
-      console.warn('[Wishlist] Failed to fetch from Supabase:', err.message);
+      console.warn('[Wishlist] Failed to fetch from Supabase, using localStorage:', err.message);
     }
+  }
+
+  // Fallback to local storage wishlist if database fails
+  try {
+    const stored = localStorage.getItem('scrunch_wishlist');
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      if (Array.isArray(parsed)) {
+        return parsed;
+      }
+    }
+  } catch (e) {
+    console.error('Failed to parse fallback wishlist:', e);
   }
   return [];
 };
