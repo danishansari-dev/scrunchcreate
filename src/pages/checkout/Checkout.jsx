@@ -6,13 +6,13 @@
  */
 import { useState, useCallback } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { useCart } from '../../context/CartContext'
+import { useCart } from '../../features/cart/context/CartContext'
 import { useToast } from '../../components/ToastContext'
 import { placeOrder } from '../../services/api'
-import CouponField from '../../components/CouponField'
-import PaymentMethodSelector from '../../components/PaymentMethodSelector'
+import CouponField from '../../features/cart/components/CouponField'
+import PaymentMethodSelector from '../../features/cart/components/PaymentMethodSelector'
 import TrustBadges from '../../components/TrustBadges'
-import { lookupPincode, getDeliveryDate } from '../../utils/pincodeUtils'
+import { lookupPincode, getDeliveryDate } from '../../shared/utils/pincodeUtils'
 import styles from './Checkout.module.css'
 
 const initialFormState = {

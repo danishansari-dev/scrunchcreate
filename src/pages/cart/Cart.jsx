@@ -5,8 +5,8 @@
  * field, savings messaging, and trust badges near the checkout CTA.
  */
 import { useState, useEffect } from 'react'
-import { useCart } from '../../context/CartContext'
-import CouponField from '../../components/CouponField'
+import { useCart } from '../../features/cart/context/CartContext'
+import CouponField from '../../features/cart/components/CouponField'
 import TrustBadges from '../../components/TrustBadges'
 import styles from './Cart.module.css'
 import { Link, useNavigate } from 'react-router-dom'

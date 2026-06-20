@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 import styles from './Wishlist.module.css'
-import { useWishlist } from '../../context/WishlistContext'
+import { useWishlist } from '../../features/wishlist/context/WishlistContext'
 import { getProducts } from '../../services/api'
-import ProductCard from '../../components/ProductCard'
+import ProductCard from '../../features/products/components/ProductCard'
 
 export default function Wishlist() {
     const { wishlist } = useWishlist()

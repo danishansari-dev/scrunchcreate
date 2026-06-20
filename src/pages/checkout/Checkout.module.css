@@ -1,4 +1,4 @@
-@import '../../theme/theme.css';
+@import '../../shared/theme/theme.css';
 
 .page {
   padding: 32px 16px 120px; /* Extra bottom padding for mobile sticky CTA */

@@ -3,12 +3,12 @@ import { useParams, useNavigate, Link } from 'react-router-dom'
 import styles from './ProductDetail.module.css'
 import { getProductBySlug, getProductsByCategory } from '../../services/api'
 
-import { useCart } from '../../context/CartContext'
+import { useCart } from '../../features/cart/context/CartContext'
 import { useToast } from '../../components/ToastContext'
-import { useWishlist } from '../../context/WishlistContext'
-import ProductCard from '../../components/ProductCard'
+import { useWishlist } from '../../features/wishlist/context/WishlistContext'
+import ProductCard from '../../features/products/components/ProductCard'
 import { AnimatePresence } from 'framer-motion'
-import { getColorDisplayName, getColorHex, isCanonicalColor, normalizeColor } from '../../utils/colorNormalization'
+import { getColorDisplayName, getColorHex, isCanonicalColor, normalizeColor } from '../../shared/utils/colorNormalization'
 
 // Heart Icon SVG components
 const HeartOutline = () => (

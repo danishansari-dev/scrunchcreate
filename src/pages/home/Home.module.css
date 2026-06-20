@@ -1,4 +1,4 @@
-@import '../../theme/theme.css';
+@import '../../shared/theme/theme.css';
 
 .homeContainer {
   display: flex;

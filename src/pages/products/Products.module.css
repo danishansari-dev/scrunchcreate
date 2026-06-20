@@ -1,4 +1,4 @@
-@import '../../theme/theme.css';
+@import '../../shared/theme/theme.css';
 
 .page {
   min-height: 100vh;

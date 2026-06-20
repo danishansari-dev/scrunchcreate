@@ -10,10 +10,10 @@
 
 import { useEffect, useState, useMemo } from 'react'
 import { Link } from 'react-router-dom';
-import { generateWhatsAppLink } from '../../utils/whatsappUtils';
-import { getDeliveryDate } from '../../utils/pincodeUtils';
+import { generateWhatsAppLink } from '../../shared/utils/whatsappUtils';
+import { getDeliveryDate } from '../../shared/utils/pincodeUtils';
 import { getProducts } from '../../services/api';
-import { shuffle } from '../../utils/shuffle';
+import { shuffle } from '../../shared/utils/shuffle';
 import styles from './OrderSuccess.module.css';
 
 export default function OrderSuccess() {
