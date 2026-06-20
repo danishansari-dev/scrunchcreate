@@ -9,6 +9,8 @@ import TermsAndConditions from '../pages/legal/TermsAndConditions'
 import Layout from '../components/Layout'
 import Checkout from '../pages/checkout/Checkout'
 import OrderSuccess from '../pages/checkout/OrderSuccess'
+import AuthPage from '../pages/auth/AuthPage'
+import ProfilePage from '../pages/profile/ProfilePage'
 import NotFound from '../pages/NotFound'
 
 export default function App() {
@@ -24,6 +26,8 @@ export default function App() {
         <Route path='/wishlist' element={<Wishlist />} />
         <Route path='/checkout' element={<Checkout />} />
         <Route path='/order-success' element={<OrderSuccess />} />
+        <Route path='/login' element={<AuthPage />} />
+        <Route path='/profile' element={<ProfilePage />} />
         <Route path='/privacy-policy' element={<PrivacyPolicy />} />
         <Route path='/terms-and-conditions' element={<TermsAndConditions />} />
         <Route path='*' element={<NotFound />} />
