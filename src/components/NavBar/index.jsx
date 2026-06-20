@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import styles from './NavBar.module.css';
-import { useCart } from '../context/CartContext';
-import { getProducts } from '../services/api';
-import { useWishlist } from '../context/WishlistContext';
+import { useCart } from '../../features/cart/context/CartContext';
+import { getProducts } from '../../services/api';
+import { useWishlist } from '../../features/wishlist/context/WishlistContext';
 
 // Map category names to URL slugs
 const categoryToSlug = {

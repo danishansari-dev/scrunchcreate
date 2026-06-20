@@ -1,10 +1,10 @@
 import { useLocation, Outlet } from 'react-router-dom'
 // Why: Framer Motion imports may flag as unused depending on ESLint JSX configuration.
 import { AnimatePresence, motion } from 'framer-motion' // eslint-disable-line no-unused-vars
-import NavBar from './NavBar'
-import Footer from './Footer'
-import CartDrawer from './CartDrawer'
-import ErrorBoundary from './ErrorBoundary'
+import NavBar from '../NavBar'
+import Footer from '../Footer'
+import CartDrawer from '../../features/cart/components/CartDrawer'
+import ErrorBoundary from '../ErrorBoundary'
 
 export default function Layout() {
   const location = useLocation()

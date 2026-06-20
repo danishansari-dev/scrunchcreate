@@ -1,4 +1,4 @@
-@import '../theme/theme.css';
+@import '../../shared/theme/theme.css';
 
 .footer {
   border-top: 1px solid rgba(54, 45, 39, 0.08);
