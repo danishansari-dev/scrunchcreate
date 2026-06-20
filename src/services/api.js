@@ -281,7 +281,7 @@ export const getCurrentUser = async () => {
 /**
  * Merges guest cart items into a user's persistent cart
  * Why: If a visitor shops as guest, we want their items migrated to their account cart upon login.
- * Tricky logic: Merges duplicate items by summing their quantities, then clears the guest cart to avoid duplicate checkouts.
+ * Tricky logic: Queries user cart from Supabase first to sum quantities, falls back to local merge if offline.
  * @danishansari-dev email - User's email address to merge items into
  * @returns {Promise<void>}
  */
@@ -290,8 +290,43 @@ export const mergeGuestCartIntoUserCart = async (email) => {
   const guestCart = getStoredCart('guest');
   if (guestCart.length === 0) return;
 
-  const userCart = getStoredCart(email);
+  if (supabase) {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        // Fetch existing user cart items first to merge quantities
+        const { data: userCartItems } = await supabase
+          .from('cart_items')
+          .select('product_id, quantity')
+          .eq('user_id', user.id);
 
+        const userCartMap = new Map((userCartItems || []).map(item => [item.product_id, item.quantity]));
+
+        for (const guestItem of guestCart) {
+          const existingQty = userCartMap.get(guestItem.productId);
+          if (existingQty !== undefined) {
+            await supabase
+              .from('cart_items')
+              .update({ quantity: existingQty + guestItem.quantity })
+              .eq('user_id', user.id)
+              .eq('product_id', guestItem.productId);
+          } else {
+            await supabase
+              .from('cart_items')
+              .insert({ user_id: user.id, product_id: guestItem.productId, quantity: guestItem.quantity });
+          }
+        }
+        
+        saveStoredCart('guest', []); // Clear local guest cart
+        return;
+      }
+    } catch (err) {
+      console.warn('[Cart] Failed to merge guest cart to Supabase, merging locally:', err.message);
+    }
+  }
+
+  // Fallback local merge
+  const userCart = getStoredCart(email);
   guestCart.forEach((guestItem) => {
     const existingItem = userCart.find((userItem) => userItem.productId === guestItem.productId);
     if (existingItem) {
@@ -303,6 +338,48 @@ export const mergeGuestCartIntoUserCart = async (email) => {
 
   saveStoredCart(email, userCart);
   saveStoredCart('guest', []); // Clear guest cart
+};
+
+/**
+ * Merges guest wishlist items into a user's persistent database wishlist
+ * Why: Moves local wishlist entries to user's cloud account upon authentication.
+ * Tricky logic: Performs upserts on conflicts to avoid primary key constraints.
+ * @returns {Promise<void>}
+ */
+export const mergeGuestWishlistIntoUserWishlist = async () => {
+  const guestWishlistStr = localStorage.getItem('scrunch_wishlist');
+  if (!guestWishlistStr) return;
+
+  let guestWishlist = [];
+  try {
+    guestWishlist = JSON.parse(guestWishlistStr);
+  } catch {
+    return;
+  }
+
+  if (!Array.isArray(guestWishlist) || guestWishlist.length === 0) return;
+
+  if (supabase) {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const insertRows = guestWishlist.map(productId => ({
+          user_id: user.id,
+          product_id: productId,
+        }));
+
+        const { error } = await supabase
+          .from('wishlist_items')
+          .upsert(insertRows, { onConflict: 'user_id,product_id' });
+
+        if (!error) {
+          localStorage.removeItem('scrunch_wishlist');
+        }
+      }
+    } catch (err) {
+      console.warn('[Wishlist] Failed to merge guest wishlist to Supabase:', err.message);
+    }
+  }
 };
 
 // ─── Order Exports (Supabase-backed) ─────────────────────────────────
@@ -516,17 +593,40 @@ export const getMyOrders = async () => {
   return allOrders;
 };
 
-// ─── Cart Exports (localStorage, unchanged) ──────────────────────────
+// ─── Cart & Wishlist Exports (Supabase + localStorage fallback) ──────
 
 /**
- * Fetches user's cart
+ * Fetches user's cart from Supabase if logged in, otherwise localStorage
+ * Why: Dual storage path allows guests to shop instantly and syncs account carts.
  * @returns {Promise<Array>} Cart items array
  */
 export const getCart = async () => {
   const email = getLocalUserEmail();
-  const cartItems = getStoredCart(email);
-
   const products = await getProducts();
+  
+  if (supabase && email !== 'guest') {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data, error } = await supabase
+          .from('cart_items')
+          .select('*')
+          .eq('user_id', user.id);
+        if (!error && data) {
+          return data
+            .map((item) => {
+              const product = resolveProductById(products, item.product_id);
+              return { product, quantity: item.quantity };
+            })
+            .filter((item) => item.product);
+        }
+      }
+    } catch (err) {
+      console.warn('[Cart] Failed to load cart from Supabase, using localStorage:', err.message);
+    }
+  }
+
+  const cartItems = getStoredCart(email);
   return cartItems
     .map((item) => {
       const product = resolveProductById(products, item.productId);
@@ -536,15 +636,44 @@ export const getCart = async () => {
 };
 
 /**
- * Adds an item to the cart
- * @param {string} productId - The product ID
- * @param {number} quantity - Quantity to add
+ * Adds an item to the user's cart
+ * Why: Saves additions to database for registered users and falls back to local storage.
+ * @danishansari-dev productId - The target product or variant ID to append
+ * @danishansari-dev quantity - Quantity units count
  * @returns {Promise<Array>} Updated cart
  */
 export const addToCartAPI = async (productId, quantity = 1) => {
   const email = getLocalUserEmail();
-  const cartItems = getStoredCart(email);
+  
+  if (supabase && email !== 'guest') {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data: existing } = await supabase
+          .from('cart_items')
+          .select('id, quantity')
+          .eq('user_id', user.id)
+          .eq('product_id', productId)
+          .maybeSingle();
 
+        if (existing) {
+          await supabase
+            .from('cart_items')
+            .update({ quantity: existing.quantity + quantity })
+            .eq('id', existing.id);
+        } else {
+          await supabase
+            .from('cart_items')
+            .insert({ user_id: user.id, product_id: productId, quantity });
+        }
+        return getCart();
+      }
+    } catch (err) {
+      console.warn('[Cart] Failed to add to Supabase cart, using localStorage:', err.message);
+    }
+  }
+
+  const cartItems = getStoredCart(email);
   const existingItem = cartItems.find((item) => item.productId === productId);
   if (existingItem) {
     existingItem.quantity += quantity;
@@ -558,14 +687,31 @@ export const addToCartAPI = async (productId, quantity = 1) => {
 
 /**
  * Updates cart item quantity
- * @param {string} productId - The product ID
- * @param {number} quantity - The target quantity
+ * Why: Syncs modified item quantity to the database.
+ * @danishansari-dev productId - The product ID to modify
+ * @danishansari-dev quantity - The target quantity count
  * @returns {Promise<Array>} Updated cart
  */
 export const updateCartItemAPI = async (productId, quantity) => {
   const email = getLocalUserEmail();
-  const cartItems = getStoredCart(email);
+  
+  if (supabase && email !== 'guest') {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { error } = await supabase
+          .from('cart_items')
+          .update({ quantity })
+          .eq('user_id', user.id)
+          .eq('product_id', productId);
+        if (!error) return getCart();
+      }
+    } catch (err) {
+      console.warn('[Cart] Failed to update Supabase cart, using localStorage:', err.message);
+    }
+  }
 
+  const cartItems = getStoredCart(email);
   const item = cartItems.find((i) => i.productId === productId);
   if (item) {
     item.quantity = quantity;
@@ -577,11 +723,29 @@ export const updateCartItemAPI = async (productId, quantity) => {
 
 /**
  * Removes an item from the cart
- * @param {string} productId - The product ID
+ * Why: Deletes the item row from database/localStorage.
+ * @danishansari-dev productId - The product ID to delete
  * @returns {Promise<Array>} Updated cart
  */
 export const removeFromCartAPI = async (productId) => {
   const email = getLocalUserEmail();
+  
+  if (supabase && email !== 'guest') {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { error } = await supabase
+          .from('cart_items')
+          .delete()
+          .eq('user_id', user.id)
+          .eq('product_id', productId);
+        if (!error) return getCart();
+      }
+    } catch (err) {
+      console.warn('[Cart] Failed to remove from Supabase cart, using localStorage:', err.message);
+    }
+  }
+
   let cartItems = getStoredCart(email);
   cartItems = cartItems.filter((item) => item.productId !== productId);
   saveStoredCart(email, cartItems);
@@ -590,12 +754,119 @@ export const removeFromCartAPI = async (productId) => {
 
 /**
  * Clears the user's cart
+ * Why: Empties the user's cart records.
  * @returns {Promise<Array>} Empty array
  */
 export const clearCartAPI = async () => {
   const email = getLocalUserEmail();
+  
+  if (supabase && email !== 'guest') {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { error } = await supabase
+          .from('cart_items')
+          .delete()
+          .eq('user_id', user.id);
+        if (!error) return [];
+      }
+    } catch (err) {
+      console.warn('[Cart] Failed to clear Supabase cart, using localStorage:', err.message);
+    }
+  }
+
   saveStoredCart(email, []);
   return [];
+};
+
+/**
+ * Retrieves wishlist product IDs for the logged-in user
+ * Why: Syncs wishlist display upon user login.
+ * @returns {Promise<Array>} Wishlist product IDs
+ */
+export const getWishlistAPI = async () => {
+  if (supabase) {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data, error } = await supabase
+          .from('wishlist_items')
+          .select('product_id')
+          .eq('user_id', user.id);
+        if (!error && data) {
+          return data.map(item => item.product_id);
+        }
+      }
+    } catch (err) {
+      console.warn('[Wishlist] Failed to fetch from Supabase:', err.message);
+    }
+  }
+  return [];
+};
+
+/**
+ * Adds a product to the user's wishlist in Supabase
+ * Why: Saves user wishlist choices permanently.
+ * @danishansari-dev productId - Product ID string
+ * @returns {Promise<void>}
+ */
+export const addToWishlistAPI = async (productId) => {
+  if (supabase) {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        await supabase
+          .from('wishlist_items')
+          .upsert({ user_id: user.id, product_id: productId }, { onConflict: 'user_id,product_id' });
+      }
+    } catch (err) {
+      console.warn('[Wishlist] Failed to add to Supabase:', err.message);
+    }
+  }
+};
+
+/**
+ * Removes a product from the user's wishlist in Supabase
+ * Why: Deletes wishlist choice.
+ * @danishansari-dev productId - Product ID string
+ * @returns {Promise<void>}
+ */
+export const removeFromWishlistAPI = async (productId) => {
+  if (supabase) {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        await supabase
+          .from('wishlist_items')
+          .delete()
+          .eq('user_id', user.id)
+          .eq('product_id', productId);
+      }
+    } catch (err) {
+      console.warn('[Wishlist] Failed to remove from Supabase:', err.message);
+    }
+  }
+};
+
+/**
+ * Clears the user's database wishlist
+ * Why: Empties user's saved wishlist records.
+ * @returns {Promise<void>}
+ */
+export const clearWishlistAPI = async () => {
+  if (supabase) {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        await supabase
+          .from('wishlist_items')
+          .delete()
+          .eq('user_id', user.id);
+      }
+    } catch (err) {
+      console.warn('[Wishlist] Failed to clear Supabase wishlist:', err.message);
+    }
+  }
 };
 
 // ─── Default Export (Axios mock instance) ────────────────────────────
