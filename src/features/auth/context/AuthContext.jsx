@@ -15,13 +15,14 @@ import {
   logout as apiLogout,
   getCurrentUser,
   mergeGuestCartIntoUserCart,
+  mergeGuestWishlistIntoUserWishlist,
 } from '../../../services/api';
 
 const AuthContext = createContext(null);
 
 /**
  * AuthProvider component that wraps the app and initializes auth listeners.
- * @danishansari-dev props - Object containing children elements
+ * @danishansari-dev children - React children elements to wrap
  * @returns React context provider wrapping the application
  */
 export function AuthProvider({ children }) {
@@ -69,7 +70,7 @@ export function AuthProvider({ children }) {
 
     // Tricky logic: onAuthStateChange handles sign-ins, sign-outs, and token refreshes.
     // If a SIGNED_IN event occurs, we want to update state, sync the local storage cache,
-    // and merge the guest cart into the user-specific cart.
+    // and merge the guest cart + wishlist into the user-specific database.
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, activeSession) => {
       setSession(activeSession);
       
@@ -79,8 +80,9 @@ export function AuthProvider({ children }) {
         
         if (currentUser?.email) {
           localStorage.setItem('scrunch_current_user_email', currentUser.email);
-          // Auto-merge cart items when logging in or signing up
+          // Auto-merge cart and wishlist items when logging in or signing up
           await mergeGuestCartIntoUserCart(currentUser.email);
+          await mergeGuestWishlistIntoUserWishlist();
         }
       } else {
         setUser(null);
