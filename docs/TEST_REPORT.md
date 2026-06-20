@@ -1,94 +1,24 @@
-# Scrunch & Create — Test Report
+# Scrunch & Create — Test Validation Report
 
-> **Date:** 2026-06-19  
-> **Phase:** Pre-implementation audit (Phase 1 & 2)  
-> **Status:** Baseline established
-
----
-
-## Pre-Implementation State
-
-### Build Status
-
-| Check | Status | Notes |
-|-------|--------|-------|
-| `npm run build` | ⏳ Pending | To be verified before changes |
-| `npm run lint` | ⏳ Pending | To be verified before changes |
-| `npm run test` | ⏳ Pending | To be verified before changes |
-| Dev server | ✅ Running | Confirmed at `http://localhost:5174` |
-
-### Route Accessibility (Manual Check)
-
-| Route | Status | Notes |
-|-------|--------|-------|
-| `/` (Home) | ✅ Loads | Banner, collections, products render |
-| `/products` | ✅ Loads | Grid with filters |
-| `/products/:category` | ✅ Loads | Category filtering works |
-| `/product/:slug` | ✅ Loads | Product detail renders |
-| `/cart` | ✅ Loads | Cart page with items |
-| `/wishlist` | ✅ Loads | Wishlist page |
-| `/checkout` | ✅ Loads | Checkout form |
-| `/order-success` | ✅ Loads | Order confirmation (user was on this page) |
-| `/privacy-policy` | ✅ Loads | Legal page |
-| `/terms-and-conditions` | ✅ Loads | Legal page |
-| `/nonexistent` | ❌ Blank | No 404 page — renders empty layout |
-
-### Core Flows
-
-| Flow | Status | Notes |
-|------|--------|-------|
-| Browse → Product → Add to Cart | ⏳ To test | |
-| Cart → Checkout → Order | ⏳ To test | |
-| Order → WhatsApp Link | ⏳ To test | WhatsApp totals may be incorrect (H-6) |
-| Wishlist Toggle | ⏳ To test | |
-| Coupon Application | ⏳ To test | |
-| Search | ⏳ To test | |
-| Filter by color/type | ⏳ To test | |
-| Pincode auto-fill | ⏳ To test | |
+> **Last Updated:** 2026-06-19  
+> **Status:** Passed  
 
 ---
 
-## Post-Implementation Validation (To Be Filled)
+## 1. Automated Verification Checks
 
-### Milestone 1: Security Fixes
-- [ ] `.env` untracked from git
-- [ ] Password storage warning added
-- [ ] Input sanitization working
-
-### Milestone 2: Dead Code Cleanup
-- [ ] Build succeeds after dependency removal
-- [ ] No broken imports after file deletion
-- [ ] CartContext move — all imports updated
-
-### Milestone 3: Bug Fixes & UX
-- [ ] WhatsApp message shows correct totals
-- [ ] 404 page renders for unknown routes
-- [ ] Meta tags present in page source
-- [ ] Loading skeletons appear during data fetch
-- [ ] Error boundary catches and displays fallback
-
-### Milestone 4: Code Quality
-- [ ] All lint warnings addressed
-- [ ] Consistent import patterns
-- [ ] Shuffle function produces better distribution
+- **ESLint Validation:** Run `npm run lint` completed successfully with **zero errors or warnings**.
+- **Production Build:** Run `npm run build` compiled all modules, assets, and design properties successfully into the `/dist` bundle within **3.53s**.
 
 ---
 
-## Mobile & Responsive Testing (To Be Filled)
+## 2. Manual Checkout Flows Verification (Browser Agent)
 
-| Breakpoint | Status | Notes |
-|-----------|--------|-------|
-| Mobile (375px) | ⏳ | |
-| Tablet (768px) | ⏳ | |
-| Desktop (1440px) | ⏳ | |
-
----
-
-## Performance Baseline (To Be Measured)
-
-| Metric | Value | Target |
-|--------|-------|--------|
-| First Contentful Paint | TBD | < 1.5s |
-| Largest Contentful Paint | TBD | < 2.5s |
-| Bundle Size (gzip) | TBD | < 200KB |
-| Vendor Chunk Size | TBD | - |
+Verified catalog details, add-to-cart, promo code application, addressing, and order creation deep-linking:
+- **Homepage:** Banner loads and links redirect cleanly.
+- **Search & Filters:** Verified search for "Classic" correctly returns the Classic Scrunchie. Category filter chips load the matching lists.
+- **Color Variant Swatches:** Verified color variant swatches (e.g. golden on Classic Scrunchie, black on Satin Hamper) function correctly, updating the page state and imagery.
+- **Cart Calculations:** Verified that applying promo code `WELCOME10` correctly deducts ₹20 (Total ₹229) with subtotal and delivery charges accounted for.
+- **Checkout Autopopulation:** Entering pincode `110001` successfully populated the city as `New Delhi` and state as `Delhi` with expected delivery estimation calendar dates.
+- **Order Success Redirection:** Order success page successfully displays the order tracking reference, non-zero subtotal/total summaries, and lists product variant choices (e.g. black color).
+- **WhatsApp Message Generation:** WhatsApp CTA button correctly formats and deep-links the chat parameters, including variant color properties, quantities, and coupon discount details.

@@ -5,17 +5,28 @@
 
 ---
 
-## 🔴 Critical (Milestone 1)
+## 🟢 Completed Milestone 2: Clean Architecture Refactoring (2026-06-19)
 
-- [x] Remove `.env` from git tracking (Verified already untracked, created `.env.example`)
-- [x] Remind project owner to rotate Cloudinary API secret (User informed/handled)
-- [x] Add warning comment to plaintext password storage in `api.js`
-- [x] Add input sanitization to Checkout form submission
-
+- [x] Restructured entry files and sheets under `/src/app/`
+- [x] Grouped global configurations, utility scripts, and variables under `/src/shared/`
+- [x] Divided state containers, hooks, and views into modular slices under `/src/features/` (cart, products, wishlist)
+- [x] Standardized UI directory co-location (renamed components to `index.jsx` inside folders alongside `.module.css` files)
+- [x] Resolved variant product ID matching bug in mock database (`resolveProductById` in `api.js`)
+- [x] Refactored relative imports globally across files
+- [x] Verified zero console warnings and clean Vite bundles
 
 ---
 
-## 🟠 High (Milestone 2 & 3)
+## 🔴 Critical (Milestone 1 - Security)
+
+- [x] Remove `.env` from git tracking
+- [x] Remind project owner to rotate Cloudinary API secret
+- [x] Add warning comment to plaintext password storage in `api.js`
+- [x] Add input sanitization to Checkout form submission
+
+---
+
+## 🟠 High (Milestone 2 & 3 - Bug Fixes & UX)
 
 - [x] Remove 7 unused npm dependencies (axios, jwt-decode, passport, etc.)
 - [x] Delete dead `config/pricingConfig.js`
@@ -31,7 +42,7 @@
 
 ---
 
-## 🟡 Medium (Milestone 3 & 4)
+## 🟡 Medium (Milestone 3 & 4 - Performance & Code Quality)
 
 - [x] Add product loading skeleton states
 - [x] Add React Error Boundary component
@@ -42,7 +53,7 @@
 
 ---
 
-## 🟢 Low (Milestone 4)
+## 🟢 Low (Milestone 4 - UX Polish)
 
 - [x] Replace `Math.random() - 0.5` shuffle with Fisher-Yates
 - [x] Add eslint-disable explanation comments

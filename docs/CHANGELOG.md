@@ -5,6 +5,23 @@
 
 ---
 
+## [2026-06-19] Phase 2 — Clean Architecture Migration
+
+### Architecture Refactoring
+- Relocated entry points (`App.jsx`, `App.css`, `index.css`, `main.jsx`) under `src/app/` and updated `index.html`.
+- Formed feature modules under `src/features/`:
+  - `cart/` — Context provider and co-located components (`CartDrawer/`, `CouponField/`, `PaymentMethodSelector/`).
+  - `products/` — Co-located components (`ProductCard/`, `ProductList/`, `ProductReviews/`, `FilterSidebar/`, `ProductSearch/`, `ActiveFilters/`, etc.) and `useProductsFilter.js` hook.
+  - `wishlist/` — Wishlist context.
+- Grouped config, utils, and theme sheets under `src/shared/` (`shared/config/`, `shared/utils/`, `shared/theme/`).
+- Enforced component co-location rules (renamed files to `index.jsx` inside component folders with corresponding module sheets).
+- Successfully resolved relative imports globally across all JS, JSX, and CSS files.
+
+### Bug Fixes
+- **Variant ID resolution in placeOrder / getCart:** Fixed a pre-existing bug where choosing a product variant set a variant ID in the cart, causing `api.js` to fail finding the parent product. This resulted in empty order totals and missing WhatsApp link CTAs on the Order Success page. Introduced the `resolveProductById` helper to accurately map variant IDs back to parent products.
+
+---
+
 ## [2026-06-19] Phase 1 — Senior Engineer Onboarding
 
 ### Documentation
@@ -24,14 +41,3 @@
 - Found 7 unused npm dependencies still installed
 - Identified WhatsApp message total calculation mismatch
 - Found missing 404 route, SEO meta tags, loading states, error boundaries
-
----
-
-## Pre-Audit History (from git log)
-
-### Recent Commits
-- `e44cf1b` — feat: enrich placeOrder payload with contact, payment, coupon, and fee data
-- `f8cd0d5` — style: rebuild Cart CSS with shipping bar, cross-sell grid, and mobile-optimized grid layout
-- `68e3557` — feat: enhance Cart page with free shipping bar, cross-sells, coupon field, and trust badges
-- `931f646` — style: rebuild OrderSuccess CSS with animated success icon, detail cards, and cross-sell grid
-- `4fbbbd8` — feat: redesign order confirmation with full details, delivery estimate, WhatsApp CTA, and cross-sells
