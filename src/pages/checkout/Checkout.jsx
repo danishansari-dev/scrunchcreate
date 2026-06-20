@@ -4,11 +4,12 @@
  * auto-fill), payment selection, and order summary. Follows the best patterns
  * identified in the e-commerce checkout analysis research.
  */
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useCart } from '../../features/cart/context/CartContext'
 import { useToast } from '../../components/ToastContext'
 import { placeOrder } from '../../services/api'
+import { useAuth } from '../../features/auth/context/AuthContext'
 import CouponField from '../../features/cart/components/CouponField'
 import PaymentMethodSelector from '../../features/cart/components/PaymentMethodSelector'
 import TrustBadges from '../../components/TrustBadges'
@@ -64,6 +65,7 @@ export default function Checkout() {
   const navigate = useNavigate()
   const { items, subtotal, clearCart, deliveryFee, grandTotal, couponDiscount, appliedCoupon, totalSavings } = useCart()
   const { show } = useToast()
+  const { user } = useAuth()
 
   const [form, setForm] = useState(initialFormState)
   const [errors, setErrors] = useState({})
@@ -72,6 +74,17 @@ export default function Checkout() {
   const [paymentDetails, setPaymentDetails] = useState({})
   const [deliveryEstimate, setDeliveryEstimate] = useState(null)
   const [showMobileSummary, setShowMobileSummary] = useState(false)
+
+  // Pre-fill user profile name and email if they are authenticated
+  useEffect(() => {
+    if (user) {
+      setForm((prev) => ({
+        ...prev,
+        name: prev.name || user.name || '',
+        email: prev.email || user.email || '',
+      }));
+    }
+  }, [user]);
 
   // COD handling fee
   const codFee = paymentMethod === 'cod' ? 30 : 0
