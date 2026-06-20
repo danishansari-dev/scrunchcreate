@@ -15,12 +15,13 @@ import { useToast } from '../../../components/ToastContext';
 import { validateCoupon, calculateDeliveryFee } from '../../../shared/utils/couponUtils';
 import { shuffle } from '../../../shared/utils/shuffle';
 import { FREE_SHIPPING_THRESHOLD } from '../../../shared/config/coupons';
+import { useAuth } from '../../auth/context/AuthContext';
 
 const CartContext = createContext(null);
 
 /**
  * Normalizes a cart item to standard layout
- * @param param0 - Item containing product and quantity properties
+ * @danishansari-dev param0 - Item containing product and quantity properties
  * @returns Normalized cart item object
  */
 function normalizeItem({ product, quantity }) {
@@ -35,7 +36,7 @@ function normalizeItem({ product, quantity }) {
 
 /**
  * CartProvider component serving cart capabilities client-side
- * @param children - Child React nodes
+ * @danishansari-dev children - Child React nodes
  */
 export function CartProvider({ children }) {
   const [items, setItems] = useState([]);
@@ -45,21 +46,25 @@ export function CartProvider({ children }) {
   const [couponError, setCouponError] = useState('');
   const [allProducts, setAllProducts] = useState([]);
   const { show } = useToast();
+  const { user } = useAuth();
 
-  // Load the initial cart + all products on mount
+  // Load all products for cross-sell recommendations once on mount
+  useEffect(() => {
+    getProducts()
+      .then((prods) => setAllProducts(prods))
+      .catch((err) => console.error('Failed to load products:', err));
+  }, []);
+
+  // Sync cart state with database/localStorage whenever user auth status changes
+  // Why: Users should see their user-specific DB cart when logging in, and fallback to guest localStorage when logging out.
   useEffect(() => {
     getCart()
       .then((data) => {
         const mappedItems = data.map(normalizeItem).filter(Boolean);
         setItems(mappedItems);
       })
-      .catch((err) => console.error('Failed to load cart on mount:', err));
-
-    // Load all products for cross-sell recommendations
-    getProducts()
-      .then((prods) => setAllProducts(prods))
-      .catch((err) => console.error('Failed to load products:', err));
-  }, []);
+      .catch((err) => console.error('Failed to load cart:', err));
+  }, [user]);
 
   // Cart Drawer togglers
   const openCart = () => setIsCartOpen(true);
