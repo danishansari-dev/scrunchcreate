@@ -5,7 +5,7 @@
  * to allow standalone, offline-ready operation without breaking existing components.
  */
 
-import { getProducts as loadLocalProducts } from '../utils/getProducts';
+import { getProducts as loadLocalProducts } from '../shared/utils/getProducts';
 
 // Product cache so we do not have to map and format local JSON products on every call.
 let productCache = null;
@@ -96,6 +96,40 @@ const saveStoredOrders = (email, orders) => {
   localStorage.setItem(`mock_orders_${email}`, JSON.stringify(orders));
 };
 
+/**
+ * Resolves a product or its variant from products list by ID.
+ * Why this exists: Products can have variants with distinct IDs. We need a way to find
+ * the product object even if the ID requested is a variant's ID.
+ * @danishansari-dev products - List of all products
+ * @danishansari-dev id - The target product or variant ID
+ * @returns Resolved product object or null
+ */
+function resolveProductById(products, id) {
+  // First match parent product IDs directly
+  let product = products.find((p) => p.id === id || p._id === id);
+  if (product) return product;
+
+  // Search inside nested variants list
+  product = products.find(
+    (p) => p.variants && p.variants.some((v) => v.id === id || v._id === id)
+  );
+  if (product) {
+    const variant = product.variants.find((v) => v.id === id || v._id === id);
+    // Tricky logic: Construct a hybrid product representation containing parent attributes
+    // and variant specific values to prevent data loss downstream in cart/orders.
+    return {
+      ...product,
+      id: variant.id,
+      color: variant.color,
+      image: variant.images?.[0] || product.primaryImage || product.image || product.images?.[0],
+      price: variant.price || product.price,
+      offerPrice: variant.offerPrice || product.offerPrice
+    };
+  }
+
+  return null;
+}
+
 // ─── Named Exports ───────────────────────────────────────────────────
 
 /**
@@ -164,7 +198,7 @@ export const getProductVariants = async (product) => {
  */
 export const getProduct = async (id) => {
   const products = await getProducts();
-  const found = products.find((p) => p.id === id || p._id === id);
+  const found = resolveProductById(products, id);
   if (!found) {
     throw createAxiosError('Product not found.', 404);
   }
@@ -252,9 +286,7 @@ export const placeOrder = async (orderData) => {
   const products = await getProducts();
   const orderItems = orderData.items
     .map((item) => {
-      const product = products.find(
-        (p) => p.id === item.productId || p._id === item.productId
-      );
+      const product = resolveProductById(products, item.productId);
       return {
         product,
         quantity: item.quantity,
@@ -318,9 +350,7 @@ export const getCart = async () => {
   const products = await getProducts();
   return cartItems
     .map((item) => {
-      const product = products.find(
-        (p) => p.id === item.productId || p._id === item.productId
-      );
+      const product = resolveProductById(products, item.productId);
       return {
         product,
         quantity: item.quantity,
