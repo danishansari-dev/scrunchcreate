@@ -321,6 +321,19 @@
   animation: dropdownFadeIn 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Bridge the 12px visual gap to prevent cursor from leaving the container bounds */
+/* and triggering onMouseLeave before entering the dropdown body */
+.profileDropdown::before {
+  content: '';
+  position: absolute;
+  top: -12px;
+  left: 0;
+  right: 0;
+  height: 12px;
+  background: transparent;
+}
+
+
 @keyframes dropdownFadeIn {
   from {
     opacity: 0;
