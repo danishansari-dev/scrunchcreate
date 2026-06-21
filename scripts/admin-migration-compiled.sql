@@ -11,9 +11,12 @@ CREATE OR REPLACE FUNCTION is_admin()
 RETURNS BOOLEAN AS $$
 BEGIN
   -- Check if the email claim in the user's JWT matches any allowed admin email
-  RETURN auth.jwt()->>'email' IN ('user_verified_1730@example.com');
+  -- Why: Using auth.email() is the standard Supabase helper for retrieving the email claim.
+  -- Removing SECURITY DEFINER ensures the function runs as SECURITY INVOKER, retaining
+  -- the session JWT claims context during RLS evaluations.
+  RETURN auth.email() IN ('user_verified_1730@example.com');
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql;
 
 -- 2. Configure RLS write policies on products table
 ALTER TABLE products ENABLE ROW LEVEL SECURITY;
