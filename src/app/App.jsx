@@ -12,6 +12,8 @@ import OrderSuccess from '../pages/checkout/OrderSuccess'
 import AuthPage from '../pages/auth/AuthPage'
 import ProfilePage from '../pages/profile/ProfilePage'
 import NotFound from '../pages/NotFound'
+import AdminDashboard from '../pages/admin/AdminDashboard'
+import { AdminGuard } from '../features/auth/components/AdminGuard/AdminGuard'
 
 export default function App() {
 
@@ -28,6 +30,7 @@ export default function App() {
         <Route path='/order-success' element={<OrderSuccess />} />
         <Route path='/login' element={<AuthPage />} />
         <Route path='/profile' element={<ProfilePage />} />
+        <Route path='/admin' element={<AdminGuard><AdminDashboard /></AdminGuard>} />
         <Route path='/privacy-policy' element={<PrivacyPolicy />} />
         <Route path='/terms-and-conditions' element={<TermsAndConditions />} />
         <Route path='*' element={<NotFound />} />
@@ -35,3 +38,4 @@ export default function App() {
     </Routes>
   )
 }
+
