@@ -895,7 +895,119 @@ export const clearWishlistAPI = async () => {
   }
 };
 
+// ─── Admin API Exports ───────────────────────────────────────────────
+
+
+/**
+ * Fetches all orders from the database.
+ * Why: Allows administrators to view all orders for processing.
+ * Tricky logic: Maps snake_case database columns to camelCase for frontend compatibility.
+ * @returns {Promise<Array>} List of all orders
+ */
+export const adminGetAllOrders = async () => {
+  if (!supabase) return [];
+  const { data, error } = await supabase
+    .from('orders')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error) throw error;
+  return (data || []).map(row => ({
+    _id: row.id,
+    id: row.id,
+    ...row,
+    shippingAddress: row.shipping_address,
+    couponDiscount: row.coupon_discount,
+    deliveryFee: row.delivery_fee,
+    codFee: row.cod_fee,
+    createdAt: row.created_at,
+    userId: row.user_id,
+  }));
+};
+
+/**
+ * Updates an order's status.
+ * Why: Allows administrators to change status during fulfillment stages.
+ * @danishansari-dev orderId - The target order ID string
+ * @danishansari-dev status - The target status string
+ * @returns {Promise<boolean>} True if successful
+ */
+export const adminUpdateOrderStatus = async (orderId, status) => {
+  if (!supabase) throw new Error('Supabase is not configured.');
+  const { error } = await supabase
+    .from('orders')
+    .update({ status })
+    .eq('id', orderId);
+  if (error) throw error;
+  return true;
+};
+
+/**
+ * Saves or updates a product in the catalog.
+ * Why: Allows administrators to manage catalog items.
+ * Tricky logic: Generates a random ID for new products, derives a slug if empty,
+ * normalizes the color name, and clears the client-side product cache.
+ * @danishansari-dev productData - Frontend camelCase product data object
+ * @returns {Promise<Object>} Saved product row
+ */
+export const adminSaveProduct = async (productData) => {
+  if (!supabase) throw new Error('Supabase is not configured.');
+
+  const id = productData.id || 'prod_' + Math.random().toString(36).substring(2, 9);
+  const slug = productData.slug || productData.name.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+  const normalizedColor = productData.color ? productData.color.toLowerCase().trim().replace(/[\s_]+/g, '-') : null;
+
+  const row = {
+    id,
+    slug,
+    name: productData.name,
+    category: productData.category,
+    type: productData.type || null,
+    color: productData.color || null,
+    normalized_color: normalizedColor,
+    color_hex: productData.colorHex || null,
+    price: Number(productData.price) || 0,
+    offer_price: Number(productData.offerPrice) || 0,
+    original_price: Number(productData.originalPrice) || 0,
+    discount_percent: Number(productData.discountPercent) || 0,
+    description: productData.description || null,
+    primary_image: productData.primaryImage || null,
+    images: productData.images || [],
+    available_colors: productData.availableColors || [],
+    badge: productData.badge || null,
+    in_stock: productData.inStock ?? true,
+    variants: productData.variants || [],
+  };
+
+  const { error } = await supabase
+    .from('products')
+    .upsert(row);
+  if (error) throw error;
+
+  invalidateProductCache();
+  return row;
+};
+
+/**
+ * Deletes a product from the database.
+ * Why: Allows administrators to remove catalog items.
+ * @danishansari-dev productId - The target product ID string
+ * @returns {Promise<boolean>} True if successful
+ */
+export const adminDeleteProduct = async (productId) => {
+  if (!supabase) throw new Error('Supabase is not configured.');
+  const { error } = await supabase
+    .from('products')
+    .delete()
+    .eq('id', productId);
+  if (error) throw error;
+
+  invalidateProductCache();
+  return true;
+};
+
 // ─── Default Export (Axios mock instance) ────────────────────────────
+
 
 const mockApi = {
   get: async (url) => {
