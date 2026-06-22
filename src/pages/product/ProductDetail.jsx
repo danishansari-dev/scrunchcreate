@@ -218,8 +218,20 @@ export default function ProductDetail() {
     }
   }
 
-  const incrementQty = () => setQuantity(q => Math.min(q + 1, 10)) // Max 10 items
-  const decrementQty = () => setQuantity(q => Math.max(q - 1, 1))
+  const maxStock = selectedVariant ? (selectedVariant.stock ?? 20) : (product?.stock ?? 20);
+
+  // Why: Sync quantity with selected variant/product stock limits.
+  // Resets selected quantity to 1 (or 0 if out of stock) when the chosen color/variant changes.
+  useEffect(() => {
+    if (maxStock <= 0) {
+      setQuantity(0);
+    } else {
+      setQuantity(1);
+    }
+  }, [selectedVariant, product, maxStock]);
+
+  const incrementQty = () => setQuantity(q => Math.min(q + 1, maxStock));
+  const decrementQty = () => setQuantity(q => Math.max(q - 1, maxStock > 0 ? 1 : 0));
 
   if (!product) {
     return (
@@ -385,13 +397,20 @@ export default function ProductDetail() {
               </div>
             )}
 
+            {/* Why: Alert shoppers when inventory is running low to create a sense of urgency. */}
+            {maxStock > 0 && maxStock <= 5 && (
+              <div style={{ color: '#dc2626', fontSize: '13px', fontWeight: '600', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <span>⚠️</span> Only {maxStock} left in stock - order soon!
+              </div>
+            )}
+
             {/* Quantity and Actions */}
             <div className={styles.actions}>
               <div className={styles.quantityControl}>
                 <button
                   className={styles.qtyBtn}
                   onClick={decrementQty}
-                  disabled={quantity <= 1}
+                  disabled={quantity <= 1 || maxStock <= 0}
                   aria-label="Decrease quantity"
                 >
                   -
@@ -400,7 +419,7 @@ export default function ProductDetail() {
                 <button
                   className={styles.qtyBtn}
                   onClick={incrementQty}
-                  disabled={quantity >= 10}
+                  disabled={quantity >= maxStock || maxStock <= 0}
                   aria-label="Increase quantity"
                 >
                   +
@@ -410,9 +429,11 @@ export default function ProductDetail() {
               <button
                 className={styles.addToCartButton}
                 onClick={handleAddToCart}
-                aria-label="Add to cart"
+                disabled={maxStock <= 0}
+                style={maxStock <= 0 ? { background: 'var(--color-text-muted)', cursor: 'not-allowed', opacity: 0.7 } : {}}
+                aria-label={maxStock > 0 ? 'Add to cart' : 'Out of stock'}
               >
-                Add to Cart
+                {maxStock > 0 ? 'Add to Cart' : 'Out of Stock'}
               </button>
             </div>
 
