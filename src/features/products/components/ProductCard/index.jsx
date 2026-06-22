@@ -94,6 +94,20 @@ export default function ProductCard({ product, index = 0 }) {
         () => product.variants?.find((variant) => variant.id === activeVariantId) || null,
         [activeVariantId, product.variants]
     )
+    
+    // Why: Determine available stock based on selected variant, falling back to parent product stock.
+    const maxStock = useMemo(
+        () => selectedVariant ? (selectedVariant.stock ?? 20) : (product.stock ?? 20),
+        [selectedVariant, product.stock]
+    )
+
+    // Why: Hide quick-add actions and show "Sold Out" overlays if all variants or the base product is out of stock.
+    const isCompletelyOutOfStock = useMemo(() => {
+        if (product.variants && product.variants.length > 0) {
+            return product.variants.every(v => (v.stock ?? 20) <= 0);
+        }
+        return (product.stock ?? 20) <= 0;
+    }, [product.variants, product.stock])
 
     const imageSet = useMemo(() => {
         if (selectedVariant?.images?.length) return selectedVariant.images
@@ -235,7 +249,11 @@ export default function ProductCard({ product, index = 0 }) {
                         </button>
                     )}
 
-                    {badge && <span className={styles.statusBadge}>{badge}</span>}
+                    {isCompletelyOutOfStock ? (
+                        <span className={styles.outOfStockBadge}>Sold Out</span>
+                    ) : badge ? (
+                        <span className={styles.statusBadge}>{badge}</span>
+                    ) : null}
 
                     <button
                         className={`${styles.wishlistBtn} ${inWishlist ? styles.wishlistBtnActive : ''}`}
@@ -250,8 +268,14 @@ export default function ProductCard({ product, index = 0 }) {
                         <button type="button" className={styles.quickViewBtn} onClick={openQuickView}>
                             Quick View
                         </button>
-                        <button type="button" className={styles.quickAddBtn} onClick={handleAddToCart}>
-                            Quick Add
+                        <button 
+                            type="button" 
+                            className={styles.quickAddBtn} 
+                            onClick={handleAddToCart}
+                            disabled={maxStock <= 0}
+                            style={maxStock <= 0 ? { opacity: 0.6, cursor: 'not-allowed', background: '#ccc', borderColor: '#ccc' } : {}}
+                        >
+                            {maxStock > 0 ? 'Quick Add' : 'Sold Out'}
                         </button>
                     </div>
                 </div>
@@ -307,7 +331,15 @@ export default function ProductCard({ product, index = 0 }) {
                         <span>Ships in 2-4 days</span>
                         <span>Easy returns</span>
                     </div>
-                    <p className={styles.stockStatus}>In stock, handmade in small batches</p>
+                    <p className={styles.stockStatus} style={maxStock <= 0 ? { color: '#dc2626' } : maxStock <= 5 ? { color: '#d97706' } : {}}>
+                        {maxStock <= 0 ? (
+                            'Sold Out'
+                        ) : maxStock <= 5 ? (
+                            `Only ${maxStock} left - low stock`
+                        ) : (
+                            'In stock, handmade in small batches'
+                        )}
+                    </p>
                 </div>
             {isQuickViewOpen && (
                 <div className={styles.modalOverlay} role="presentation" onMouseDown={() => setIsQuickViewOpen(false)}>
@@ -346,15 +378,34 @@ export default function ProductCard({ product, index = 0 }) {
                                 )}
                             </div>
                             <p className={styles.modalCopy}>{product.description || 'Handcrafted accessory made in small batches with a polished finish.'}</p>
-                            <div className={styles.modalTrust}>
-                                <span>Secure checkout</span>
-                                <span>Gift-ready packaging</span>
-                                <span>Easy returns</span>
-                            </div>
-                            <div className={styles.modalActions}>
-                                <button type="button" className={styles.modalAdd} onClick={handleAddToCart}>Add to cart</button>
-                                <button type="button" className={styles.modalDetails} onClick={handleProductClick}>View details</button>
-                            </div>
+                             
+                             {maxStock <= 0 ? (
+                                 <div style={{ color: '#dc2626', fontSize: '13px', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                     <span>⚠️</span> Out of stock
+                                 </div>
+                             ) : maxStock <= 5 ? (
+                                 <div style={{ color: '#d97706', fontSize: '13px', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                     <span>⚠️</span> Only {maxStock} left - order soon!
+                                 </div>
+                             ) : null}
+
+                             <div className={styles.modalTrust}>
+                                 <span>Secure checkout</span>
+                                 <span>Gift-ready packaging</span>
+                                 <span>Easy returns</span>
+                             </div>
+                             <div className={styles.modalActions}>
+                                 <button 
+                                     type="button" 
+                                     className={styles.modalAdd} 
+                                     onClick={handleAddToCart}
+                                     disabled={maxStock <= 0}
+                                     style={maxStock <= 0 ? { background: 'var(--color-text-muted)', cursor: 'not-allowed', opacity: 0.7 } : {}}
+                                 >
+                                     {maxStock > 0 ? 'Add to cart' : 'Out of stock'}
+                                 </button>
+                                 <button type="button" className={styles.modalDetails} onClick={handleProductClick}>View details</button>
+                             </div>
                         </div>
                     </motion.div>
                 </div>
