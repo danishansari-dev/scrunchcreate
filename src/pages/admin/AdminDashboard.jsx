@@ -73,11 +73,19 @@ export default function AdminDashboard() {
     
     const outOfStockProducts = products.filter(p => !p.inStock && !p.in_stock).length;
 
+    // Why: Count products that have low stock level (between 1 and 5 units) or have variants with low stock
+    const lowStockProducts = products.filter(p => {
+      const parentLow = p.stock !== undefined && p.stock <= 5 && p.stock > 0;
+      const variantsLow = p.variants && p.variants.some(v => v.stock !== undefined && v.stock <= 5 && v.stock > 0);
+      return parentLow || variantsLow;
+    }).length;
+
     return {
       grossSales,
       totalOrders: orders.length,
       pendingOrders,
-      outOfStockProducts
+      outOfStockProducts,
+      lowStockProducts
     };
   }, [orders, products]);
 
@@ -121,13 +129,16 @@ export default function AdminDashboard() {
    * @danishansari-dev product - Product data object
    */
   const handleToggleStock = async (product) => {
-    const nextStock = !product.inStock;
+    const isNowInStock = !product.inStock;
+    // Why: Toggling stock should sync the numerical quantity (e.g. set to 20 if marking in-stock, 0 if marking out-of-stock)
+    const nextStockQty = isNowInStock ? (product.stock > 0 ? product.stock : 20) : 0;
     try {
       // Create clone with toggled state
       const updatedProduct = {
         ...product,
-        inStock: nextStock,
-        in_stock: nextStock
+        inStock: isNowInStock,
+        in_stock: isNowInStock,
+        stock: nextStockQty
       };
 
       // Optimistic local state update
@@ -270,9 +281,13 @@ export default function AdminDashboard() {
                 <div className={styles.statSubtitle}>Need dispatch/delivery</div>
               </div>
               <div className={styles.statCard}>
-                <div className={styles.statLabel}>Out of Stock</div>
-                <div className={styles.statValue}>{stats.outOfStockProducts}</div>
-                <div className={styles.statSubtitle}>Requires inventory check</div>
+                <div className={styles.statLabel}>Inventory Alerts</div>
+                <div className={styles.statValue}>
+                  {stats.outOfStockProducts} <span style={{ fontSize: '14px', fontWeight: 'normal', color: 'var(--color-text-muted)' }}>out</span>
+                  {' / '}
+                  {stats.lowStockProducts} <span style={{ fontSize: '14px', fontWeight: 'normal', color: 'var(--color-text-muted)' }}>low</span>
+                </div>
+                <div className={styles.statSubtitle}>Out of stock / Low stock (&lt;5)</div>
               </div>
             </div>
 
@@ -490,12 +505,12 @@ export default function AdminDashboard() {
                       </td>
                       <td>
                         <div className={styles.stockToggleContainer}>
-                          <span className={p.inStock ? styles.textSuccess : styles.textDanger}>
-                            {p.inStock ? 'In Stock' : 'Out of Stock'}
+                          <span className={p.stock <= 0 ? styles.textDanger : p.stock <= 5 ? styles.textWarning : styles.textSuccess}>
+                            {p.stock <= 0 ? 'Out of Stock' : p.stock <= 5 ? `Low Stock (${p.stock})` : `In Stock (${p.stock})`}
                           </span>
                           <button
                             onClick={() => handleToggleStock(p)}
-                            className={`${styles.toggleSwitch} ${p.inStock ? styles.toggleSwitchOn : ''}`}
+                            className={`${styles.toggleSwitch} ${p.inStock && p.stock > 0 ? styles.toggleSwitchOn : ''}`}
                             aria-label={`Toggle stock status for ${p.name}`}
                           >
                             <span className={styles.toggleKnob} />
