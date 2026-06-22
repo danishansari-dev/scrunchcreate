@@ -38,8 +38,15 @@ function toCloudinary(path) {
  * @returns {Object} Frontend-compatible product object
  */
 function transformSupabaseProduct(row) {
-  // Parse the variants JSONB field (already stored in frontend shape by the seeder)
-  const variants = Array.isArray(row.variants) ? row.variants : [];
+  // Why: Map variants and format individual stock counts and overall in-stock flag
+  const variants = (Array.isArray(row.variants) ? row.variants : []).map(v => ({
+    ...v,
+    stock: typeof v.stock === 'number' ? v.stock : 20,
+    inStock: typeof v.stock === 'number' ? v.stock > 0 : (v.inStock ?? true)
+  }));
+
+  // Why: Parse row.stock with safe defaults. If stock is 0 or less, inStock is overridden to false.
+  const parentStock = typeof row.stock === 'number' ? row.stock : 20;
 
   return {
     id: row.id,
@@ -61,7 +68,8 @@ function transformSupabaseProduct(row) {
     images: row.images || [],
     availableColors: row.available_colors || [],
     badge: row.badge,
-    inStock: row.in_stock,
+    stock: parentStock,
+    inStock: parentStock > 0 ? row.in_stock : false,
     // Variants in the shape the frontend already expects
     variants: variants,
   };
@@ -91,9 +99,14 @@ function loadLocalProducts() {
         const productImages = (product.images || (defaultVariant.images && defaultVariant.images.length > 0
           ? defaultVariant.images : [rawMainImage])).map(toCloudinary);
 
+        // Why: Default to 20 units and dynamically check stock value for offline fallbacks
+        const parentStock = product.stock ?? 20;
+
         return {
           ...product,
           ...pricing,
+          stock: parentStock,
+          inStock: parentStock > 0 ? (product.inStock ?? true) : false,
           images: productImages,
           primaryImage: mainImage,
           color: product.color || defaultVariant.color,
@@ -103,14 +116,19 @@ function loadLocalProducts() {
             ...v,
             colorHex: getColorHex(v.color),
             normalizedColor: normalizeColor(v.color),
-            images: (v.images || []).map(toCloudinary)
+            images: (v.images || []).map(toCloudinary),
+            stock: v.stock ?? 20,
+            inStock: (v.stock ?? 20) > 0 ? (v.inStock ?? true) : false
           }))
         };
       } else {
         const productImages = (product.images || [rawMainImage]).map(toCloudinary);
+        const parentStock = product.stock ?? 20;
         return {
           ...product,
           ...pricing,
+          stock: parentStock,
+          inStock: parentStock > 0 ? (product.inStock ?? true) : false,
           images: productImages,
           primaryImage: mainImage,
           normalizedColor: normalizeColor(product.color),
