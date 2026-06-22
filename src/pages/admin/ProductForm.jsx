@@ -33,11 +33,13 @@ export default function ProductForm({ product, onClose, onSave }) {
   const [images, setImages] = useState('');
   const [badge, setBadge] = useState('');
   const [inStock, setInStock] = useState(true);
+  const [stock, setStock] = useState(20);
 
   // Nested variants list state
   const [variants, setVariants] = useState([]);
 
   // Load product if editing
+  // Why: Hydrate the form states with the selected product catalog fields when in edit mode
   useEffect(() => {
     if (product) {
       setName(product.name || '');
@@ -54,6 +56,7 @@ export default function ProductForm({ product, onClose, onSave }) {
       setImages(Array.isArray(product.images) ? product.images.join(', ') : '');
       setBadge(product.badge || '');
       setInStock(product.inStock ?? true);
+      setStock(product.stock ?? 20);
       setVariants(product.variants || []);
     } else {
       // Defaults for new product
@@ -71,6 +74,7 @@ export default function ProductForm({ product, onClose, onSave }) {
       setImages('');
       setBadge('');
       setInStock(true);
+      setStock(20);
       setVariants([]);
     }
   }, [product]);
@@ -97,7 +101,8 @@ export default function ProductForm({ product, onClose, onSave }) {
       color: '',
       price: null,
       offerPrice: null,
-      images: []
+      images: [],
+      stock: 20
     };
     setVariants(prev => [...prev, newVariant]);
   };
@@ -155,14 +160,20 @@ export default function ProductForm({ product, onClose, onSave }) {
       primaryImage,
       images: images.split(',').map(i => i.trim()).filter(Boolean),
       badge: badge || null,
-      inStock,
-      variants: variants.map(v => ({
-        ...v,
-        price: v.price ? Number(v.price) : null,
-        offerPrice: v.offerPrice ? Number(v.offerPrice) : null,
-        colorHex: v.colorHex || v.color || '',
-        normalizedColor: v.color ? v.color.toLowerCase().trim().replace(/[\s_]+/g, '-') : ''
-      }))
+      stock: Number(stock),
+      inStock: inStock && Number(stock) > 0,
+      variants: variants.map(v => {
+        const vStock = v.stock !== undefined ? Number(v.stock) : 20;
+        return {
+          ...v,
+          price: v.price ? Number(v.price) : null,
+          offerPrice: v.offerPrice ? Number(v.offerPrice) : null,
+          colorHex: v.colorHex || v.color || '',
+          normalizedColor: v.color ? v.color.toLowerCase().trim().replace(/[\s_]+/g, '-') : '',
+          stock: vStock,
+          inStock: vStock > 0
+        };
+      })
     };
 
     // Construct available colors list
@@ -387,37 +398,50 @@ export default function ProductForm({ product, onClose, onSave }) {
             />
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <button
-              type="button"
-              onClick={() => setInStock(prev => !prev)}
-              style={{
-                width: '38px',
-                height: '20px',
-                backgroundColor: inStock ? '#10b981' : '#e5e7eb',
-                borderRadius: '999px',
-                border: 'none',
-                cursor: 'pointer',
-                position: 'relative',
-                transition: 'background-color 0.2s ease',
-                padding: 0
-              }}
-            >
-              <span style={{
-                width: '16px',
-                height: '16px',
-                backgroundColor: '#ffffff',
-                borderRadius: '50%',
-                position: 'absolute',
-                top: '2px',
-                left: '2px',
-                transition: 'transform 0.2s ease',
-                transform: inStock ? 'translateX(18px)' : 'translateX(0)'
-              }} />
-            </button>
-            <span style={{ fontSize: '14px', fontWeight: '600', color: inStock ? '#059669' : '#dc2626' }}>
-              {inStock ? 'List Product as In Stock' : 'List Product as Out of Stock'}
-            </span>
+          <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-end' }}>
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <label style={{ fontSize: '13px', fontWeight: '600', color: 'var(--color-secondary)' }}>Stock Quantity *</label>
+              <input
+                type="number"
+                required
+                min="0"
+                value={stock}
+                onChange={(e) => setStock(Number(e.target.value))}
+                style={{ padding: '10px', border: '1px solid var(--color-border-soft)', borderRadius: '6px', fontSize: '14px', outline: 'none' }}
+              />
+            </div>
+            <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '12px', height: '40px' }}>
+              <button
+                type="button"
+                onClick={() => setInStock(prev => !prev)}
+                style={{
+                  width: '38px',
+                  height: '20px',
+                  backgroundColor: inStock && stock > 0 ? '#10b981' : '#e5e7eb',
+                  borderRadius: '999px',
+                  border: 'none',
+                  cursor: 'pointer',
+                  position: 'relative',
+                  transition: 'background-color 0.2s ease',
+                  padding: 0
+                }}
+              >
+                <span style={{
+                  width: '16px',
+                  height: '16px',
+                  backgroundColor: '#ffffff',
+                  borderRadius: '50%',
+                  position: 'absolute',
+                  top: '2px',
+                  left: '2px',
+                  transition: 'transform 0.2s ease',
+                  transform: inStock && stock > 0 ? 'translateX(18px)' : 'translateX(0)'
+                }} />
+              </button>
+              <span style={{ fontSize: '14px', fontWeight: '600', color: inStock && stock > 0 ? '#059669' : '#dc2626' }}>
+                {inStock && stock > 0 ? 'List Product as In Stock' : 'List Product as Out of Stock'}
+              </span>
+            </div>
           </div>
 
           {/* VARIANTS SECTION */}
@@ -508,6 +532,17 @@ export default function ProductForm({ product, onClose, onSave }) {
                         value={v.offerPrice || ''}
                         onChange={(e) => handleVariantChange(v.id, 'offerPrice', e.target.value)}
                         placeholder="Use parent if empty"
+                        style={{ padding: '6px 10px', border: '1px solid var(--color-border-soft)', borderRadius: '4px', fontSize: '13px', outline: 'none' }}
+                      />
+                    </div>
+                    <div style={{ flex: '1 1 80px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                      <label style={{ fontSize: '11px', fontWeight: '600', color: 'var(--color-text-muted)' }}>Stock *</label>
+                      <input
+                        type="number"
+                        required
+                        min="0"
+                        value={v.stock ?? 20}
+                        onChange={(e) => handleVariantChange(v.id, 'stock', Number(e.target.value))}
                         style={{ padding: '6px 10px', border: '1px solid var(--color-border-soft)', borderRadius: '4px', fontSize: '13px', outline: 'none' }}
                       />
                     </div>
