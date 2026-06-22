@@ -508,6 +508,10 @@
   color: #dc2626;
 }
 
+.textWarning {
+  color: #d97706;
+}
+
 /* Action Groups */
 .actionGroup {
   display: flex;
