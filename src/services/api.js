@@ -102,13 +102,16 @@ function resolveProductById(products, id) {
     const variant = product.variants.find((v) => v.id === id || v._id === id);
     // Tricky logic: Construct a hybrid product representation containing parent attributes
     // and variant specific values to prevent data loss downstream in cart/orders.
+    // Why: Ensures variant specific stock and inStock values are used for cart validation and UI.
     return {
       ...product,
       id: variant.id || variant._id,
       color: variant.color,
       image: variant.images?.[0] || product.primaryImage || product.image || product.images?.[0],
       price: variant.price || product.price,
-      offerPrice: variant.offerPrice || product.offerPrice
+      offerPrice: variant.offerPrice || product.offerPrice,
+      stock: variant.stock !== undefined ? variant.stock : product.stock,
+      inStock: variant.stock !== undefined ? variant.stock > 0 : (variant.inStock !== undefined ? variant.inStock : product.inStock)
     };
   }
 
@@ -448,6 +451,22 @@ export const placeOrder = async (orderData) => {
   // Try Supabase first
   if (supabase) {
     try {
+      // Why: Run stock checks and decrement atomically via RPC. 
+      // If stock is insufficient, this raises an exception and aborts checkout.
+      const rpcItems = orderData.items.map(item => ({
+        id: item.productId,
+        quantity: item.quantity
+      }));
+      
+      const { error: rpcError } = await supabase.rpc('place_order_decrement_stock', {
+        order_items: rpcItems
+      });
+
+      if (rpcError) {
+        console.error('[Orders] Stock decrement RPC failed:', rpcError.message);
+        throw createAxiosError(rpcError.message, 400);
+      }
+
       // Supabase row uses snake_case columns
       const supabaseRow = {
         id: orderId,
@@ -474,8 +493,14 @@ export const placeOrder = async (orderData) => {
         saveOrderLocally(newOrder);
       } else {
         console.log('[Orders] Order saved to Supabase:', orderId);
+        // Force refresh products cache so updated stock levels are fetched on next pages
+        invalidateProductCache();
       }
     } catch (err) {
+      // Why: Rethrow database-enforced stock limits so frontend forms display the error
+      if (err.message.includes('Insufficient stock') || err.message.includes('not found') || err.response?.data?.message?.includes('Insufficient stock')) {
+        throw err;
+      }
       console.warn('[Orders] Supabase unreachable, using localStorage:', err.message);
       saveOrderLocally(newOrder);
     }
