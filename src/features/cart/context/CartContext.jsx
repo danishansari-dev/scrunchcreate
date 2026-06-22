@@ -79,6 +79,16 @@ export function CartProvider({ children }) {
    */
   const addToCart = async (product, qty = 1) => {
     const productId = product._id || product.id;
+    // Why: Ensure we check stock limits for both simple products and specific variants
+    const maxStock = product.stock !== undefined ? product.stock : 20;
+    const existingItem = items.find((item) => item.id === productId);
+    const currentQty = existingItem ? existingItem.qty : 0;
+
+    if (currentQty + qty > maxStock) {
+      show(`Cannot add more. Only ${maxStock} items available in stock.`, 'error');
+      return false;
+    }
+
     try {
       await addToCartAPI(productId, qty);
 
@@ -123,7 +133,15 @@ export function CartProvider({ children }) {
    * @param qty - New quantity count
    */
   const updateQuantity = async (id, qty) => {
-    const normalized = Math.max(1, Math.floor(qty || 1));
+    const item = items.find((p) => p.id === id);
+    const maxStock = item?.stock !== undefined ? item.stock : 20;
+    const normalized = Math.min(maxStock, Math.max(1, Math.floor(qty || 1)));
+
+    // Why: Warn user if their requested quantity exceeded available stock limits
+    if (qty > maxStock) {
+      show(`Only ${maxStock} items available in stock.`, 'warning');
+    }
+
     try {
       await updateCartItemAPI(id, normalized);
       setItems((prev) => prev.map((p) => (p.id === id ? { ...p, qty: normalized } : p)));
@@ -140,6 +158,11 @@ export function CartProvider({ children }) {
   const increment = async (id) => {
     const item = items.find((p) => p.id === id);
     if (item) {
+      const maxStock = item.stock !== undefined ? item.stock : 20;
+      if (item.qty >= maxStock) {
+        show(`Only ${maxStock} items available in stock.`, 'error');
+        return;
+      }
       updateQuantity(id, item.qty + 1);
     }
   };
