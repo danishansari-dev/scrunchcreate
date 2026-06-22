@@ -139,6 +139,24 @@
     backdrop-filter: blur(10px);
 }
 
+.outOfStockBadge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 5;
+    max-width: calc(100% - 64px);
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: rgba(220, 38, 38, 0.95);
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    line-height: 1;
+    text-transform: uppercase;
+    backdrop-filter: blur(10px);
+}
+
 .imageActions {
     position: absolute;
     right: 12px;
@@ -525,7 +543,8 @@
         padding: 11px;
     }
 
-    .statusBadge {
+    .statusBadge,
+    .outOfStockBadge {
         top: 8px;
         left: 8px;
         padding: 5px 8px;
