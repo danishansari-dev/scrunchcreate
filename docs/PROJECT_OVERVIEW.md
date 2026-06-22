@@ -1,9 +1,9 @@
 # Scrunch & Create — Project Overview
 
-> **Last updated:** 2026-06-19  
-> **Stack:** React 19 + Vite 7 + Framer Motion + CSS Modules  
+> **Last updated:** 2026-06-22  
+> **Stack:** React 19 + Vite 7 + Framer Motion + CSS Modules + Supabase  
 > **Deployment:** Vercel (frontend SPA)  
-> **Status:** Production — fully client-side, no live backend
+> **Status:** Production — Supabase-backed data layer with localStorage fallbacks
 
 ---
 
@@ -25,26 +25,28 @@
 │       │                                          │
 │       ├── Context Providers                      │
 │       │    ├── ToastProvider (notifications)      │
-│       │    ├── WishlistProvider (localStorage)    │
-│       │    └── CartProvider (localStorage + API)  │
+│       │    ├── AuthProvider (Supabase Auth)     │
+│       │    ├── WishlistProvider (DB + local)    │
+│       │    └── CartProvider (DB + local)        │
 │       │                                          │
 │       ├── Layout (NavBar + Footer + CartDrawer)  │
 │       │                                          │
 │       └── Pages                                  │
-│            ├── Home                              │
-│            ├── Products (catalog + filters)       │
-│            ├── ProductDetail                     │
-│            ├── Cart                              │
-│            ├── Wishlist                           │
-│            ├── Checkout                          │
-│            ├── OrderSuccess                      │
-│            └── NotFound                          │
+│            ├── Home, Products, ProductDetail     │
+│            ├── Cart, Wishlist, Checkout          │
+│            ├── OrderSuccess, NotFound            │
+│            ├── Auth (/login)                     │
+│            ├── Profile (/profile)                │
+│            ├── Admin (/admin, AdminGuard)        │
+│            └── Legal (privacy, terms)            │
 │                                                  │
-│  Data Layer (all client-side)                    │
-│  ├── data/products.json (89KB product catalog)   │
-│  ├── localStorage (cart, wishlist, orders)       │
-│  ├── services/api.js (mocked backend)            │
-│  └── shared/ (common helpers, config & theme)    │
+│  Data Layer                                      │
+│  ├── Supabase (products, orders, cart, wishlist) │
+│  ├── Supabase Auth (sessions, user metadata)     │
+│  ├── localStorage (guest cart/wishlist, fallbacks)│
+│  ├── data/products.json (offline catalog fallback)│
+│  ├── services/api.js (unified data facade)       │
+│  └── shared/ (config, utils, theme)              │
 └──────────────────────────────────────────────────┘
 ```
 
@@ -53,14 +55,16 @@
 ## 3. Module Map
 
 ### App Layer (`src/app/`)
-- `main.jsx` — React root entry: Router → Toast → Wishlist → Cart → App.
-- `App.jsx` — Client-side route declarations wrapped in Layout.
+- `main.jsx` — React root entry: Router → Toast → Auth → Wishlist → Cart → App.
+- `App.jsx` — Client-side route declarations wrapped in Layout; admin route wrapped in `AdminGuard`.
 - `App.css` / `index.css` — Global stylesheets and scroll behaviors.
 
 ### Feature Modules (`src/features/`)
 
 | Feature | Component/Context | Purpose |
 |---------|-------------------|---------|
+| **auth** | `AuthContext.jsx` | Supabase Auth session, login/signup/logout, cart/wishlist merge on sign-in |
+|         | `AdminGuard/` | Client-side admin route protection via `VITE_ADMIN_EMAILS` allowlist |
 | **cart** | `CartContext.jsx` | Cart state (items, coupon logic, delivery fees) |
 |         | `CartDrawer/` | Slide-out cart panel component |
 |         | `CouponField/` | Promo code validation form |
@@ -76,13 +80,13 @@
 |         | `ProductSearch/` | Product search input box |
 |         | `ProductSkeleton/` | Product list loading indicator |
 |         | `useProductsFilter.js` | Product sorting, filtering, and variant image hooks |
-| **wishlist** | `WishlistContext.jsx` | Wishlist state and cross-tab storage synchronizer |
+| **wishlist** | `WishlistContext.jsx` | Wishlist state; Supabase sync for logged-in users, localStorage for guests |
 
 ### Reusable UI / Layout (`src/components/`)
 - `ErrorBoundary/` — Fallback boundary wrapper to catch UI crashes.
 - `Layout/` — Main page frame container (attaches NavBar, Footer, CartDrawer).
-- `NavBar/` — Responsive header navigation and mega-menus.
-- `Footer/` — Global footer.
+- `NavBar/` — Responsive header navigation, auth avatar/dropdown, mega-menus.
+- `Footer/` — Global footer with legal links.
 - `ToastContext/` — Toast provider and animation styles.
 - `TrustBadges/` — Handcrafted / secure checkout trust indicators.
 - `Banner/` — Homepage hero banner carousel.
@@ -91,17 +95,27 @@
 - `SectionHeader/` — Typography block for page sections.
 
 ### Page View Controllers (`src/pages/`)
-- `home/` — Homepage.
-- `products/` — Catalog page.
-- `product/` — Product details.
-- `cart/` — Cart page.
-- `wishlist/` — Wishlist view page.
-- `checkout/` — Checkout form.
-- `NotFound.jsx` — 404 page.
+
+| Page folder | Route(s) | Purpose |
+|-------------|----------|---------|
+| `home/` | `/` | Homepage |
+| `products/` | `/products`, `/products/:category` | Catalog with filters |
+| `product/` | `/product/:slug` | Product detail |
+| `cart/` | `/cart` | Full cart page |
+| `wishlist/` | `/wishlist` | Saved items |
+| `checkout/` | `/checkout`, `/order-success` | Checkout form and confirmation |
+| `auth/` | `/login` | Combined login / register page |
+| `profile/` | `/profile` | Account details and order history |
+| `admin/` | `/admin` | Admin dashboard and product management (guarded) |
+| `legal/` | `/privacy-policy`, `/terms-and-conditions` | Privacy policy and terms |
+| `NotFound.jsx` | `*` | 404 page |
+
+### Services (`src/services/`)
+- `api.js` — Unified facade for Supabase products, orders, cart, wishlist, auth, and admin operations; localStorage fallbacks; Axios-shaped errors.
 
 ### Shared Modules (`src/shared/`)
-- `config/` — Configuration files (`config.js` and `coupons.js`).
-- `utils/` — Business utility functions (`pricing.js`, `whatsappUtils.js`, `pincodeUtils.js`, etc.).
+- `config/` — `config.js`, `coupons.js`, `supabase.js`, `adminConfig.js`.
+- `utils/` — Business utility functions (`getProducts.js`, `pricing.js`, `whatsappUtils.js`, `pincodeUtils.js`, etc.).
 - `theme/` — Custom design tokens and CSS properties (`theme.css`).
 
 ---

@@ -57,7 +57,7 @@ const cloudinaryMap = JSON.parse(
   readFileSync(join(__dirname, 'cloudinary-url-map.json'), 'utf-8')
 );
 
-// ─── Pricing logic (duplicated from src/shared/utils/pricing.js) ─────────
+// ─── Pricing logic (duplicated from src/features/products/utils/pricing.js) ─────────
 // Why duplicated: This is a Node script that can't import Vite-based modules.
 const OFFER_PRICE_TABLE = {
   scrunchie: {

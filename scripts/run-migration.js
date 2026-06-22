@@ -38,7 +38,7 @@ if (!supabaseUrl || !supabaseKey) {
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-const sqlPath = join(__dirname, 'supabase-schema.sql');
+const sqlPath = join(__dirname, '..', 'supabase', 'migrations', '20260620112335_initial_schema.sql');
 const sql = readFileSync(sqlPath, 'utf-8');
 
 // Split SQL into individual statements and run them
@@ -65,7 +65,7 @@ async function runMigration() {
     console.log('\n⚠️  Could not run SQL via API (this is normal with anon key).');
     console.log('📋 Please run the SQL migration manually:');
     console.log('   1. Go to https://supabase.com/dashboard/project/zwrawhvslgubinaygixr/sql');
-    console.log('   2. Open file: scripts/supabase-schema.sql');
+    console.log('   2. Open file: supabase/migrations/20260620112335_initial_schema.sql');
     console.log('   3. Paste the contents and click "Run"');
     console.log('   4. Then run: node scripts/seed-supabase.js');
     return;
@@ -78,6 +78,6 @@ runMigration().catch(err => {
   console.error('❌ Error:', err.message);
   console.log('\n📋 Please run the SQL migration manually:');
   console.log('   1. Go to https://supabase.com/dashboard/project/zwrawhvslgubinaygixr/sql');
-  console.log('   2. Open file: scripts/supabase-schema.sql');
+  console.log('   2. Open file: supabase/migrations/20260620112335_initial_schema.sql');
   console.log('   3. Paste the contents and click "Run"');
 });

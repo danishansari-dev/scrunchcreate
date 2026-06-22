@@ -5,6 +5,30 @@
 
 ---
 
+## [2026-06-22] Phase 4 — Admin Panel
+
+### Admin Dashboard
+- Added `/admin` route protected by `AdminGuard` (`src/features/auth/components/AdminGuard/AdminGuard.jsx`).
+- Built `AdminDashboard.jsx` with overview stats, order management (status updates, expandable detail rows), and product catalog CRUD via `ProductForm.jsx`.
+- Admin API functions in `api.js`: `adminGetAllOrders`, `adminUpdateOrderStatus`, `adminSaveProduct`, `adminDeleteProduct`.
+- Client-side admin check via `isUserAdmin()` in `src/shared/config/adminConfig.js` (`VITE_ADMIN_EMAILS` comma-separated allowlist).
+- Server-side admin writes enforced by `is_admin()` RLS function (`scripts/admin-migration.sql`) on `products`, `product_variants`, and `orders`.
+
+---
+
+## [2026-06-22] Phase 4 — Cart & Wishlist Supabase Migration
+
+### Database Schema
+- Added `cart_items` and `wishlist_items` tables (`scripts/cart-wishlist-migration.sql`) with `user_id` FK to `auth.users`, RLS policies (`auth.uid() = user_id`), and indexes.
+
+### API & Context Updates
+- `getCart`, `addToCart`, `updateCartItem`, `removeFromCart`, `clearCart` in `api.js` now read/write Supabase `cart_items` for authenticated users; guests continue using localStorage.
+- Wishlist operations (`getWishlist`, `addToWishlist`, `removeFromWishlist`, `clearWishlist`) sync to Supabase `wishlist_items` for logged-in users.
+- `mergeGuestCartIntoUserCart` and `mergeGuestWishlistIntoUserWishlist` migrate guest localStorage data into Supabase on authentication (triggered from `AuthContext`).
+- localStorage retained as offline/guest fallback path when Supabase is unreachable.
+
+---
+
 ## [2026-06-20] Phase 4 — Supabase Auth Integration
 
 ### User Authentication

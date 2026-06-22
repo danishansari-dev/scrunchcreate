@@ -12,9 +12,9 @@
 import { createContext, useContext, useEffect, useMemo, useState, useCallback } from 'react'
 import { getCart, addToCartAPI, updateCartItemAPI, removeFromCartAPI, clearCartAPI, getProducts } from '../../../services/api';
 import { useToast } from '../../../components/ToastContext';
-import { validateCoupon, calculateDeliveryFee } from '../../../shared/utils/couponUtils';
+import { validateCoupon, calculateDeliveryFee } from '../utils/couponUtils';
 import { shuffle } from '../../../shared/utils/shuffle';
-import { FREE_SHIPPING_THRESHOLD } from '../../../shared/config/coupons';
+import { FREE_SHIPPING_THRESHOLD } from '../config/coupons';
 import { useAuth } from '../../auth/context/AuthContext';
 
 const CartContext = createContext(null);

@@ -9,13 +9,13 @@
  * SAFETY: Products with empty or missing images are automatically excluded
  * to prevent blank/broken cards in any view.
  */
-import { supabase } from '../config/supabase';
+import { supabase } from '../../../shared/config/supabase';
 import { getProductPrice } from './pricing';
 import { normalizeColor, getColorHex } from './colorNormalization';
 
 // Fallback imports for offline mode
-import productsData from '../../data/products.json';
-import cloudinaryMap from '../../../scripts/cloudinary-url-map.json';
+import productsData from '../../../data/products.json';
+import cloudinaryMap from '../../../../scripts/cloudinary-url-map.json';
 
 let cachedProducts = null;
 

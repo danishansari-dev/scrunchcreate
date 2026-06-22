@@ -1,5 +1,5 @@
 import { useMemo, useState, useCallback, useEffect } from 'react'
-import { normalizeColor, CANONICAL_COLORS } from '../../../shared/utils/colorNormalization'
+import { normalizeColor, CANONICAL_COLORS } from '../utils/colorNormalization'
 
 // Set of canonical colors for fast lookup — only these should appear in the color filter
 const VALID_COLORS = new Set(CANONICAL_COLORS)

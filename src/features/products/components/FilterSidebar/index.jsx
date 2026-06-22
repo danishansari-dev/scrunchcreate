@@ -2,8 +2,8 @@ import { useEffect, useMemo, useState } from 'react'
 // Why: Framer Motion imports may flag as unused depending on ESLint JSX configuration.
 import { AnimatePresence, motion } from 'framer-motion' // eslint-disable-line no-unused-vars
 import styles from './FilterSidebar.module.css'
-import { formatTypeName } from '../../../../shared/utils/catalogDisplay'
-import { getColorDisplayName, getColorHex } from '../../../../shared/utils/colorNormalization'
+import { formatTypeName } from '../../utils/catalogDisplay'
+import { getColorDisplayName, getColorHex } from '../../utils/colorNormalization'
 
 const DEFAULT_PRICE_RANGE = { min: 0, max: 10000 }
 

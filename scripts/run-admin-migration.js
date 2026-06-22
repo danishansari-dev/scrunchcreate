@@ -1,7 +1,8 @@
 /**
  * Why this script exists:
  * Parses the VITE_ADMIN_EMAILS environment variable from the .env file,
- * interpolates the list of emails into the SQL migration template (scripts/admin-migration.sql),
+ * interpolates the list of emails into the SQL migration template
+ * (supabase/migrations/20260621224558_admin_rls_policies.sql),
  * and writes the compiled SQL to scripts/admin-migration-compiled.sql.
  *
  * Usage: node scripts/run-admin-migration.js
@@ -48,7 +49,7 @@ const formattedEmails = emails.length > 0
 console.log('👥 Detected admin emails for RLS migration:', emails);
 
 // Read SQL template
-const sqlTemplatePath = join(__dirname, 'admin-migration.sql');
+const sqlTemplatePath = join(__dirname, '..', 'supabase', 'migrations', '20260621224558_admin_rls_policies.sql');
 let sqlContent = '';
 try {
   sqlContent = readFileSync(sqlTemplatePath, 'utf-8');

@@ -8,7 +8,7 @@ import { useToast } from '../../components/ToastContext'
 import { useWishlist } from '../../features/wishlist/context/WishlistContext'
 import ProductCard from '../../features/products/components/ProductCard'
 import { AnimatePresence } from 'framer-motion'
-import { getColorDisplayName, getColorHex, isCanonicalColor, normalizeColor } from '../../shared/utils/colorNormalization'
+import { getColorDisplayName, getColorHex, isCanonicalColor, normalizeColor } from '../../features/products/utils/colorNormalization'
 
 // Heart Icon SVG components
 const HeartOutline = () => (

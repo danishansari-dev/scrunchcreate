@@ -8,7 +8,7 @@ import FilterSidebar from '../../features/products/components/FilterSidebar'
 import ActiveFilters from '../../features/products/components/ActiveFilters'
 import ProductSearch from '../../features/products/components/ProductSearch'
 import { getProducts } from '../../services/api'
-import { CATEGORY_SLUGS, getCategoryDisplayName } from '../../shared/utils/catalogDisplay'
+import { CATEGORY_SLUGS, getCategoryDisplayName } from '../../features/products/utils/catalogDisplay'
 import { useProductsFilter } from '../../features/products/hooks/useProductsFilter'
 
 const categorySlugMap = {

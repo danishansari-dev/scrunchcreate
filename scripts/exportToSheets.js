@@ -20,7 +20,7 @@ fs.writeFileSync('prepared_products.json', JSON.stringify(productsData, null, 2)
 console.log(`Saved ${productsData.length} products to prepared_products.json`);
 
 // 2. Prepare Pricing Data
-const pricingStr = fs.readFileSync('src/utils/pricing.js', 'utf8');
+const pricingStr = fs.readFileSync('src/features/products/utils/pricing.js', 'utf8');
 const offerPriceTableMatch = pricingStr.match(/const OFFER_PRICE_TABLE = (\{[\s\S]*?\});/);
 const mrpMarkupMatch = pricingStr.match(/const MRP_MARKUP = (\{[\s\S]*?\});/);
 

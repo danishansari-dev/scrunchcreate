@@ -15,7 +15,7 @@ import {
   getProductsByCategory as fetchProductsByCategory,
   getProductVariants as fetchProductVariants,
   invalidateProductCache,
-} from '../shared/utils/getProducts';
+} from '../features/products/utils/getProducts';
 
 // ─── Session Management ──────────────────────────────────────────────
 
@@ -104,7 +104,7 @@ function resolveProductById(products, id) {
     // and variant specific values to prevent data loss downstream in cart/orders.
     return {
       ...product,
-      id: variant.id,
+      id: variant.id || variant._id,
       color: variant.color,
       image: variant.images?.[0] || product.primaryImage || product.image || product.images?.[0],
       price: variant.price || product.price,
@@ -114,6 +114,8 @@ function resolveProductById(products, id) {
 
   return null;
 }
+
+export { resolveProductById };
 
 // ─── Product Exports ─────────────────────────────────────────────────
 

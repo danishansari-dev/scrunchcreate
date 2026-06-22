@@ -1,6 +1,6 @@
 import styles from './ActiveFilters.module.css'
-import { formatTypeName } from '../../../../shared/utils/catalogDisplay'
-import { getColorDisplayName } from '../../../../shared/utils/colorNormalization'
+import { formatTypeName } from '../../utils/catalogDisplay'
+import { getColorDisplayName } from '../../utils/colorNormalization'
 
 const DEFAULT_PRICE_RANGE = { min: 0, max: 10000 }
 

@@ -6,9 +6,9 @@ import styles from './ProductCard.module.css'
 import { useCart } from '../../../cart/context/CartContext'
 import { useToast } from '../../../../components/ToastContext'
 import { useWishlist } from '../../../wishlist/context/WishlistContext'
-import { formatTypeName, getCategoryDisplayName } from '../../../../shared/utils/catalogDisplay'
-import { getColorDisplayName, isCanonicalColor, normalizeColor } from '../../../../shared/utils/colorNormalization'
-import { createSlug } from '../../../../shared/utils/productUtils'
+import { formatTypeName, getCategoryDisplayName } from '../../utils/catalogDisplay'
+import { getColorDisplayName, isCanonicalColor, normalizeColor } from '../../utils/colorNormalization'
+import { createSlug } from '../../utils/productUtils'
 
 /**
  * Renders a wishlist outline icon without depending on a separate icon bundle.
