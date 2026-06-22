@@ -8,7 +8,7 @@ import { useState, useCallback, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useCart } from '../../features/cart/context/CartContext'
 import { useToast } from '../../components/ToastContext'
-import { placeOrder } from '../../services/api'
+import { placeOrder, getProducts, resolveProductById } from '../../services/api'
 import { useAuth } from '../../features/auth/context/AuthContext'
 import CouponField from '../../features/cart/components/CouponField'
 import PaymentMethodSelector from '../../features/cart/components/PaymentMethodSelector'
@@ -63,7 +63,7 @@ function validateForm(form, paymentMethod, paymentDetails) {
 
 export default function Checkout() {
   const navigate = useNavigate()
-  const { items, subtotal, clearCart, deliveryFee, grandTotal, couponDiscount, appliedCoupon, totalSavings } = useCart()
+  const { items, subtotal, clearCart, deliveryFee, grandTotal, couponDiscount, appliedCoupon, totalSavings, updateQuantity } = useCart()
   const { show } = useToast()
   const { user } = useAuth()
 
@@ -178,6 +178,36 @@ export default function Checkout() {
     }
 
     setIsSubmitting(true)
+
+    // Why: Query the latest catalog and verify stock limits on the DB before submitting.
+    // If any item exceeds available stock, notify user and adjust cart automatically to prevent order processing failure.
+    try {
+      const freshProducts = await getProducts();
+      for (const item of items) {
+        const freshProduct = resolveProductById(freshProducts, item.id);
+        if (!freshProduct) {
+          show(`${item.name} is no longer available in the catalog.`, 'error');
+          setIsSubmitting(false);
+          return;
+        }
+
+        const maxStock = freshProduct.stock !== undefined ? freshProduct.stock : 20;
+        if (maxStock <= 0) {
+          show(`${item.name} is out of stock. Please remove it from your cart.`, 'error');
+          setIsSubmitting(false);
+          return;
+        }
+
+        if (item.qty > maxStock) {
+          show(`Only ${maxStock} units of ${item.name} are left in stock. We've adjusted your cart quantity.`, 'warning');
+          updateQuantity(item.id, maxStock);
+          setIsSubmitting(false);
+          return;
+        }
+      }
+    } catch (err) {
+      console.warn('[Checkout] Pre-order stock verification failed:', err.message);
+    }
 
     try {
       const orderData = {
