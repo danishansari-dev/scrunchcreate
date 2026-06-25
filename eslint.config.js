@@ -5,7 +5,8 @@ import reactRefresh from 'eslint-plugin-react-refresh'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
-  globalIgnores(['dist', 'scripts']),
+  // Why: `graphify/` is a separate local workspace and can contain generated/vendor files.
+  globalIgnores(['dist', 'scripts', 'graphify']),
   {
     files: ['**/*.{js,jsx}'],
     extends: [

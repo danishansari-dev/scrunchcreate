@@ -1,8 +1,10 @@
 # Scrunch & Create — Implementation Plan
 
 > **Created:** 2026-06-19  
-> **Status:** Awaiting Approval  
+> **Status:** Historical plan; Supabase is now the active backend direction  
 > **Estimated effort:** 4-6 hours across 4 milestones
+
+> **Current backend note:** The project is not using Render/MongoDB for the live app. Current production data flows through Supabase, with localStorage fallbacks for guest/offline state.
 
 ---
 

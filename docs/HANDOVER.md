@@ -1,7 +1,7 @@
 # Scrunch & Create — Developer Handover Guide
 
 > **Last updated:** 2026-06-19  
-> **Stack:** React 19 + Vite 7 + Framer Motion + CSS Modules  
+> **Stack:** React 19 + Vite 7 + Framer Motion + CSS Modules + Supabase
 
 ---
 
@@ -15,7 +15,7 @@ npm install
 
 # 2. Environment setup
 cp .env.example .env
-# Edit .env with your values (only VITE_API_URL matters for dev)
+# Edit .env with your Supabase values
 
 # 3. Start development
 npm run dev
@@ -51,10 +51,10 @@ src/
 │   └── [PageName]/
 │       ├── [PageName].jsx
 │       └── [PageName].module.css
-├── services/             # Client-side Mock APIs (api.js database)
+├── services/             # Supabase-backed API facade with localStorage fallbacks
 │   └── api.js
 └── shared/               # Shared settings, styles, and tools
-    ├── config/           # Coupons and configurations
+    ├── config/           # Supabase, admin, and app configurations
     ├── utils/            # Shuffling, pincode lookup, WhatsApp formatters
     └── theme/            # Global theme design tokens (theme.css)
 ```

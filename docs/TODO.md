@@ -65,7 +65,8 @@
 
 ## Future Considerations (Not in Current Scope)
 
-- [ ] Backend integration (Supabase / Render)
+- [x] Backend integration (Supabase)
+- [ ] Remove stale Render/MongoDB references from legacy docs and scripts
 - [ ] Payment gateway integration (Razorpay)
 - [ ] Product inventory/stock management
 - [ ] Order tracking system
