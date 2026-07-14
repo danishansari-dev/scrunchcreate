@@ -571,3 +571,104 @@
     padding: 24px;
   }
 }
+
+/* Fulfillment & Tracking styles */
+.dispatchForm {
+  background: var(--color-background-soft, #faf8f9);
+  padding: 16px;
+  border-radius: var(--radius-md, 8px);
+  border: 1px solid var(--color-border-soft, #f0e6ed);
+  margin-top: 8px;
+}
+
+.formGroup {
+  margin-bottom: 12px;
+}
+
+.formLabel {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-main, #4a1c40);
+  margin-bottom: 4px;
+}
+
+.formInput {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--color-border-soft, #f0e6ed);
+  border-radius: var(--radius-sm, 6px);
+  font-family: inherit;
+  font-size: 13px;
+  background: #ffffff;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.formInput:focus {
+  border-color: var(--color-primary, #e78592);
+}
+
+.formActions {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.submitDispatchBtn, .cancelDispatchBtn, .prepareDispatchBtn {
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 99px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.prepareDispatchBtn {
+  background: var(--color-primary, #e78592);
+  color: #ffffff;
+  border: none;
+}
+
+.prepareDispatchBtn:hover {
+  background: #d86c7b;
+  transform: translateY(-1px);
+}
+
+.submitDispatchBtn {
+  background: #25d366;
+  color: #ffffff;
+  border: none;
+}
+
+.submitDispatchBtn:hover {
+  background: #20ba56;
+}
+
+.cancelDispatchBtn {
+  background: transparent;
+  color: var(--color-text-muted, #8c5a82);
+  border: 1px solid var(--color-border-soft, #f0e6ed);
+}
+
+.cancelDispatchBtn:hover {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.trackLink {
+  display: inline-block;
+  background: var(--color-text-main, #4a1c40);
+  color: #ffffff !important;
+  text-decoration: none;
+  padding: 6px 14px;
+  border-radius: 99px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-top: 8px;
+  transition: opacity 0.2s ease;
+}
+
+.trackLink:hover {
+  opacity: 0.9;
+}

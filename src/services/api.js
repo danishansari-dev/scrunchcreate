@@ -495,6 +495,13 @@ export const placeOrder = async (orderData) => {
         console.log('[Orders] Order saved to Supabase:', orderId);
         // Force refresh products cache so updated stock levels are fetched on next pages
         invalidateProductCache();
+
+        // Trigger customer/admin email confirmation via Supabase Edge Function
+        supabase.functions.invoke('send-email', {
+          body: { type: 'order_confirmation', order: newOrder }
+        }).catch((err) => {
+          console.warn('[Orders] Edge function send-email failed:', err.message);
+        });
       }
     } catch (err) {
       // Why: Rethrow database-enforced stock limits so frontend forms display the error
@@ -959,13 +966,30 @@ export const adminGetAllOrders = async () => {
  * @danishansari-dev status - The target status string
  * @returns {Promise<boolean>} True if successful
  */
-export const adminUpdateOrderStatus = async (orderId, status) => {
+export const adminUpdateOrderStatus = async (orderId, status, trackingNumber = null, trackingUrl = null) => {
   if (!supabase) throw new Error('Supabase is not configured.');
+  
+  const updateData = { status };
+  if (trackingNumber !== null) {
+    updateData.tracking_number = trackingNumber;
+  }
+  if (trackingUrl !== null) {
+    updateData.tracking_url = trackingUrl;
+  }
+
   const { error } = await supabase
     .from('orders')
-    .update({ status })
+    .update(updateData)
     .eq('id', orderId);
   if (error) throw error;
+
+  // Trigger status update email via Edge Function
+  supabase.functions.invoke('send-email', {
+    body: { type: 'status_update', orderId, status }
+  }).catch((err) => {
+    console.warn('[Orders] Edge function status_update send-email failed:', err.message);
+  });
+
   return true;
 };
 

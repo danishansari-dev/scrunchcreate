@@ -272,6 +272,35 @@ export default function ProfilePage() {
                                 <p>{order.shippingAddress.street}</p>
                                 <p>{order.shippingAddress.city}, {order.shippingAddress.state} - {order.shippingAddress.zipCode}</p>
                                 <p>Phone: {order.contact?.phone || 'N/A'}</p>
+                                
+                                {(order.tracking_number || order.trackingNumber) && (
+                                  <div style={{ marginTop: '16px', borderTop: '1px dashed rgba(74, 28, 64, 0.1)', paddingTop: '12px' }}>
+                                    <h6 style={{ margin: '0 0 6px 0', color: 'var(--color-text-main, #4a1c40)', fontWeight: 'bold' }}>📦 Tracking Information</h6>
+                                    <p style={{ margin: '0 0 8px 0', fontSize: '13px' }}>
+                                      Tracking ID: <strong style={{ color: 'var(--color-text-main, #4a1c40)' }}>{order.tracking_number || order.trackingNumber}</strong>
+                                    </p>
+                                    {(order.tracking_url || order.trackingUrl) && (
+                                      <a 
+                                        href={order.tracking_url || order.trackingUrl} 
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        style={{
+                                          display: 'inline-block',
+                                          backgroundColor: 'var(--color-primary, #e78592)',
+                                          color: '#ffffff',
+                                          padding: '6px 12px',
+                                          borderRadius: '99px',
+                                          fontSize: '11px',
+                                          fontWeight: 'bold',
+                                          textDecoration: 'none',
+                                          textAlign: 'center'
+                                        }}
+                                      >
+                                        Track Package 🚚
+                                      </a>
+                                    )}
+                                  </div>
+                                )}
                               </div>
                             )}
 

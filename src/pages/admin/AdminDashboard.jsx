@@ -16,6 +16,7 @@ import {
   adminSaveProduct
 } from '../../services/api';
 import ProductForm from './ProductForm';
+import { supabase } from '../../shared/config/supabase';
 
 /**
  * AdminDashboard renders administration panels and stats.
@@ -105,12 +106,138 @@ export default function AdminDashboard() {
     });
   };
 
+  // Fulfillment state
+  const [dispatchingOrderId, setDispatchingOrderId] = useState(null);
+  const [trackingNumber, setTrackingNumber] = useState('');
+  const [carrier, setCarrier] = useState('delhivery');
+  const [customUrl, setCustomUrl] = useState('');
+
+  // Subscribe to real-time order notifications
+  useEffect(() => {
+    if (!supabase) return;
+
+    const channel = supabase
+      .channel('admin-orders-channel')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'orders' },
+        (payload) => {
+          if (payload.eventType === 'INSERT') {
+            const newOrderRow = payload.new;
+            // Map snake_case to camelCase
+            const newOrder = {
+              _id: newOrderRow.id,
+              id: newOrderRow.id,
+              ...newOrderRow,
+              shippingAddress: newOrderRow.shipping_address,
+              couponDiscount: newOrderRow.coupon_discount,
+              deliveryFee: newOrderRow.delivery_fee,
+              codFee: newOrderRow.cod_fee,
+              createdAt: newOrderRow.created_at,
+              userId: newOrderRow.user_id,
+            };
+            setOrders((prev) => {
+              // Deduplicate in case of race conditions
+              if (prev.some(o => o.id === newOrder.id)) return prev;
+              return [newOrder, ...prev];
+            });
+            show(`🎉 New Order #${newOrder.id.substring(6, 14)} received!`, 'success');
+          } else if (payload.eventType === 'UPDATE') {
+            const updatedRow = payload.new;
+            setOrders((prev) =>
+              prev.map((o) =>
+                o.id === updatedRow.id
+                  ? {
+                      ...o,
+                      ...updatedRow,
+                      shippingAddress: updatedRow.shipping_address,
+                      couponDiscount: updatedRow.coupon_discount,
+                      deliveryFee: updatedRow.delivery_fee,
+                      codFee: updatedRow.cod_fee,
+                      createdAt: updatedRow.created_at,
+                      userId: updatedRow.user_id,
+                    }
+                  : o
+              )
+            );
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [show]);
+
+  /**
+   * Helper to build carrier specific tracking link
+   */
+  const getCarrierTrackingUrl = (carrierName, trackNum, customLink) => {
+    if (carrierName === 'custom') return customLink;
+    const num = trackNum.trim();
+    if (carrierName === 'delhivery') return `https://www.delhivery.com/track/package/${num}`;
+    if (carrierName === 'bluedart') return `https://www.bluedart.com/tracking?trackid=${num}`;
+    if (carrierName === 'indiapost') return `https://www.indiapost.gov.in/_layouts/15/dop.portal.tracking/trackconsignment.aspx?consignmentNo=${num}`;
+    if (carrierName === 'dtdc') return `https://www.dtdc.in/tracking/tracking_results.asp?ctAvt=Consignment&pinno=${num}`;
+    return '';
+  };
+
+  /**
+   * Handles dispatch order action, saving tracking info and sending notification email
+   */
+  const handleDispatchOrder = async (orderId) => {
+    if (!trackingNumber.trim()) {
+      show('Please enter a tracking number', 'warning');
+      return;
+    }
+    if (carrier === 'custom' && !customUrl.trim()) {
+      show('Please enter a custom tracking URL', 'warning');
+      return;
+    }
+
+    try {
+      setActionLoading(true);
+      const computedUrl = getCarrierTrackingUrl(carrier, trackingNumber, customUrl);
+      
+      await adminUpdateOrderStatus(orderId, 'Dispatched', trackingNumber, computedUrl);
+      
+      setOrders(prev => prev.map(o => o.id === orderId ? { 
+        ...o, 
+        status: 'Dispatched',
+        tracking_number: trackingNumber,
+        tracking_url: computedUrl
+      } : o));
+      
+      show('Order marked as Dispatched and customer notified!', 'success');
+      setDispatchingOrderId(null);
+      setTrackingNumber('');
+      setCustomUrl('');
+    } catch (err) {
+      console.error(err);
+      show('Failed to dispatch order', 'error');
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
   /**
    * Updates an order status in database and local state.
    * @danishansari-dev orderId - Unique order ID string
    * @danishansari-dev newStatus - Target status string ('Pending', 'Dispatched', 'Delivered', 'Cancelled')
    */
   const handleUpdateStatus = async (orderId, newStatus) => {
+    if (newStatus === 'Dispatched') {
+      // Toggle expansion so the detail view shows the dispatch form
+      setExpandedOrders(prev => {
+        const next = new Set(prev);
+        next.add(orderId);
+        return next;
+      });
+      setDispatchingOrderId(orderId);
+      return;
+    }
+
     try {
       setActionLoading(true);
       await adminUpdateOrderStatus(orderId, newStatus);
@@ -396,9 +523,9 @@ export default function AdminDashboard() {
                                 <div className={styles.detailsGrid}>
                                   <div>
                                     <h4 className={styles.detailsSubheading}>Shipping Address</h4>
-                                    <p className={styles.addressText}>{o.shippingAddress?.addressLine}</p>
+                                    <p className={styles.addressText}>{o.shippingAddress?.addressLine || o.shippingAddress?.street}</p>
                                     <p className={styles.addressText}>
-                                      {o.shippingAddress?.city}, {o.shippingAddress?.state} - {o.shippingAddress?.pincode}
+                                      {o.shippingAddress?.city}, {o.shippingAddress?.state} - {o.shippingAddress?.pincode || o.shippingAddress?.zipCode}
                                     </p>
                                     <p className={styles.addressText}>📞 {o.contact?.phone}</p>
                                   </div>
@@ -408,6 +535,100 @@ export default function AdminDashboard() {
                                     <p className={styles.detailsText}>Delivery Fee: ₹{o.deliveryFee}</p>
                                     {o.codFee > 0 && <p className={styles.detailsText}>COD Service Fee: ₹{o.codFee}</p>}
                                     {o.couponDiscount > 0 && <p className={styles.detailsText}>Coupon Savings: -₹{o.couponDiscount} ({o.coupon})</p>}
+                                  </div>
+                                  <div>
+                                    <h4 className={styles.detailsSubheading}>Fulfillment &amp; Tracking</h4>
+                                    {o.status === 'Pending' || o.status === 'Processing' || dispatchingOrderId === o.id ? (
+                                      dispatchingOrderId === o.id ? (
+                                        <div className={styles.dispatchForm}>
+                                          <div className={styles.formGroup}>
+                                            <label className={styles.formLabel}>Carrier</label>
+                                            <select 
+                                              value={carrier} 
+                                              onChange={(e) => setCarrier(e.target.value)}
+                                              className={styles.formInput}
+                                            >
+                                              <option value="delhivery">Delhivery</option>
+                                              <option value="bluedart">BlueDart</option>
+                                              <option value="indiapost">India Post</option>
+                                              <option value="dtdc">DTDC</option>
+                                              <option value="custom">Custom URL</option>
+                                            </select>
+                                          </div>
+                                          <div className={styles.formGroup}>
+                                            <label className={styles.formLabel}>Tracking Number</label>
+                                            <input 
+                                              type="text" 
+                                              value={trackingNumber} 
+                                              onChange={(e) => setTrackingNumber(e.target.value)}
+                                              placeholder="Enter Tracking ID"
+                                              className={styles.formInput}
+                                            />
+                                          </div>
+                                          {carrier === 'custom' && (
+                                            <div className={styles.formGroup}>
+                                              <label className={styles.formLabel}>Tracking URL</label>
+                                              <input 
+                                                type="url" 
+                                                value={customUrl} 
+                                                onChange={(e) => setCustomUrl(e.target.value)}
+                                                placeholder="https://example.com/track"
+                                                className={styles.formInput}
+                                              />
+                                            </div>
+                                          )}
+                                          <div className={styles.formActions}>
+                                            <button 
+                                              onClick={() => handleDispatchOrder(o.id)}
+                                              disabled={actionLoading}
+                                              className={styles.submitDispatchBtn}
+                                            >
+                                              Notify Shipped 📧
+                                            </button>
+                                            <button 
+                                              onClick={() => setDispatchingOrderId(null)}
+                                              className={styles.cancelDispatchBtn}
+                                            >
+                                              Cancel
+                                            </button>
+                                          </div>
+                                        </div>
+                                      ) : (
+                                        <button 
+                                          onClick={() => {
+                                            setDispatchingOrderId(o.id);
+                                            setTrackingNumber('');
+                                            setCarrier('delhivery');
+                                          }}
+                                          className={styles.prepareDispatchBtn}
+                                        >
+                                          📦 Prepare Dispatch
+                                        </button>
+                                      )
+                                    ) : (
+                                      <div>
+                                        {o.tracking_number ? (
+                                          <>
+                                            <p className={styles.detailsText}>Carrier: <span style={{textTransform: 'capitalize'}}>{o.tracking_url?.includes('delhivery') ? 'Delhivery' : o.tracking_url?.includes('bluedart') ? 'BlueDart' : o.tracking_url?.includes('indiapost') ? 'India Post' : o.tracking_url?.includes('dtdc') ? 'DTDC' : 'Custom'}</span></p>
+                                            <p className={styles.detailsText}>Tracking: <strong>{o.tracking_number}</strong></p>
+                                            {o.tracking_url && (
+                                              <a 
+                                                href={o.tracking_url} 
+                                                target="_blank" 
+                                                rel="noopener noreferrer" 
+                                                className={styles.trackLink}
+                                              >
+                                                Track Package 🔗
+                                              </a>
+                                            )}
+                                          </>
+                                        ) : (
+                                          <p className={styles.detailsText} style={{fontStyle: 'italic', color: 'var(--color-text-muted)'}}>
+                                            No tracking info available.
+                                          </p>
+                                        )}
+                                      </div>
+                                    )}
                                   </div>
                                 </div>
 

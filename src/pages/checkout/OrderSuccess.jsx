@@ -217,6 +217,35 @@ export default function OrderSuccess() {
               </p>
             )}
           </div>
+          {(order.tracking_number || order.trackingNumber) && (
+            <div className={styles.infoCard}>
+              <h3 className={styles.infoTitle}>📦 Tracking Info</h3>
+              <p className={styles.infoText}>
+                Tracking Number: <strong>{order.tracking_number || order.trackingNumber}</strong>
+              </p>
+              {(order.tracking_url || order.trackingUrl) && (
+                <a 
+                  href={order.tracking_url || order.trackingUrl} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  style={{
+                    display: 'inline-block',
+                    backgroundColor: 'var(--color-primary, #e78592)',
+                    color: '#ffffff',
+                    padding: '8px 16px',
+                    borderRadius: '99px',
+                    fontSize: '12px',
+                    fontWeight: 'bold',
+                    textDecoration: 'none',
+                    marginTop: '8px',
+                    textAlign: 'center'
+                  }}
+                >
+                  Track Package 🚚
+                </a>
+              )}
+            </div>
+          )}
         </div>
 
         {/* ─── WhatsApp CTA (secondary) ─── */}
