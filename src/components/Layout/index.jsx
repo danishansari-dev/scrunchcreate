@@ -6,19 +6,26 @@ import Footer from '../Footer'
 import CartDrawer from '../../features/cart/components/CartDrawer'
 import ErrorBoundary from '../ErrorBoundary'
 
+/**
+ * Root layout wrapper — renders NavBar, animated page outlet, Footer, and CartDrawer.
+ * Why mode="sync" instead of "wait": React Router v7's Outlet lifecycle doesn't
+ * trigger Framer Motion exit callbacks reliably, causing mode="wait" to leave pages
+ * stuck at initial opacity: 0 (blank screen). mode="sync" cross-fades instead.
+ * initial={false} prevents the first page load from starting invisible.
+ */
 export default function Layout() {
   const location = useLocation()
 
   return (
     <div className="App">
       <NavBar />
-      <AnimatePresence mode="wait">
+      <AnimatePresence mode="sync" initial={false}>
         <motion.main
           key={location.pathname}
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 8 }}
-          transition={{ duration: 0.25, ease: 'easeOut' }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2, ease: 'easeOut' }}
         >
           <ErrorBoundary>
             <Outlet />
