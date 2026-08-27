@@ -128,6 +128,18 @@
   - Updated `snippets/header-drawer.liquid` to use clean sub-type titles on mobile.
 - **Status:** Verified & Live.
 
+### Entry 8 — Full Storefront Audit & Comprehensive Automated Regression Fixes
+- **Goal:** Perform full store audit across all sections, pages, components, navigation, search, and responsive viewports. Identify and fix 404 policy links, eliminate duplicate header search modals, add fallback favicon to prevent 404 console errors, add missing Hairclips category to footer, standardize category titles ("Gift Hampers"), replace hardcoded routes with Shopify route objects, and resolve all Theme Check warnings.
+- **Changes:**
+  - `sections/footer.liquid`: Replaced broken hardcoded `/policies/...` links with dynamic `shop.privacy_policy.url`, `shop.terms_of_service.url`, `shop.refund_policy.url` with WhatsApp customer support fallbacks; added missing `Hairclips` link; used `routes.all_products_collection_url` and `routes.collections_url`; fixed Instagram alt tag typo; used `file_img_url` CDN filter.
+  - `sections/header.liquid`: Removed duplicate search modal and button rendering on the left of the logo, unifying search in `.header__icons`.
+  - `snippets/scrunch-nav-mega-menu.liquid`: Replaced hardcoded collection URLs with standard Shopify routes; standardized "Hamper" to "Gift Hampers".
+  - `snippets/header-drawer.liquid`: Updated mobile drawer routes to dynamic route objects and standardized category labels.
+  - `layout/theme.liquid` & `layout/password.liquid`: Added fallback SVG brand favicon data URI to prevent 404 `/favicon.ico` errors; initialized `scheme_classes = ''` to resolve Theme Check `UndefinedObject` warning.
+  - `assets/scrunch-custom.css`: Added global `overflow-x: clip` on `html, body` to eliminate horizontal scrollbar/overflow across tablet and desktop viewports.
+  - `sections/scrunch-collections.liquid` & `sections/scrunch-kits.liquid`: Replaced static string routes with dynamic Shopify route objects.
+- **Status:** Verified, Automated Tests Passed & Deployed Live.
+
 ---
 
 ## 5. Standard Operating Procedure for Future Changes
@@ -137,5 +149,6 @@
 3. **Validate:** Run `npx @shopify/cli theme check`.
 4. **Deploy:** Run `npx @shopify/cli theme push --store scrunchcreate.myshopify.com --allow-live --live`.
 5. **Update This Log:** Append the new prompt report to the [Interaction & Change History](#interaction--change-history) section.
+
 
 
