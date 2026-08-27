@@ -28,8 +28,12 @@ dist-ssr
 # Academic submission deliverables
 cloud-computing-submission/
 
-# Separate local workspace; not part of the ScrunchCreate storefront.
+# Local workspaces
 graphify/
+# shopify-migration
+
+# Shopify theme files
+# shopify-theme/
 
 # Product Images
 public/assets/products/
