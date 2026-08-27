@@ -148,7 +148,10 @@
   - `snippets/scrunch-policy.liquid`: Created dedicated, reusable Policy Hub snippet with interactive tabs for Terms & Conditions, Refund & Returns, Shipping & Delivery, Privacy Policy, and Support & Contact.
   - `sections/scrunch-policy.liquid`: Simplified section to render `snippets/scrunch-policy.liquid`.
   - `sections/main-404.liquid`: Added smart client-side route and URL hash interceptor that dynamically renders the Policy Hub whenever a visitor accesses any policy path (`/pages/terms-and-conditions`, `/pages/refund-policy`, `/pages/shipping-policy`, `/pages/privacy-policy`, `/policies/*`), automatically selecting and activating the corresponding policy tab and updating page metadata without showing a 404 error.
-  - `sections/footer.liquid`: Updated policy column links to point directly to clean policy slugs with tab anchors (`/pages/terms-and-conditions#terms`, `/pages/refund-policy#refund`, `/pages/shipping-policy#shipping`, `/pages/privacy-policy#privacy`, `/pages/contact#contact`).
+### Entry 11 — Footer Instagram Preview Images Fix
+- **Goal:** Fix the Instagram preview section in the footer where tiles were showing "No image" placeholders instead of actual brand imagery, while preserving the existing 4-tile grid layout, sizing, aspect-ratio, and hover animations.
+- **Changes:**
+  - `sections/footer.liquid`: Replaced broken `file_img_url` placeholder tags with high-resolution, direct Cloudinary CDN product images showcasing the 4 core brand categories (Scrunchies, Hair Bows, Gift Hampers, Flower Jewellery) at exact 1:1 aspect ratio with `object-fit: cover`.
 - **Status:** Verified & Deployed Live.
 
 ---
@@ -160,6 +163,7 @@
 3. **Validate:** Run `npx @shopify/cli theme check`.
 4. **Deploy:** Run `npx @shopify/cli theme push --store scrunchcreate.myshopify.com --allow-live --live`.
 5. **Update This Log:** Append the new prompt report to the [Interaction & Change History](#interaction--change-history) section.
+
 
 
 
