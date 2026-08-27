@@ -137,8 +137,19 @@
   - `snippets/header-drawer.liquid`: Updated mobile drawer routes to dynamic route objects and standardized category labels.
   - `layout/theme.liquid` & `layout/password.liquid`: Added fallback SVG brand favicon data URI to prevent 404 `/favicon.ico` errors; initialized `scheme_classes = ''` to resolve Theme Check `UndefinedObject` warning.
   - `assets/scrunch-custom.css`: Added global `overflow-x: clip` on `html, body` to eliminate horizontal scrollbar/overflow across tablet and desktop viewports.
-  - `sections/scrunch-collections.liquid` & `sections/scrunch-kits.liquid`: Replaced static string routes with dynamic Shopify route objects.
-- **Status:** Verified, Automated Tests Passed & Deployed Live.
+### Entry 10 — Product Card Color Swatches Redesign & 404 Policy Interception
+- **Goal:** Fix product color swatches overlapping with product title headings on the homepage and collection cards; provide rich, accurate hex colors and gradients for all store variants (combos, satins, layered, prints); ensure all policy pages and links render the Policy Hub seamlessly with zero 404 errors.
+- **Changes:**
+  - `snippets/scrunch-color-swatches.liquid`: Expanded color palette mapping covering all 46 store color and style variants (`black`, `white`, `ruby`, `baby-pink`, `magenta`, `mauve`, `plum`, `emerald`, `mint`, `olive`, `navy`, `petrol`, `sky-blue`, `mustard`, `lavender`, `chocolate`, `beige`, `gold`, `silver`, `pistachio`, `peach`, `combo`, `tulip`, `3-layered`, `jimmi-choo`, `mini-bow`, `pigtail`, `princess`, `scarf`, etc.) with support for multi-color linear gradients and fallback gradients.
+  - `snippets/card-product.liquid`: Wrapped product swatches in dedicated container (`.sc-card-swatches-wrap`) positioned cleanly between `.card__heading` and `.price`.
+  - `assets/scrunch-custom.css`:
+    - Enforced strict vertical layout and margins: `.card__heading` (`font-size: 15px; font-weight: 700; line-height: 1.35; margin: 4px 0 6px; min-height: 38px; 2-line clamped`), `.sc-card-swatches-wrap` (`min-height: 24px; margin: 4px 0 6px; display: flex; align-items: center;`), `.sc-swatches-row` (`gap: 7px; margin: 0; padding: 2px 0;`), `.sc-swatch-dot` (`18px x 18px; circular; 1.5px white border; subtle shadow; 1.2x hover scale with primary ring`), `.sc-swatch-more` (`11px bold pill badge with background and border`).
+    - Added matching mobile media query rules ensuring touch-friendly 17px dot diameter, clean spacing, and zero overlap on 2-column mobile grids.
+  - `snippets/scrunch-policy.liquid`: Created dedicated, reusable Policy Hub snippet with interactive tabs for Terms & Conditions, Refund & Returns, Shipping & Delivery, Privacy Policy, and Support & Contact.
+  - `sections/scrunch-policy.liquid`: Simplified section to render `snippets/scrunch-policy.liquid`.
+  - `sections/main-404.liquid`: Added smart client-side route and URL hash interceptor that dynamically renders the Policy Hub whenever a visitor accesses any policy path (`/pages/terms-and-conditions`, `/pages/refund-policy`, `/pages/shipping-policy`, `/pages/privacy-policy`, `/policies/*`), automatically selecting and activating the corresponding policy tab and updating page metadata without showing a 404 error.
+  - `sections/footer.liquid`: Updated policy column links to point directly to clean policy slugs with tab anchors (`/pages/terms-and-conditions#terms`, `/pages/refund-policy#refund`, `/pages/shipping-policy#shipping`, `/pages/privacy-policy#privacy`, `/pages/contact#contact`).
+- **Status:** Verified & Deployed Live.
 
 ---
 
@@ -149,6 +160,8 @@
 3. **Validate:** Run `npx @shopify/cli theme check`.
 4. **Deploy:** Run `npx @shopify/cli theme push --store scrunchcreate.myshopify.com --allow-live --live`.
 5. **Update This Log:** Append the new prompt report to the [Interaction & Change History](#interaction--change-history) section.
+
+
 
 
 
