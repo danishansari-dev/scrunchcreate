@@ -32,6 +32,7 @@
     "fast-check": "^4.6.0",
     "globals": "^16.3.0",
     "jsdom": "^29.0.2",
+    "playwright": "^1.62.1",
     "vite": "^7.1.2",
     "vitest": "^4.1.4"
   }
