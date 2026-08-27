@@ -154,6 +154,19 @@
   - `sections/footer.liquid`: Replaced broken `file_img_url` placeholder tags with high-resolution, direct Cloudinary CDN product images showcasing the 4 core brand categories (Scrunchies, Hair Bows, Gift Hampers, Flower Jewellery) at exact 1:1 aspect ratio with `object-fit: cover`.
 - **Status:** Verified & Deployed Live.
 
+### Entry 12 — Instant Product Card Color Swatch Image Switcher
+- **Goal:** Implement instant, client-side product card image switching when customers click any color swatch option across all product cards (homepage featured collection, collection listings, search results, related products). Ensure the selected swatch is visually highlighted, images switch seamlessly without reloading the page, and the card layout/design remains intact.
+- **Changes:**
+  - `snippets/scrunch-color-swatches.liquid`:
+    - Updated each swatch button to lookup and associate the matching variant media and alt tags.
+    - Embedded `data-image-src`, `data-image-srcset`, `data-image-alt`, and `data-variant-url` attributes for instant client-side lookup.
+    - Set accessible `role="radiogroup"` and `role="radio"` with `aria-checked` attributes.
+  - `assets/scrunch-custom.css`:
+    - Added button resets for `.sc-swatch-dot` and refined `.is-active` / `[aria-checked="true"]` highlight styling.
+  - `layout/theme.liquid`:
+    - Implemented a smooth, fast global event delegation handler that intercepts color swatch button clicks, smoothly updates the card's primary image and srcset, sets the active highlight state, and updates the card product detail link to point to the selected variant URL.
+- **Status:** Verified & Deployed Live.
+
 ---
 
 ## 5. Standard Operating Procedure for Future Changes
@@ -163,6 +176,7 @@
 3. **Validate:** Run `npx @shopify/cli theme check`.
 4. **Deploy:** Run `npx @shopify/cli theme push --store scrunchcreate.myshopify.com --allow-live --live`.
 5. **Update This Log:** Append the new prompt report to the [Interaction & Change History](#interaction--change-history) section.
+
 
 
 
