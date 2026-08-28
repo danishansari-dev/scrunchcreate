@@ -165,7 +165,19 @@
     - Added button resets for `.sc-swatch-dot` and refined `.is-active` / `[aria-checked="true"]` highlight styling.
   - `layout/theme.liquid`:
     - Implemented a smooth, fast global event delegation handler that intercepts color swatch button clicks, smoothly updates the card's primary image and srcset, sets the active highlight state, and updates the card product detail link to point to the selected variant URL.
-- **Status:** Verified & Deployed Live.
+### Entry 13 — Shopify Go-Live Launch Checklist & Operational Roadmap
+- **Goal:** Create a comprehensive, production-ready master launch checklist and operational task guide (`Shopify-migration/SHOPIFY-LAUNCH-CHECKLIST.md`) covering all remaining administrative, logistical, and technical steps required for real customer transactions and live sales.
+- **Changes:**
+  - `Shopify-migration/SHOPIFY-LAUNCH-CHECKLIST.md`: Created master checklist covering:
+    - Phase 1: Payment Gateway Setup (Razorpay, PhonePe, Cashfree UPI/Cards & COD).
+    - Phase 2: Shipping, Courier 3PL Logistics (Shiprocket/Delhivery) & Free Shipping threshold configuration.
+    - Phase 3: Shopify Admin native legal policies & store currency/tax settings.
+    - Phase 4: Customer email branding & WhatsApp automated notifications.
+    - Phase 5: Promotional coupon codes (`WELCOME10`, `SCRUNCH15`, `FREESHIP`).
+    - Phase 6: Custom Domain (`scrunchcreate.com`) DNS cutover (A record & CNAME) and SSL setup.
+    - Phase 7: Analytics (GA4, Google Search Console sitemap, Meta Pixel for IG/FB ads).
+    - Phase 8: Pre-launch end-to-end smoke test sequence & storefront password removal.
+- **Status:** Complete & Available in `Shopify-migration/SHOPIFY-LAUNCH-CHECKLIST.md`.
 
 ---
 
@@ -176,6 +188,7 @@
 3. **Validate:** Run `npx @shopify/cli theme check`.
 4. **Deploy:** Run `npx @shopify/cli theme push --store scrunchcreate.myshopify.com --allow-live --live`.
 5. **Update This Log:** Append the new prompt report to the [Interaction & Change History](#interaction--change-history) section.
+
 
 
 
