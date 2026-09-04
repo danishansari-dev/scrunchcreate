@@ -177,7 +177,37 @@
     - Phase 6: Custom Domain (`scrunchcreate.com`) DNS cutover (A record & CNAME) and SSL setup.
     - Phase 7: Analytics (GA4, Google Search Console sitemap, Meta Pixel for IG/FB ads).
     - Phase 8: Pre-launch end-to-end smoke test sequence & storefront password removal.
-- **Status:** Complete & Available in `Shopify-migration/SHOPIFY-LAUNCH-CHECKLIST.md`.
+### Entry 14 — Interactive Floating WhatsApp Support Toggle & Chat Widget
+- **Goal:** Implement a floating WhatsApp support toggle widget across the Shopify storefront to facilitate direct merchant-customer communication, instant product queries, and order assistance.
+- **Changes:**
+  - `snippets/scrunch-whatsapp.liquid`: Created interactive floating WhatsApp widget with:
+    - Branded FAB button (`#25D366`) with pulse animation and notification badge.
+    - Expandable chat drawer featuring brand header (🎀), live online indicator, greeting message bubble, and dynamic timestamp.
+    - 1-tap quick action chips (Track Order, Custom Hampers, Recommendations, Shipping FAQs, and automatic current product inquiry).
+    - Direct custom message input and send action that auto-formats and redirects to `https://wa.me/917300969491?text=...`.
+    - Mobile safe-area inset support and collision avoidance with the mobile sticky ATC bar.
+  - `layout/theme.liquid`: Globally rendered `{% render 'scrunch-whatsapp' %}` before `</body>`.
+  - `config/settings_schema.json`: Added "WhatsApp Support Widget" configuration options to the Shopify Theme Editor.
+  - `config/settings_data.json`: Added default settings under the Dawn preset.
+- **Status:** Complete & Verified.
+
+---
+
+### Entry 15 — Responsive Header UI & Mobile Drawer Navigation Overhaul
+- **Goal:** Overhaul the Shopify theme header across all viewports, specifically targeting tablet and mobile screens to eliminate layout collisions, prevent desktop navigation leakage, modernize the hamburger drawer, and establish flawless 3-column responsive balance.
+- **Root Cause Identified:** In `assets/scrunch-custom.css`, `.sc-header-nav` was set to `display: flex !important;` globally without an enclosing media query. This caused desktop mega-menu navigation links to render inline on tablet and mobile viewports, squishing the logo, colliding with the hamburger toggle, and pushing the action icons (Search, Account, Cart) completely off-screen.
+- **Changes:**
+  - `assets/scrunch-custom.css`:
+    - Confined `.sc-header-nav` strictly to `@media screen and (min-width: 990px)` with mobile-first `display: none !important;`.
+    - Implemented a balanced 3-column CSS Grid (`minmax(44px, 1fr) auto minmax(44px, 1fr)`) on viewports `< 990px` to maintain true centering of the brand logo.
+    - Added responsive typography scaling (`clamp(16.5px, 4vw, 21px)`) for the header logo to guarantee zero text wrapping or horizontal scrolling down to 320px.
+    - Standardized action icon touch targets (40px on tablet/mobile, 36px on small mobile) and aligned the red cart count badge (`#e11d48`) with `top: 4px; right: 4px;`.
+    - Modernized the mobile navigation drawer with elevated white background (`#ffffff`), smooth cubic-bezier transitions, 16px semibold item links, warm pink hover tints, and clean divider lines.
+    - Converted vertically stacked drawer social icons into a clean horizontal flex row with rounded circular badges and interactive hover effects.
+  - `snippets/scrunch-nav-mega-menu.liquid`: Updated base CSS to mobile-first `display: none;` and enforced desktop-only presentation at `min-width: 990px`.
+  - `snippets/header-drawer.liquid`: Styled category spotlight links (`.sc-drawer-all-link`) with brand pink accent pill styling and updated back navigation button styles.
+  - `sections/header.liquid`: Linked `component-list-social.css` in the header for proper social icon styling.
+- **Status:** Complete & Verified across Desktop (1440x900), Tablet (768x1024, 600x800), Mobile Large (414x896), Mobile Small (360x740), Mobile Tiny (320x568), and Collection page (`/collections/all`).
 
 ---
 
